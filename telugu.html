@@ -1,0 +1,343 @@
+
+<!DOCTYPE html>
+<html lang="te">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>నెల్లూరు మటన్ క్లబ్</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #000;
+      margin: 0;
+      padding: 20px;
+      color: #fff;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    h1 {
+      font-family: 'Cinzel', serif;
+      font-weight: 900;
+      font-size: 2.5rem;
+      letter-spacing: 0.12em;
+      background: linear-gradient(90deg, #ffcc00, #ffd700, #ffcc00);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 8px rgba(255, 215, 0, 0.7), 0 0 15px rgba(184, 134, 11, 0.5), 0 0 20px rgba(255, 215, 0, 0.2);
+      animation: shine 3s linear infinite;
+      display: inline-block;
+      padding: 12px 0.5in;
+      margin: 0 auto 25px;
+      border-radius: 10px;
+      user-select: none;
+    }
+
+    @keyframes shine {
+      0% { background-position: 0% center; }
+      100% { background-position: 200% center; }
+    }
+
+    .form-container {
+      background-color: #1a1a1a;
+      border-radius: 15px;
+      padding: 25px 20px;
+      max-width: 500px;
+      margin: 20px auto;
+      box-shadow: 0 0 15px #ffffff40;
+      text-align: left;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+      border: 1px solid #ffd700;
+      background-color: #000;
+      color: #fff;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+
+    input::placeholder, select { color: #ccc; }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #ffd700;
+      box-shadow: 0 0 10px 3px #ffd700cc;
+      background-color: #111;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 700;
+      color: #fff;
+      font-size: 1.05rem;
+    }
+
+    .submit-area {
+      margin-top: 25px;
+      text-align: center;
+    }
+
+    .submit-btn {
+      padding: 14px 25px;
+      font-size: 18px;
+      background: linear-gradient(90deg, #b8860b, #ffd700);
+      border: none;
+      color: #000;
+      cursor: pointer;
+      border-radius: 12px;
+      width: 100%;
+      margin-top: 10px;
+      font-weight: 700;
+      box-shadow: 0 5px 0 #8b6b00;
+    }
+
+    .submit-btn:hover:not(:disabled) {
+      background: linear-gradient(90deg, #ffd700, #b8860b);
+      transform: scale(1.05);
+      box-shadow: 0 7px 15px #ffd700aa;
+    }
+
+    .submit-btn:disabled {
+      background: linear-gradient(to right, #444, #666);
+      color: #bbb;
+      cursor: not-allowed;
+    }
+
+    .info-box {
+      margin: 20px auto;
+      font-size: 13px;
+      background: #3d2e00;
+      padding: 10px 0.5in;
+      border-radius: 10px;
+      display: inline-block;
+      max-width: 90%;
+      color: #fff;
+      box-shadow: 0 0 8px #ffffff99 inset;
+    }
+
+    .tick-area {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 20px;
+      font-size: 14px;
+      color: #fff;
+    }
+
+    .tick-area input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      accent-color: #b8860b;
+    }
+
+    .price-box {
+      display: none;
+      margin-top: 20px;
+      padding: 20px;
+      border-radius: 15px;
+      background: #111;
+      border: 2px solid #ffd700;
+      box-shadow: 0 0 15px #ffd700aa;
+      text-align: center;
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: #ffd700;
+    }
+
+    @media (max-width: 480px) {
+      h1 { font-size: 1.6rem; padding: 10px 0.08in; }
+      .form-container { padding: 20px 15px; }
+      .tick-area { font-size: 13px; gap: 8px; }
+      button { font-size: 16px; }
+      .info-box { font-size: 12px; padding: 10px 0.08in; }
+    }
+  </style>
+</head>
+<body>
+  <h1>నెల్లూరు మటన్ క్లబ్</h1>
+
+  <div class="form-container">
+    <p><strong>మా వెబ్‌సైట్‌ని సందర్శించి మమ్మల్ని సంప్రదించినందుకు ధన్యవాదాలు.! మీ ఇంటి వద్ద తాజా మటన్ ముక్కలు డెలివరీ చేస్తాం.</strong></p>
+
+    <form id="orderForm">
+      <label>మీ పూర్తి పేరు*</label>
+      <input type="text" name="Full Name" placeholder="మీ పేరు రాయండి" required />
+
+      <label>ఫోన్ నంబర్*</label>
+      <input type="tel" name="Phone Number" placeholder="10 అంకెల నంబర్" required pattern="[0-9]{10}" />
+
+      <label>ముక్కల పరిమాణం*</label>
+      <select name="Size Of Pieces" required>
+        <option value="" disabled selected>పరిమాణం ఎంచుకోండి</option>
+        <option value="Large (For Biriyani)">పెద్దవి (బిర్యానీకి)</option>
+        <option value="Medium (For Curry)">మీడియం (కర్రీకి)</option>
+        <option value="Small (For Mutton Kheema)">చిన్నవి (ఖీమా కోసం)</option>
+      </select>
+
+      <label>బరువు (కిలోలలో)*</label>
+      <select name="Weight" id="weightSelect" required>
+        <option value="" disabled selected>బరువు ఎంచుకోండి</option>
+        <option value="0.5">0.5 kg</option>
+        <option value="1">1 kg</option>
+        <option value="1.5">1.5 kg</option>
+        <option value="2">2 kg</option>
+        <option value="2.5">2.5 kg</option>
+        <option value="3">3 kg</option>
+        <option value="3.5">3.5 kg</option>
+        <option value="4">4 kg</option>
+        <option value="4.5">4.5 kg</option>
+        <option value="5">5 kg</option>
+        <option value="5.5">5.5 kg</option>
+        <option value="6">6 kg</option>
+        <option value="6.5">6.5 kg</option>
+        <option value="7">7 kg</option>
+        <option value="7.5">7.5 kg</option>
+        <option value="8">8 kg</option>
+        <option value="8.5">8.5 kg</option>
+        <option value="9">9 kg</option>
+        <option value="9.5">9.5 kg</option>
+        <option value="10">10 kg</option>
+      </select>
+
+      <label>మీరు కోరే డెలివరీ టైం*</label>
+      <select name="Preferred Delivery Time" required>
+        <option value="" disabled selected>డెలివరీ టైం ఎంచుకోండి</option>
+        <option value="6:00 AM Morning">6:00 AM ఉదయం</option>
+        <option value="6:30 AM Morning">6:30 AM ఉదయం</option>
+        <option value="7:00 AM Morning">7:00 AM ఉదయం</option>
+        <option value="7:30 AM Morning">7:30 AM ఉదయం</option>
+        <option value="8:00 AM Morning">8:00 AM ఉదయం</option>
+        <option value="8:30 AM Morning">8:30 AM ఉదయం</option>
+        <option value="9:00 AM Morning">9:00 AM ఉదయం</option>
+        <option value="9:30 AM Morning">9:30 AM ఉదయం</option>
+        <option value="10:00 AM Morning">10:00 AM ఉదయం</option>
+        <option value="10:30 AM Morning">10:30 AM ఉదయం</option>
+        <option value="11:00 AM Morning">11:00 AM ఉదయం</option>
+        <option value="11:30 AM Morning">11:30 AM ఉదయం</option>
+        <option value="12:00 PM Afternoon">12:00 PM మధ్యాహ్నం</option>
+      </select>
+
+      <label>ఏరియా పేరు*</label>
+      <input type="text" name="Area Name" placeholder="ఉదా: నరుకూరు" required />
+
+      <div class="price-box" id="priceBox">
+        <div id="priceDisplay">Price</div>
+      </div>
+
+      <input type="hidden" name="Latitude" />
+      <input type="hidden" name="Longitude" />
+      <input type="hidden" name="Language" value="Telugu" />
+
+      <div class="tick-area">
+        <input type="checkbox" id="tickBox" />
+        <label for="tickBox">పై వివరాలు సరిగ్గా ఉన్నాయని ఒప్పుకుంటూ ఆర్డర్ ఇవ్వాలనుకుంటున్నాను. ( బాక్స్‌ను టిక్ చేయండి ). "సబ్మిట్ బటన్ క్లిక్ చేసిన తర్వాత, దయచేసి సమర్పించడానికి లొకేషన్‌ను అనుమతించండి."</label>
+      </div>
+
+      <div class="submit-area">
+        <button type="submit" id="submitBtn" class="submit-btn" disabled>సబ్మిట్ చేయండి</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="info-box">
+    <strong>సబ్మిట్ చేసేముందు, మీరు ఇచ్చిన వివరాలు సరిగ్గా ఉన్నాయో లేదో చెక్ చేసుకోండి</strong><br><br>
+    వేగంగా మరియు కాంటాక్ట్‌లెస్ డెలివరీ కోసం, దయచేసి మీ కరెంట్ లొకేషన్‌ను WhatsApp లో పంపండి.<br>
+    WhatsApp → 📎 → "Location" → మీ కరెంట్ లొకేషన్ పంపండి.
+  </div>
+
+  <script>
+    const form = document.getElementById("orderForm");
+    const submitBtn = document.getElementById("submitBtn");
+    const tickBox = document.getElementById("tickBox");
+    const weightSelect = document.getElementById("weightSelect");
+    const priceBox = document.getElementById("priceBox");
+    const priceDisplay = document.getElementById("priceDisplay");
+
+    tickBox.addEventListener("change", () => {
+      submitBtn.disabled = !tickBox.checked;
+    });
+
+    weightSelect.addEventListener("change", function () {
+      const weight = parseFloat(this.value);
+      let price = 0;
+
+      if (weight === 0.5) {
+        price = 500;
+      } else if (weight > 0.5) {
+        price = weight * 900;
+      }
+
+      if (price > 0) {
+        priceBox.style.display = "block";
+        priceDisplay.textContent = `${price} రూపాయలు`;
+      } else {
+        priceBox.style.display = "none";
+        priceDisplay.textContent = "";
+      }
+    });
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `<span style="display:inline-block;width:18px;height:18px;border:2px solid #fff;border-top:2px solid transparent;border-radius:50%;animation:spin 1s linear infinite;vertical-align:middle;margin-right:8px;"></span>సబ్మిట్ అవుతోంది...`;
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+          form.querySelector("input[name='Latitude']").value = position.coords.latitude;
+          form.querySelector("input[name='Longitude']").value = position.coords.longitude;
+
+          const formData = new FormData(form);
+          formData.append("Ordered Date", new Date().toLocaleString());
+
+          fetch("https://script.google.com/macros/s/AKfycbyi-lJSOYk4X5ameVJAKDxu_3pYtEpUqPhjeMbvRjg2N65GPsrvKbebH090hbNrLIMCZQ/exec", {
+            method: "POST",
+            body: formData
+          })
+          .then(response => {
+            if (response.ok) {
+              alert("ధన్యవాదాలు! మీ ఆర్డర్ విజయవంతంగా పంపబడింది!");
+              form.reset();
+              priceBox.style.display = "none";
+              priceDisplay.textContent = "";
+              tickBox.checked = false;
+            } else {
+              alert("ఏదో తప్పు జరిగింది. మళ్లీ ప్రయత్నించండి.");
+            }
+          })
+          .catch(() => {
+            alert("నెట్‌వర్క్ లోపం. దయచేసి మళ్లీ ప్రయత్నించండి.");
+          })
+          .finally(() => {
+            submitBtn.innerHTML = "సబ్మిట్ చేయండి";
+            submitBtn.disabled = true;
+          });
+        }, function () {
+          alert("లొకేషన్ తీసుకోవడం సాధ్యపడలేదు. లొకేషన్ అనుమతి ఇవ్వండి.");
+          submitBtn.innerHTML = "సబ్మిట్ చేయండి";
+          submitBtn.disabled = false;
+        });
+      } else {
+        alert("మీ బ్రౌజర్ జియోలొకేషన్‌ను సపోర్ట్ చేయదు.");
+        submitBtn.innerHTML = "సబ్మిట్ చేయండి";
+        submitBtn.disabled = false;
+      }
+    });
+
+    const style = document.createElement('style');
+    style.innerHTML = `@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`;
+    document.head.appendChild(style);
+  </script>
+</body>
+</html>
