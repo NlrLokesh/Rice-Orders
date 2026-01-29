@@ -187,9 +187,9 @@
         <option value="Small (For Mutton Kheema)">Small (For Mutton Kheema)</option>
       </select>
 
-      <label>Select Weight*</label>
-      <select name="Weight" id="weightSelect" required>
-        <option value="" disabled selected>Select Weight</option>
+      <label>Select Number Of Bags*</label>
+      <select name="No Of Bags" id="weightSelect" required>
+        <option value="" disabled selected>Select Number Of Bags</option>
         <option value="0.5">0.5 kg</option>
         <option value="1">1 kg</option>
         <option value="1.5">1.5 kg</option>
@@ -315,7 +315,7 @@
           const formData = new FormData(form);
           formData.append("Ordered Date", new Date().toLocaleString());
 
-          fetch("https://script.google.com/macros/s/AKfycbwvGGHl6zEb3nQWJpEUI4zJ4IjTc2TtIhj_hR3uakXOoewnWjRP1qMEeVomf3QUAtWc/exec", {
+          fetch("https://script.google.com/macros/s/AKfycbwRuBysykYCV6CaK2nP8GojI1THk1gjTRR43fhISZxxspYx1E8wuzPiYx16Hnkm8dZt/exec", {
             method: "POST",
             body: formData
           })
