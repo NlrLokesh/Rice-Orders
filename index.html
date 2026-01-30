@@ -243,143 +243,107 @@
     Open WhatsApp → Tap 📎 → Tap "Location" → Send "Your current location".
   </div>
 
-  <script>
-    const form = document.getElementById("orderForm");
-    const submitBtn = document.getElementById("submitBtn");
-    const tickBox = document.getElementById("tickBox");
-    const weightSelect = document.getElementById("weightSelect");
-    const priceBox = document.getElementById("priceBox");
-    const priceDisplay = document.getElementById("priceDisplay");
+ <script>
+  const form = document.getElementById("orderForm");
+  const submitBtn = document.getElementById("submitBtn");
+  const tickBox = document.getElementById("tickBox");
+  const weightSelect = document.getElementById("weightSelect");
+  const priceBox = document.getElementById("priceBox");
+  const priceDisplay = document.getElementById("priceDisplay");
+  const riceTypeSelect = document.getElementById("riceType");
 
-    tickBox.addEventListener("change", () => {
-      submitBtn.disabled = !tickBox.checked;
-    });
+  tickBox.addEventListener("change", () => {
+    submitBtn.disabled = !tickBox.checked;
+  });
 
-    const riceTypeSelect = document.getElementById("riceType");
+  function updatePrice() {
+    const riceType = riceTypeSelect.value;
+    const quantity = parseInt(weightSelect.value);
 
-function updatePrice() {
-  const riceType = riceTypeSelect.value;
-  const quantity = parseInt(weightSelect.value);
+    const priceMap = {
+      "Pedda Jilakara": 1350,
+      "Nellore Jilakara": 1300,
+      "Sannalu": 1200,
+      "Half Boiled": 1100
+    };
 
-  const priceMap = {
-    "Pedda Jilakara": 1350,
-    "Nellore Jilakara": 1300,
-    "Sannalu": 1200,
-    "Half Boiled": 1100
-  };
-
-  if (riceType && quantity && priceMap[riceType]) {
-    const totalPrice = priceMap[riceType] * quantity;
-    priceBox.style.display = "block";
-    priceDisplay.textContent = `${totalPrice} Rupees Only`;
-  } else {
-    priceBox.style.display = "none";
-    priceDisplay.textContent = "";
+    if (riceType && quantity && priceMap[riceType]) {
+      priceBox.style.display = "block";
+      priceDisplay.textContent = `${priceMap[riceType] * quantity} Rupees Only`;
+    } else {
+      priceBox.style.display = "none";
+      priceDisplay.textContent = "";
+    }
   }
-}
 
-riceTypeSelect.addEventListener("change", updatePrice);
-weightSelect.addEventListener("change", updatePrice);
+  riceTypeSelect.addEventListener("change", updatePrice);
+  weightSelect.addEventListener("change", updatePrice);
 
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = `<span style="display:inline-block;width:18px;height:18px;border:2px solid #fff;border-top:2px solid transparent;border-radius:50%;animation:spin 1s linear infinite;margin-right:8px;"></span>Submitting...`;
 
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = `<span style="display:inline-block;width:18px;height:18px;border:2px solid #fff;border-top:2px solid transparent;border-radius:50%;animation:spin 1s linear infinite;vertical-align:middle;margin-right:8px;"></span>Submitting...`;
-
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-  function (position) {
-    form.querySelector("input[name='Latitude']").value = position.coords.latitude;
-    form.querySelector("input[name='Longitude']").value = position.coords.longitude;
-
-    const formData = new FormData(form);
-    formData.append("Ordered Date", new Date().toLocaleString());
-
-    fetch("https://script.google.com/macros/s/AKfycbwRuBysykYCV6CaK2nP8GojI1THk1gjTRR43fhISZxxspYx1E8wuzPiYx16Hnkm8dZt/exec", {
-      method: "POST",
-      body: formData
-    })
-    .then(response => {
-      if (response.ok) {
-        alert("THANKS FOR ORDERING... ORDER SUBMITTED SUCCESSFULLY!");
-        form.reset();
-        priceBox.style.display = "none";
-        priceDisplay.textContent = "";
-        tickBox.checked = false;
-      } else {
-        alert("Something went wrong. Please try again.");
-      }
-    })
-    .catch(() => {
-      alert("Network error. Please check your connection and try again.");
-    })
-    .finally(() => {
+    if (!navigator.geolocation) {
+      alert("Geolocation not supported.");
       submitBtn.innerHTML = "Submit";
-      submitBtn.disabled = true;
-    });
-  },
+      submitBtn.disabled = false;
+      return;
+    }
 
-  function (error) {
-    alert("Unable to fetch precise location. Please turn ON GPS and try again.");
-    submitBtn.innerHTML = "Submit";
-    submitBtn.disabled = false;
-  },
+    navigator.geolocation.getCurrentPosition(
+      function (position) {
+        // ✅ ACCURATE GPS VALUES
+        form.querySelector("input[name='Latitude']").value = position.coords.latitude;
+        form.querySelector("input[name='Longitude']").value = position.coords.longitude;
 
-  {
-    enableHighAccuracy: true, // ⭐ MOST IMPORTANT
-    timeout: 15000,
-    maximumAge: 0
-  }
-);
+        const formData = new FormData(form);
+        formData.append("Ordered Date", new Date().toLocaleString());
 
-          form.querySelector("input[name='Latitude']").value = position.coords.latitude;
-          form.querySelector("input[name='Longitude']").value = position.coords.longitude;
-
-          const formData = new FormData(form);
-          formData.append("Ordered Date", new Date().toLocaleString());
-
-          fetch("https://script.google.com/macros/s/AKfycbwRuBysykYCV6CaK2nP8GojI1THk1gjTRR43fhISZxxspYx1E8wuzPiYx16Hnkm8dZt/exec", {
-            method: "POST",
-            body: formData
-          })
-          .then(response => {
-            if (response.ok) {
-              alert("THANKS FOR ORDERING... ORDER SUBMITTED SUCCESSFULLY!");
-              form.reset();
-              priceBox.style.display = "none";
-              priceDisplay.textContent = "";
-              tickBox.checked = false;
-            } else {
-              alert("Something went wrong. Please try again.");
-            }
-          })
-          .catch(() => {
-            alert("Network error. Please check your connection and try again.");
-          })
-          .finally(() => {
-            submitBtn.innerHTML = "Submit";
-            submitBtn.disabled = true;
-          });
-        }, function () {
-          alert("Unable to fetch location. Please allow location access.");
+        fetch("https://script.google.com/macros/s/AKfycbwRuBysykYCV6CaK2nP8GojI1THk1gjTRR43fhISZxxspYx1E8wuzPiYx16Hnkm8dZt/exec", {
+          method: "POST",
+          body: formData
+        })
+        .then(res => {
+          if (res.ok) {
+            alert("THANKS FOR ORDERING... ORDER SUBMITTED SUCCESSFULLY!");
+            form.reset();
+            priceBox.style.display = "none";
+            tickBox.checked = false;
+          } else {
+            alert("Something went wrong. Please try again.");
+          }
+        })
+        .catch(() => {
+          alert("Network error. Please try again.");
+        })
+        .finally(() => {
           submitBtn.innerHTML = "Submit";
-          submitBtn.disabled = false;
+          submitBtn.disabled = true;
         });
-      } else {
-        alert("Geolocation not supported.");
+      },
+      function () {
+        alert("Please turn ON GPS, set Location to PRECISE and try again.");
         submitBtn.innerHTML = "Submit";
         submitBtn.disabled = false;
+      },
+      {
+        enableHighAccuracy: true, // ⭐ MOST IMPORTANT
+        timeout: 15000,
+        maximumAge: 0
       }
-    });
+    );
+  });
 
-    const style = document.createElement('style');
-    style.innerHTML = `@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}`;
+  const style = document.createElement("style");
+  style.innerHTML = `
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  `;
+  document.head.appendChild(style);
+</script>
 
-    document.head.appendChild(style);
-  </script>
 </body>
 </html>
