@@ -288,7 +288,51 @@ weightSelect.addEventListener("change", updatePrice);
       submitBtn.innerHTML = `<span style="display:inline-block;width:18px;height:18px;border:2px solid #fff;border-top:2px solid transparent;border-radius:50%;animation:spin 1s linear infinite;vertical-align:middle;margin-right:8px;"></span>Submitting...`;
 
       if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function (position) {
+        navigator.geolocation.getCurrentPosition(
+  function (position) {
+    form.querySelector("input[name='Latitude']").value = position.coords.latitude;
+    form.querySelector("input[name='Longitude']").value = position.coords.longitude;
+
+    const formData = new FormData(form);
+    formData.append("Ordered Date", new Date().toLocaleString());
+
+    fetch("https://script.google.com/macros/s/AKfycbwRuBysykYCV6CaK2nP8GojI1THk1gjTRR43fhISZxxspYx1E8wuzPiYx16Hnkm8dZt/exec", {
+      method: "POST",
+      body: formData
+    })
+    .then(response => {
+      if (response.ok) {
+        alert("THANKS FOR ORDERING... ORDER SUBMITTED SUCCESSFULLY!");
+        form.reset();
+        priceBox.style.display = "none";
+        priceDisplay.textContent = "";
+        tickBox.checked = false;
+      } else {
+        alert("Something went wrong. Please try again.");
+      }
+    })
+    .catch(() => {
+      alert("Network error. Please check your connection and try again.");
+    })
+    .finally(() => {
+      submitBtn.innerHTML = "Submit";
+      submitBtn.disabled = true;
+    });
+  },
+
+  function (error) {
+    alert("Unable to fetch precise location. Please turn ON GPS and try again.");
+    submitBtn.innerHTML = "Submit";
+    submitBtn.disabled = false;
+  },
+
+  {
+    enableHighAccuracy: true, // ⭐ MOST IMPORTANT
+    timeout: 15000,
+    maximumAge: 0
+  }
+);
+
           form.querySelector("input[name='Latitude']").value = position.coords.latitude;
           form.querySelector("input[name='Longitude']").value = position.coords.longitude;
 
