@@ -189,11 +189,17 @@
       <label>Select Number Of Bags*</label>
       <select name="No Of Bags" id="weightSelect" required>
         <option value="" disabled selected>Select Number Of Bags</option>
+       
         <option value="1">1</option>
+       
         <option value="2">2</option>
+     
         <option value="3">3</option>
+   
         <option value="4">4</option>
+    
         <option value="5">5</option>
+       
       </select>
 
       <label>Your Preferred Delivery*</label>
@@ -201,13 +207,16 @@
         <option value="" disabled selected>Select Delivery Day</option>
         <option value="Today">Today</option>
         <option value="Tomorrow">Tomorrow</option>
+       
+       
       </select>
 
       <label>Your Area Name*</label>
       <input type="text" name="Area Name" placeholder="e.g., Narukur or Allipuram" required />
 
+      <!-- ✅ Elegant Dynamic Price Box (moved here) -->
       <div class="price-box" id="priceBox">
-        <div id="priceDisplay">Select Rice Type & Bags to see price</div>
+        <div id="priceDisplay">Price</div>
       </div>
 
       <input type="hidden" name="Latitude" />
@@ -235,81 +244,55 @@
     const form = document.getElementById("orderForm");
     const submitBtn = document.getElementById("submitBtn");
     const tickBox = document.getElementById("tickBox");
-    const riceSelect = document.getElementById("riceSelect");
     const weightSelect = document.getElementById("weightSelect");
+    const riceSelect = document.getElementById("riceSelect");
     const priceBox = document.getElementById("priceBox");
     const priceDisplay = document.getElementById("priceDisplay");
 
-    // ✅ Fixed pricing function
+    // ✅ Price calculation function based on your exact requirements
     function calculatePrice() {
       const riceType = riceSelect.value;
-      const bags = weightSelect.value;
-      
-      const prices = {
-        "Pedda Jilakara": 1300,
-        "Nellore Jilakara": 1200,
-        "Sannalu": 1100,
-        "Half Boiled": 1000
-      };
+      const numBags = parseInt(weightSelect.value) || 0;
 
-      if (riceType && bags && prices[riceType]) {
-        const totalPrice = prices[riceType] * parseInt(bags);
-        priceDisplay.textContent = ${totalPrice} Rupees Only;
-      } else {
-        priceDisplay.textContent = "Select Rice Type & Bags to see price";
+      if (!riceType || numBags === 0) {
+        priceBox.style.display = "none";
+        return;
       }
+
+      let basePrice = 0;
+      
+      // Your exact pricing requirements
+      switch(riceType) {
+        case "Pedda Jilakara":
+          basePrice = 1300;
+          break;
+        case "Nellore Jilakara":
+          basePrice = 1200;
+          break;
+        case "Sannalu":
+          basePrice = 1100;
+          break;
+        case "Half Boiled":
+          basePrice = 1000;
+          break;
+      }
+
+      const totalPrice = basePrice * numBags;
+
+      priceBox.style.display = "block";
+      priceDisplay.textContent = ${totalPrice} Rupees Only;
     }
 
-    // Event listeners
+    // Listen to changes in both rice type and number of bags
     riceSelect.addEventListener("change", calculatePrice);
     weightSelect.addEventListener("change", calculatePrice);
 
-    // ✅ FIXED tickbox logic
-    tickBox.addEventListener("change", function() {
-      if (tickBox.checked) {
-        submitBtn.disabled = false;
-      } else {
-        submitBtn.disabled = true;
-      }
-    });
-
-    // Form validation for required fields
-    form.addEventListener("input", function() {
-      const requiredFields = form.querySelectorAll('[required]');
-      let allFilled = true;
-      
-      requiredFields.forEach(field => {
-        if (!field.value.trim()) {
-          allFilled = false;
-        }
-      });
-      
-      if (allFilled && tickBox.checked) {
-        submitBtn.disabled = false;
-      } else if (!tickBox.checked) {
-        submitBtn.disabled = true;
-      }
+    tickBox.addEventListener("change", () => {
+      submitBtn.disabled = !tickBox.checked;
     });
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
-      
-      // Double-check all fields before submit
-      const requiredFields = form.querySelectorAll('[required]');
-      let allValid = true;
-      
-      requiredFields.forEach(field => {
-        if (!field.value.trim()) {
-          allValid = false;
-          return;
-        }
-      });
-      
-      if (!allValid) {
-        alert("Please fill all required fields!");
-        return;
-      }
-
       submitBtn.disabled = true;
       submitBtn.innerHTML = <span style="display:inline-block;width:18px;height:18px;border:2px solid #fff;border-top:2px solid transparent;border-radius:50%;animation:spin 1s linear infinite;vertical-align:middle;margin-right:8px;"></span>Submitting...;
 
@@ -329,30 +312,29 @@
             if (response.ok) {
               alert("THANKS FOR ORDERING... ORDER SUBMITTED SUCCESSFULLY!");
               form.reset();
-              priceDisplay.textContent = "Select Rice Type & Bags to see price";
+              priceBox.style.display = "none";
+              priceDisplay.textContent = "";
               tickBox.checked = false;
-              submitBtn.disabled = true;
-              submitBtn.innerHTML = "Submit";
             } else {
-              alert("Something went wrong. Please try again.");
-              submitBtn.disabled = false;
-              submitBtn.innerHTML = "Submit";
+              alert("Something went wrong.  Please try again.");
             }
           })
           .catch(() => {
             alert("Network error. Please check your connection and try again.");
-            submitBtn.disabled = false;
+          })
+          .finally(() => {
             submitBtn.innerHTML = "Submit";
+            submitBtn.disabled = true;
           });
         }, function () {
           alert("Unable to fetch location. Please allow location access.");
-          submitBtn.disabled = false;
           submitBtn.innerHTML = "Submit";
+          submitBtn.disabled = false;
         });
       } else {
         alert("Geolocation not supported.");
-        submitBtn.disabled = false;
         submitBtn.innerHTML = "Submit";
+        submitBtn.disabled = false;
       }
     });
 
