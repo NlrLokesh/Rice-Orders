@@ -180,7 +180,8 @@
       <input type="tel" name="Phone Number" placeholder="Enter 10-digit number" required pattern="[0-9]{10}" />
 
       <label>Select Type Of Rice*</label>
-      <select name="Type Of Rice" required>
+      <select name="Type Of Rice" id="riceType" required>
+
         <option value="" disabled selected>Select Type Of Rice</option>
         <option value="Pedda Jilakara">Pedda Jilakara</option>
         <option value="Nellore Jilakara">Nellore Jilakara</option>
@@ -254,24 +255,32 @@
       submitBtn.disabled = !tickBox.checked;
     });
 
-    weightSelect.addEventListener("change", function () {
-      const weight = parseFloat(this.value);
-      let price = 0;
+    const riceTypeSelect = document.getElementById("riceType");
 
-      if (weight === 0.5) {
-        price = 500;
-      } else if (weight > 0.5) {
-        price = weight * 900;
-      }
+function updatePrice() {
+  const riceType = riceTypeSelect.value;
+  const quantity = parseInt(weightSelect.value);
 
-      if (price > 0) {
-        priceBox.style.display = "block";
-        priceDisplay.textContent = ${price} Rupees Only;
-      } else {
-        priceBox.style.display = "none";
-        priceDisplay.textContent = "";
-      }
-    });
+  const priceMap = {
+    "Pedda Jilakara": 1350,
+    "Nellore Jilakara": 1300,
+    "Sannalu": 1200,
+    "Half Boiled": 1100
+  };
+
+  if (riceType && quantity && priceMap[riceType]) {
+    const totalPrice = priceMap[riceType] * quantity;
+    priceBox.style.display = "block";
+    priceDisplay.textContent = `${totalPrice} Rupees Only`;
+  } else {
+    priceBox.style.display = "none";
+    priceDisplay.textContent = "";
+  }
+}
+
+riceTypeSelect.addEventListener("change", updatePrice);
+weightSelect.addEventListener("change", updatePrice);
+
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
