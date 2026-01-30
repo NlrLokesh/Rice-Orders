@@ -206,9 +206,8 @@
       <label>Your Area Name*</label>
       <input type="text" name="Area Name" placeholder="e.g., Narukur or Allipuram" required />
 
-      <!-- ✅ Dynamic Price Box with Rice Pricing -->
       <div class="price-box" id="priceBox">
-        <div id="priceDisplay">Price</div>
+        <div id="priceDisplay">Select Rice Type & Bags to see price</div>
       </div>
 
       <input type="hidden" name="Latitude" />
@@ -241,10 +240,10 @@
     const priceBox = document.getElementById("priceBox");
     const priceDisplay = document.getElementById("priceDisplay");
 
-    // ✅ Dynamic pricing based on rice type and quantity
+    // ✅ Fixed pricing function
     function calculatePrice() {
       const riceType = riceSelect.value;
-      const bags = parseInt(weightSelect.value);
+      const bags = weightSelect.value;
       
       const prices = {
         "Pedda Jilakara": 1300,
@@ -254,27 +253,63 @@
       };
 
       if (riceType && bags && prices[riceType]) {
-        const totalPrice = prices[riceType] * bags;
-        priceBox.style.display = "block";
+        const totalPrice = prices[riceType] * parseInt(bags);
         priceDisplay.textContent = ${totalPrice} Rupees Only;
-        return totalPrice;
       } else {
-        priceBox.style.display = "none";
-        priceDisplay.textContent = "";
-        return 0;
+        priceDisplay.textContent = "Select Rice Type & Bags to see price";
       }
     }
 
-    // Event listeners for both rice type and bags
+    // Event listeners
     riceSelect.addEventListener("change", calculatePrice);
     weightSelect.addEventListener("change", calculatePrice);
 
-    tickBox.addEventListener("change", () => {
-      submitBtn.disabled = !tickBox.checked;
+    // ✅ FIXED tickbox logic
+    tickBox.addEventListener("change", function() {
+      if (tickBox.checked) {
+        submitBtn.disabled = false;
+      } else {
+        submitBtn.disabled = true;
+      }
+    });
+
+    // Form validation for required fields
+    form.addEventListener("input", function() {
+      const requiredFields = form.querySelectorAll('[required]');
+      let allFilled = true;
+      
+      requiredFields.forEach(field => {
+        if (!field.value.trim()) {
+          allFilled = false;
+        }
+      });
+      
+      if (allFilled && tickBox.checked) {
+        submitBtn.disabled = false;
+      } else if (!tickBox.checked) {
+        submitBtn.disabled = true;
+      }
     });
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
+      
+      // Double-check all fields before submit
+      const requiredFields = form.querySelectorAll('[required]');
+      let allValid = true;
+      
+      requiredFields.forEach(field => {
+        if (!field.value.trim()) {
+          allValid = false;
+          return;
+        }
+      });
+      
+      if (!allValid) {
+        alert("Please fill all required fields!");
+        return;
+      }
+
       submitBtn.disabled = true;
       submitBtn.innerHTML = <span style="display:inline-block;width:18px;height:18px;border:2px solid #fff;border-top:2px solid transparent;border-radius:50%;animation:spin 1s linear infinite;vertical-align:middle;margin-right:8px;"></span>Submitting...;
 
@@ -294,29 +329,30 @@
             if (response.ok) {
               alert("THANKS FOR ORDERING... ORDER SUBMITTED SUCCESSFULLY!");
               form.reset();
-              priceBox.style.display = "none";
-              priceDisplay.textContent = "";
+              priceDisplay.textContent = "Select Rice Type & Bags to see price";
               tickBox.checked = false;
+              submitBtn.disabled = true;
+              submitBtn.innerHTML = "Submit";
             } else {
               alert("Something went wrong. Please try again.");
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = "Submit";
             }
           })
           .catch(() => {
             alert("Network error. Please check your connection and try again.");
-          })
-          .finally(() => {
+            submitBtn.disabled = false;
             submitBtn.innerHTML = "Submit";
-            submitBtn.disabled = true;
           });
         }, function () {
           alert("Unable to fetch location. Please allow location access.");
-          submitBtn.innerHTML = "Submit";
           submitBtn.disabled = false;
+          submitBtn.innerHTML = "Submit";
         });
       } else {
         alert("Geolocation not supported.");
-        submitBtn.innerHTML = "Submit";
         submitBtn.disabled = false;
+        submitBtn.innerHTML = "Submit";
       }
     });
 
