@@ -285,7 +285,7 @@ weightSelect.addEventListener("change", updatePrice);
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       submitBtn.disabled = true;
-      submitBtn.innerHTML = <span style="display:inline-block;width:18px;height:18px;border:2px solid #fff;border-top:2px solid transparent;border-radius:50%;animation:spin 1s linear infinite;vertical-align:middle;margin-right:8px;"></span>Submitting...;
+      submitBtn.innerHTML = `<span style="display:inline-block;width:18px;height:18px;border:2px solid #fff;border-top:2px solid transparent;border-radius:50%;animation:spin 1s linear infinite;vertical-align:middle;margin-right:8px;"></span>Submitting...`;
 
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
@@ -330,7 +330,11 @@ weightSelect.addEventListener("change", updatePrice);
     });
 
     const style = document.createElement('style');
-    style.innerHTML = @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } };
+    style.innerHTML = `@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}`;
+
     document.head.appendChild(style);
   </script>
 </body>
