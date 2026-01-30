@@ -178,7 +178,7 @@
       <input type="tel" name="Phone Number" placeholder="Enter 10-digit number" required pattern="[0-9]{10}" />
 
       <label>Select Type Of Rice*</label>
-      <select name="Type Of Rice" id="riceSelect" required>
+      <select name="Type Of Rice" id="riceTypeSelect" required>
         <option value="" disabled selected>Select Type Of Rice</option>
         <option value="Pedda Jilakara">Pedda Jilakara</option>
         <option value="Nellore Jilakara">Nellore Jilakara</option>
@@ -189,17 +189,11 @@
       <label>Select Number Of Bags*</label>
       <select name="No Of Bags" id="weightSelect" required>
         <option value="" disabled selected>Select Number Of Bags</option>
-       
         <option value="1">1</option>
-       
         <option value="2">2</option>
-     
         <option value="3">3</option>
-   
         <option value="4">4</option>
-    
         <option value="5">5</option>
-       
       </select>
 
       <label>Your Preferred Delivery*</label>
@@ -207,8 +201,6 @@
         <option value="" disabled selected>Select Delivery Day</option>
         <option value="Today">Today</option>
         <option value="Tomorrow">Tomorrow</option>
-       
-       
       </select>
 
       <label>Your Area Name*</label>
@@ -245,51 +237,41 @@
     const submitBtn = document.getElementById("submitBtn");
     const tickBox = document.getElementById("tickBox");
     const weightSelect = document.getElementById("weightSelect");
-    const riceSelect = document.getElementById("riceSelect");
+    const riceTypeSelect = document.getElementById("riceTypeSelect");
     const priceBox = document.getElementById("priceBox");
     const priceDisplay = document.getElementById("priceDisplay");
 
-    // ✅ Price calculation function based on your exact requirements
-    function calculatePrice() {
-      const riceType = riceSelect.value;
-      const numBags = parseInt(weightSelect.value) || 0;
+    // Price mapping for each rice type per bag
+    const ricePrices = {
+      "Pedda Jilakara": 1300,
+      "Nellore Jilakara": 1200,
+      "Sannalu": 1100,
+      "Half Boiled": 1000
+    };
 
-      if (!riceType || numBags === 0) {
+    // Function to calculate and display price
+    function updatePrice() {
+      const riceType = riceTypeSelect.value;
+      const numBags = parseInt(weightSelect.value);
+
+      if (riceType && numBags) {
+        const basePrice = ricePrices[riceType];
+        const totalPrice = basePrice * numBags;
+        priceBox.style.display = "block";
+        priceDisplay.textContent = ${totalPrice} Rupees Only;
+      } else {
         priceBox.style.display = "none";
-        return;
+        priceDisplay.textContent = "";
       }
-
-      let basePrice = 0;
-      
-      // Your exact pricing requirements
-      switch(riceType) {
-        case "Pedda Jilakara":
-          basePrice = 1300;
-          break;
-        case "Nellore Jilakara":
-          basePrice = 1200;
-          break;
-        case "Sannalu":
-          basePrice = 1100;
-          break;
-        case "Half Boiled":
-          basePrice = 1000;
-          break;
-      }
-
-      const totalPrice = basePrice * numBags;
-
-      priceBox.style.display = "block";
-      priceDisplay.textContent = ${totalPrice} Rupees Only;
     }
 
-    // Listen to changes in both rice type and number of bags
-    riceSelect.addEventListener("change", calculatePrice);
-    weightSelect.addEventListener("change", calculatePrice);
-
+    // Event listeners
     tickBox.addEventListener("change", () => {
       submitBtn.disabled = !tickBox.checked;
     });
+
+    riceTypeSelect.addEventListener("change", updatePrice);
+    weightSelect.addEventListener("change", updatePrice);
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
@@ -315,8 +297,9 @@
               priceBox.style.display = "none";
               priceDisplay.textContent = "";
               tickBox.checked = false;
+              submitBtn.disabled = true;
             } else {
-              alert("Something went wrong.  Please try again.");
+              alert("Something went wrong. Please try again.");
             }
           })
           .catch(() => {
@@ -324,17 +307,17 @@
           })
           .finally(() => {
             submitBtn.innerHTML = "Submit";
-            submitBtn.disabled = true;
+            submitBtn.disabled = !tickBox.checked;
           });
         }, function () {
           alert("Unable to fetch location. Please allow location access.");
           submitBtn.innerHTML = "Submit";
-          submitBtn.disabled = false;
+          submitBtn.disabled = !tickBox.checked;
         });
       } else {
         alert("Geolocation not supported.");
         submitBtn.innerHTML = "Submit";
-        submitBtn.disabled = false;
+        submitBtn.disabled = !tickBox.checked;
       }
     });
 
