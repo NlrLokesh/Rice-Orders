@@ -241,86 +241,110 @@
   </div>
 
   <script>
-    const form = document.getElementById("orderForm");
-    const submitBtn = document.getElementById("submitBtn");
-    const tickBox = document.getElementById("tickBox");
-    const weightSelect = document.getElementById("weightSelect");
-    const priceBox = document.getElementById("priceBox");
-    const priceDisplay = document.getElementById("priceDisplay");
+  const form = document.getElementById("orderForm");
+  const submitBtn = document.getElementById("submitBtn");
+  const tickBox = document.getElementById("tickBox");
+  const weightSelect = document.getElementById("weightSelect");
+  const priceBox = document.getElementById("priceBox");
+  const priceDisplay = document.getElementById("priceDisplay");
+  const riceTypeSelect = document.querySelector("select[name='Type Of Rice']");
 
-    tickBox.addEventListener("change", () => {
-      submitBtn.disabled = !tickBox.checked;
-    });
+  // ✅ Enable submit only after checkbox
+  tickBox.addEventListener("change", () => {
+    submitBtn.disabled = !tickBox.checked;
+  });
 
-    weightSelect.addEventListener("change", function () {
-      const weight = parseFloat(this.value);
-      let price = 0;
+  // ✅ SAME PRICE LOGIC AS ENGLISH SITE
+  function updatePrice() {
+    const riceType = riceTypeSelect.value;
+    const quantity = parseInt(weightSelect.value);
 
-      if (weight === 0.5) {
-        price = 500;
-      } else if (weight > 0.5) {
-        price = weight * 900;
-      }
+    const priceMap = {
+      "Pedda Jilakara": 1350,
+      "Nellore Jilakara": 1300,
+      "Sannalu": 1200,
+      "Half Boiled": 1100
+    };
 
-      if (price > 0) {
-        priceBox.style.display = "block";
-        priceDisplay.textContent = `${price} రూపాయలు`;
-      } else {
-        priceBox.style.display = "none";
-        priceDisplay.textContent = "";
-      }
-    });
+    if (riceType && quantity && priceMap[riceType]) {
+      priceBox.style.display = "block";
+      priceDisplay.textContent = `${priceMap[riceType] * quantity} రూపాయలు మాత్రమే`;
+    } else {
+      priceBox.style.display = "none";
+      priceDisplay.textContent = "";
+    }
+  }
 
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = `<span style="display:inline-block;width:18px;height:18px;border:2px solid #fff;border-top:2px solid transparent;border-radius:50%;animation:spin 1s linear infinite;vertical-align:middle;margin-right:8px;"></span>సబ్మిట్ అవుతోంది...`;
+  riceTypeSelect.addEventListener("change", updatePrice);
+  weightSelect.addEventListener("change", updatePrice);
 
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function (position) {
-          form.querySelector("input[name='Latitude']").value = position.coords.latitude;
-          form.querySelector("input[name='Longitude']").value = position.coords.longitude;
+  // ✅ FORM SUBMIT WITH PRECISE GPS
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = `<span style="display:inline-block;width:18px;height:18px;border:2px solid #fff;border-top:2px solid transparent;border-radius:50%;animation:spin 1s linear infinite;margin-right:8px;"></span>సబ్మిట్ అవుతోంది...`;
 
-          const formData = new FormData(form);
-          formData.append("Ordered Date", new Date().toLocaleString());
+    if (!navigator.geolocation) {
+      alert("మీ బ్రౌజర్ జియోలొకేషన్‌ను సపోర్ట్ చేయదు.");
+      submitBtn.innerHTML = "సబ్మిట్ చేయండి";
+      submitBtn.disabled = false;
+      return;
+    }
 
-          fetch("https://script.google.com/macros/s/AKfycbwkWkLbmreDoK1VNGfPQHnT-2BeIvekv4GnnyZ7Pp-hduC0J5ac60-0gMJ2Li06Kfpl/exec", {
-            method: "POST",
-            body: formData
-          })
-          .then(response => {
-            if (response.ok) {
-              alert("ధన్యవాదాలు! మీ ఆర్డర్ విజయవంతంగా పంపబడింది!");
-              form.reset();
-              priceBox.style.display = "none";
-              priceDisplay.textContent = "";
-              tickBox.checked = false;
-            } else {
-              alert("ఏదో తప్పు జరిగింది. మళ్లీ ప్రయత్నించండి.");
-            }
-          })
-          .catch(() => {
-            alert("నెట్‌వర్క్ లోపం. దయచేసి మళ్లీ ప్రయత్నించండి.");
-          })
-          .finally(() => {
-            submitBtn.innerHTML = "సబ్మిట్ చేయండి";
-            submitBtn.disabled = true;
-          });
-        }, function () {
-          alert("లొకేషన్ తీసుకోవడం సాధ్యపడలేదు. లొకేషన్ అనుమతి ఇవ్వండి.");
+    navigator.geolocation.getCurrentPosition(
+      function (position) {
+        // ⭐ PRECISE LOCATION
+        form.querySelector("input[name='Latitude']").value = position.coords.latitude;
+        form.querySelector("input[name='Longitude']").value = position.coords.longitude;
+
+        const formData = new FormData(form);
+        formData.append("Ordered Date", new Date().toLocaleString());
+
+        fetch("https://script.google.com/macros/s/AKfycbwkWkLbmreDoK1VNGfPQHnT-2BeIvekv4GnnyZ7Pp-hduC0J5ac60-0gMJ2Li06Kfpl/exec", {
+          method: "POST",
+          body: formData
+        })
+        .then(res => {
+          if (res.ok) {
+            alert("ధన్యవాదాలు! మీ ఆర్డర్ విజయవంతంగా పంపబడింది!");
+            form.reset();
+            priceBox.style.display = "none";
+            tickBox.checked = false;
+          } else {
+            alert("ఏదో తప్పు జరిగింది. మళ్లీ ప్రయత్నించండి.");
+          }
+        })
+        .catch(() => {
+          alert("నెట్‌వర్క్ లోపం. మళ్లీ ప్రయత్నించండి.");
+        })
+        .finally(() => {
           submitBtn.innerHTML = "సబ్మిట్ చేయండి";
-          submitBtn.disabled = false;
+          submitBtn.disabled = true;
         });
-      } else {
-        alert("మీ బ్రౌజర్ జియోలొకేషన్‌ను సపోర్ట్ చేయదు.");
+      },
+      function () {
+        alert("దయచేసి GPS ON చేసి, Location = PRECISE గా పెట్టండి.");
         submitBtn.innerHTML = "సబ్మిట్ చేయండి";
         submitBtn.disabled = false;
+      },
+      {
+        enableHighAccuracy: true, // ⭐ MOST IMPORTANT
+        timeout: 15000,
+        maximumAge: 0
       }
-    });
+    );
+  });
 
-    const style = document.createElement('style');
-    style.innerHTML = `@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`;
-    document.head.appendChild(style);
-  </script>
+  // ✅ Spinner animation
+  const style = document.createElement("style");
+  style.innerHTML = `
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  `;
+  document.head.appendChild(style);
+</script>
+
 </body>
 </html>
