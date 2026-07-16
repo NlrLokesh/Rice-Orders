@@ -349,24 +349,13 @@ function buildWhatsAppURL(locationText) {
   // wa.me query string, no matter what bag names contain.
   var msg = encodeURIComponent(parts.join('\n'));
   var phone = '918008970033';
-  var fallback = 'https://wa.me/' + phone + '?text=' + msg;
 
-  // On Android, going through wa.me forces Chrome to load a web page
-  // first (api.whatsapp.com/send) before it can hand off to the app -
-  // that extra hop is what shows the "Continue to WhatsApp?" landing
-  // page. An intent:// URL instead tells Chrome directly "launch the
-  // WhatsApp app (com.whatsapp) with this message", skipping the web
-  // page entirely. If WhatsApp isn't installed, it falls back to the
-  // wa.me link automatically via browser_fallback_url.
-  var isAndroid = /Android/i.test(navigator.userAgent);
-  if (isAndroid) {
-    return 'intent://send/?phone=' + phone + '&text=' + msg +
-      '#Intent;scheme=smsto;package=com.whatsapp;S.browser_fallback_url=' +
-      encodeURIComponent(fallback) + ';end';
-  }
-
-  // iOS and desktop handle wa.me directly without this extra hop.
-  return fallback;
+  // Plain wa.me link - this is WhatsApp's own official chat-link API.
+  // (An earlier version tried an intent:// / "smsto" trick to force a
+  // faster Android handoff, but that makes WhatsApp treat the number
+  // as a phone contact to SMS instead of using its chat API - which is
+  // why it showed "not registered with WhatsApp". Reverted.)
+  return 'https://wa.me/' + phone + '?text=' + msg;
 }
 
 function sendToWhatsApp() {
