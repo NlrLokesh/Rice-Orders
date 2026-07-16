@@ -16,7 +16,6 @@
     --gold-shine: #fff2b3; --black: #050505; --black-mid: #0f0f0f;
     --black-card: #161616; --black-border: #2f2f2f;
     --white: #ffffff; --white-dim: #d6d6d6; --red-warn: #ff4d4d;
-    --green-good: #3ddc84;
   }
   body { font-family: 'Montserrat', sans-serif; background: var(--black); color: var(--white); min-height: 100vh; overflow-x: hidden; -webkit-overflow-scrolling: touch; -webkit-tap-highlight-color: transparent; }
 
@@ -38,16 +37,7 @@
   .input-group input { width: 100%; padding: 12px 14px 12px 42px; background: var(--black-mid); border: 1px solid var(--black-border); border-radius: 8px; color: var(--white); font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 500; outline: none; transition: border 0.25s, box-shadow 0.25s; -webkit-appearance: none; appearance: none; }
   .input-group input::placeholder { color: #cccccc; font-weight: 400; }
   .input-group input:focus { border-color: var(--gold-dark); box-shadow: 0 0 0 3px rgba(212,175,55,0.08); }
-  .input-group input:disabled { opacity: 0.6; }
   .input-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 14px; pointer-events: none; }
-
-  /* --- Confirm details / location button --- */
-  .btn-confirm { width: 100%; padding: 14px; margin-top: 14px; background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: var(--black); border: none; border-radius: 10px; font-family: 'Montserrat', sans-serif; font-size: 12.5px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform 0.2s, box-shadow 0.2s, background 0.3s, color 0.3s; -webkit-appearance: none; appearance: none; }
-  .btn-confirm:active { transform: scale(0.98); }
-  .btn-confirm.confirmed { background: linear-gradient(135deg, #0d6e2f, #25D366); color: #fff; cursor: default; }
-  .btn-confirm.confirmed:active { transform: none; }
-  .confirm-hint { font-size: 10px; color: #888; text-align: center; margin-top: 8px; letter-spacing: 0.3px; line-height: 1.5; }
-  .confirm-hint.ok { color: var(--green-good); font-weight: 600; }
 
   /* --- Wholesale notice strip --- */
   .notice-strip { background: #1a1400; border: 1px solid var(--gold-dark); border-radius: 12px; padding: 14px 16px; margin-bottom: 16px; }
@@ -133,45 +123,24 @@
   /* --- Location loading overlay --- */
   .loading-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.86); z-index: 9998; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
   .loading-overlay.show { opacity: 1; pointer-events: all; }
-  .loading-box { background: var(--black-card); border: 1px solid var(--gold-dark); border-radius: 20px; padding: 34px 26px 28px; max-width: 320px; width: 100%; position: relative; overflow: hidden; transform: scale(0.9) translateY(20px); transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1); text-align: center; }
+  .loading-box { background: var(--black-card); border: 1px solid var(--gold-dark); border-radius: 20px; padding: 34px 26px 28px; max-width: 300px; width: 100%; position: relative; overflow: hidden; transform: scale(0.9) translateY(20px); transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1); text-align: center; }
   .loading-overlay.show .loading-box { transform: scale(1) translateY(0); }
   .loading-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent); }
 
-  .gps-spinner-wrap { position: relative; width: 64px; height: 64px; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; }
+  .gps-spinner-wrap { position: relative; width: 64px; height: 64px; margin: 0 auto 18px; display: flex; align-items: center; justify-content: center; }
   .gps-spinner-ring { position: absolute; inset: 0; border: 3px solid rgba(212,175,55,0.15); border-top-color: var(--gold); border-radius: 50%; animation: gps-spin 0.9s linear infinite; }
   .gps-spinner-ring.slow { border-top-color: var(--gold-light); animation-duration: 1.6s; inset: 9px; opacity: 0.75; }
   .gps-spinner-pin { font-size: 20px; position: relative; z-index: 2; animation: gps-pulse 1.4s ease-in-out infinite; }
   @keyframes gps-spin { to { transform: rotate(360deg); } }
   @keyframes gps-pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.15); opacity: 0.7; } }
 
-  .loading-title { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; color: var(--gold-light); margin-bottom: 6px; line-height: 1.3; min-height: 22px; transition: opacity 0.25s; }
-  .loading-sub { font-size: 11px; color: #999; letter-spacing: 0.3px; line-height: 1.6; margin-bottom: 16px; }
+  .loading-title { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; color: var(--gold-light); margin-bottom: 8px; line-height: 1.3; }
+  .loading-sub { font-size: 11.5px; color: #999; letter-spacing: 0.3px; line-height: 1.6; }
+  .loading-accuracy { margin-top: 14px; font-size: 11px; color: var(--gold-dark); font-weight: 600; letter-spacing: 0.5px; min-height: 15px; }
   .loading-dots span { display: inline-block; animation: gps-dots 1.4s infinite; opacity: 0; }
   .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
   .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
   @keyframes gps-dots { 0%, 20% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
-
-  /* Live accuracy meter */
-  .accuracy-wrap { margin-top: 4px; }
-  .accuracy-label-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
-  .accuracy-tag { font-size: 9px; letter-spacing: 1.5px; color: #777; text-transform: uppercase; font-weight: 700; }
-  .accuracy-value { font-size: 13px; font-weight: 700; color: var(--gold); font-family: 'Montserrat', sans-serif; transition: color 0.3s; }
-  .accuracy-track { width: 100%; height: 7px; background: #221c00; border-radius: 6px; overflow: hidden; position: relative; }
-  .accuracy-fill { height: 100%; width: 4%; border-radius: 6px; background: linear-gradient(90deg, var(--red-warn), var(--gold), var(--green-good)); transition: width 0.6s cubic-bezier(0.34,1.2,0.64,1); }
-
-  /* Elapsed-time progress bar */
-  .time-track { width: 100%; height: 3px; background: #1a1a1a; border-radius: 3px; overflow: hidden; margin-top: 14px; }
-  .time-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--gold-dark), var(--gold-light)); transition: width 0.3s linear; }
-
-  /* Confirmation-state badge in the loading box */
-  .confirm-state { margin-top: 10px; font-size: 10px; letter-spacing: 0.8px; color: #777; text-align: center; }
-  .confirm-state b { color: var(--green-good); }
-
-  /* Rotating tip */
-  .loading-tip { margin-top: 16px; padding-top: 14px; border-top: 1px dashed #2a2200; font-size: 10.5px; color: #999; line-height: 1.6; min-height: 32px; display: flex; align-items: center; justify-content: center; }
-  .loading-tip .tip-emoji { margin-right: 5px; }
-  .tip-text { transition: opacity 0.35s ease; opacity: 1; }
-  .tip-text.fade { opacity: 0; }
 </style>
 </head>
 <body>
@@ -182,7 +151,7 @@
   <div class="popup-box">
     <span class="popup-icon">&#127968;</span>
     <div class="popup-title">Are you at Home?</div>
-    <div class="popup-subtitle">If you're home, we'll <span>capture your precise location</span> for the delivery rider. Not home right now? No problem — you can still place the order.</div>
+    <div class="popup-subtitle">We will <span>share your location</span> with the order so we can deliver right to your door.</div>
     <div class="popup-buttons">
       <button class="popup-btn popup-btn-yes" onclick="handleLocationChoice(true)"><span class="btn-emoji">&#9989;</span>Yes, I'm Home</button>
       <button class="popup-btn popup-btn-no" onclick="handleLocationChoice(false)"><span class="btn-emoji">&#128694;</span>No, I'm Not</button>
@@ -197,22 +166,9 @@
       <div class="gps-spinner-ring slow"></div>
       <span class="gps-spinner-pin">&#128205;</span>
     </div>
-    <div class="loading-title" id="loadingTitle">Finding Your Precise Location</div>
-    <div class="loading-sub">Locking onto satellites for pinpoint accuracy<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></div>
-
-    <div class="accuracy-wrap">
-      <div class="accuracy-label-row">
-        <span class="accuracy-tag">Signal Precision</span>
-        <span class="accuracy-value" id="accuracyValue">searching&hellip;</span>
-      </div>
-      <div class="accuracy-track"><div class="accuracy-fill" id="accuracyFill"></div></div>
-    </div>
-
-    <div class="confirm-state" id="confirmState">Waiting for a second reading to confirm the fix&hellip;</div>
-
-    <div class="time-track"><div class="time-fill" id="timeFill"></div></div>
-
-    <div class="loading-tip"><span class="tip-emoji">&#128161;</span><span class="tip-text" id="tipText">Standing near a window or open door helps lock the signal faster.</span></div>
+    <div class="loading-title">Finding Your Precise Location</div>
+    <div class="loading-sub">Please wait, this may take a few seconds<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></div>
+    <div class="loading-accuracy" id="loadingAccuracy"></div>
   </div>
 </div>
 
@@ -228,16 +184,12 @@
   <div class="customer-card">
     <div class="input-group" style="margin-bottom:10px;">
       <span class="input-icon">&#128100;</span>
-      <input type="text" id="customerName" placeholder="Full Name" autocomplete="name" autocorrect="off" autocapitalize="words" spellcheck="false" oninput="updateSummary(); resetConfirmIfChanged();"/>
+      <input type="text" id="customerName" placeholder="Full Name" autocomplete="name" autocorrect="off" autocapitalize="words" spellcheck="false" oninput="updateSummary()"/>
     </div>
     <div class="input-group">
       <span class="input-icon">&#128222;</span>
-      <input type="tel" id="customerPhone" placeholder="Phone Number (10 digits)" maxlength="10" autocomplete="tel" inputmode="numeric" pattern="[0-9]*" oninput="filterPhone(this); updateSummary(); resetConfirmIfChanged();"/>
+      <input type="tel" id="customerPhone" placeholder="Phone Number (10 digits)" maxlength="10" autocomplete="tel" inputmode="numeric" pattern="[0-9]*" oninput="filterPhone(this); updateSummary();"/>
     </div>
-    <button class="btn-confirm" id="confirmBtn" onclick="confirmDetails()">
-      <span style="font-size:15px">&#128205;</span> Confirm Details &amp; Detect Location
-    </button>
-    <div class="confirm-hint" id="confirmHint">We'll ask if you're home now, so placing the order later is instant.</div>
   </div>
 
   <div class="section-title">&#10022; Delivery &amp; Payment</div>
@@ -399,170 +351,19 @@ function buildWhatsAppURL(locationText) {
   var phone = '918008970033';
 
   // Plain wa.me link - this is WhatsApp's own official chat-link API.
+  // (An earlier version tried an intent:// / "smsto" trick to force a
+  // faster Android handoff, but that makes WhatsApp treat the number
+  // as a phone contact to SMS instead of using its chat API - which is
+  // why it showed "not registered with WhatsApp". Reverted.)
   return 'https://wa.me/' + phone + '?text=' + msg;
 }
 
-function validateDetails(focusOnError) {
+function sendToWhatsApp() {
   var name = document.getElementById('customerName').value.trim();
   var custPhone = document.getElementById('customerPhone').value.trim();
-  if (!name) {
-    showToast('Please enter your Full Name');
-    if (focusOnError) document.getElementById('customerName').focus();
-    return false;
-  }
-  if (!custPhone) {
-    showToast('Please enter your Phone Number');
-    if (focusOnError) document.getElementById('customerPhone').focus();
-    return false;
-  }
-  if (custPhone.length !== 10 || !/^[6-9][0-9]{9}$/.test(custPhone)) {
-    showToast('Enter a valid 10-digit Indian mobile number');
-    if (focusOnError) document.getElementById('customerPhone').focus();
-    return false;
-  }
-  return true;
-}
-
-/* ============================================================
-   STEP 1 — CONFIRM DETAILS: this is where ALL location tracking
-   happens now. Runs as soon as the customer taps the button
-   right under the phone field, well before the final WhatsApp
-   click, so by the time they place the order the fix is already
-   sitting ready and that final tap can navigate instantly and
-   synchronously (no Chrome "Continue to WhatsApp?" interstitial).
-   ============================================================ */
-var detailsConfirmed = false;
-var confirmedLocationText = null;
-
-function resetConfirmIfChanged() {
-  // If the customer edits name/phone after confirming, make them
-  // re-confirm so the WhatsApp message always matches the inputs.
-  if (!detailsConfirmed) return;
-  detailsConfirmed = false;
-  confirmedLocationText = null;
-  var btn = document.getElementById('confirmBtn');
-  btn.classList.remove('confirmed');
-  btn.innerHTML = '<span style="font-size:15px">&#128205;</span> Confirm Details &amp; Detect Location';
-  var hint = document.getElementById('confirmHint');
-  hint.classList.remove('ok');
-  hint.textContent = 'We\'ll ask if you\'re home now, so placing the order later is instant.';
-}
-
-function confirmDetails() {
-  if (detailsConfirmed) return; // already confirmed, nothing to do
-  if (!validateDetails(true)) return;
-
-  // Ask "Are you home?" first. Fire off the GPS listener at the same
-  // time the popup opens, so if they pick "Yes" a fix may already be
-  // improving by the time they tap.
-  startLocationWarmup();
-  document.getElementById('locationPopup').classList.add('show');
-}
-
-function finishConfirm(locationText, statusHint) {
-  var btn = document.getElementById('confirmBtn');
-  btn.disabled = false;
-  detailsConfirmed = true;
-  confirmedLocationText = locationText;
-  btn.classList.add('confirmed');
-  btn.innerHTML = '<span style="font-size:15px">&#9989;</span> Details Confirmed';
-  var hint = document.getElementById('confirmHint');
-  hint.classList.add('ok');
-  hint.textContent = statusHint;
-}
-
-function handleLocationChoice(isHome) {
-  document.getElementById('locationPopup').classList.remove('show');
-  var btn = document.getElementById('confirmBtn');
-
-  if (!isHome) {
-    // Not at home right now: skip GPS entirely, don't make them wait.
-    // We still remember whatever address text applies so the order
-    // can go through — the rider will confirm on call/WhatsApp instead.
-    stopLocationWarmup();
-    finishConfirm('Customer not at home right now - please confirm delivery address on call', 'Saved as "Not at home". You\'re all set — select your bags below.');
-    return;
-  }
-
-  // At home: run (or keep running) the tiered GPS acquisition.
-  btn.disabled = true;
-
-  // Best case: a CONFIRMED ideal-tier fix already arrived while the
-  // popup was open — finish immediately. Note geoState.best is only
-  // ever set once a reading has been corroborated by another reading
-  // nearby (see considerReading()), so this is safe to trust.
-  if (geoState.best && geoState.best.coords.accuracy <= TIERS[0].acc) {
-    var locText = formatLocationText(geoState.best);
-    stopLocationWarmup();
-    finishConfirm(locText, 'Location locked (\u00B1' + Math.round(geoState.best.coords.accuracy) + 'm, confirmed). You\'re all set — select your bags below.');
-    btn.disabled = false;
-    return;
-  }
-
-  if (geoState.unsupported) {
-    finishConfirm('Location not supported on this device', 'Saved. You\'re all set — select your bags below.');
-    btn.disabled = false;
-    return;
-  }
-
-  if (geoState.denied) {
-    finishConfirm('Location permission denied', 'Saved. You\'re all set — select your bags below.');
-    btn.disabled = false;
-    return;
-  }
-
-  showLoadingOverlay();
-
-  var finished = false;
-  var pollTimer = null;
-  var maxTimer = setTimeout(function() { checkAndFinish(true); }, MAX_WAIT);
-
-  function checkAndFinish(forceFinish) {
-    if (finished) return;
-    var elapsed = Date.now() - geoState.startTime;
-    var acceptAcc = currentTierAccuracy(elapsed);
-    var haveGoodEnough = geoState.best && geoState.best.coords.accuracy <= acceptAcc;
-
-    if (!forceFinish && !haveGoodEnough && !geoState.denied) return;
-
-    finished = true;
-    clearTimeout(maxTimer);
-    clearInterval(pollTimer);
-    stopLocationWarmup();
-    hideLoadingOverlay();
-    btn.disabled = false;
-
-    // Prefer a CONFIRMED reading (geoState.best). If time ran out and we
-    // never got two readings to agree, fall back to the single least-bad
-    // reading we saw, but say so honestly instead of overstating accuracy.
-    var locText, hintText;
-    var chosen = geoState.best || geoState.fallback;
-    if (chosen) {
-      var confirmedTag = geoState.best ? 'confirmed' : 'unconfirmed - use with care';
-      locText = formatLocationText(chosen);
-      hintText = 'Location locked (\u00B1' + Math.round(chosen.coords.accuracy) + 'm, ' + confirmedTag + '). You\'re all set — select your bags below.';
-    } else if (geoState.denied) {
-      locText = 'Location permission denied';
-      hintText = 'Saved. You\'re all set — select your bags below.';
-    } else {
-      locText = 'Could not get precise location';
-      hintText = 'Saved. You\'re all set — select your bags below.';
-    }
-    finishConfirm(locText, hintText);
-  }
-
-  pollTimer = setInterval(function() { checkAndFinish(false); }, 300);
-}
-
-/* ============================================================
-   STEP 2 — PLACE ORDER: fires the moment the button is tapped.
-   Since location was already resolved in Step 1, this is a
-   simple synchronous redirect — no async work happens inside
-   this click, so the browser never shows an intermediate
-   confirmation screen before opening WhatsApp.
-   ============================================================ */
-function sendToWhatsApp() {
-  if (!validateDetails(true)) return;
+  if (!name) { showToast('Please enter your Full Name'); document.getElementById('customerName').focus(); return; }
+  if (!custPhone) { showToast('Please enter your Phone Number'); document.getElementById('customerPhone').focus(); return; }
+  if (custPhone.length !== 10 || !/^[6-9][0-9]{9}$/.test(custPhone)) { showToast('Enter a valid 10-digit Indian mobile number'); document.getElementById('customerPhone').focus(); return; }
 
   var hasAny = false;
   RICE_BAGS.forEach(function(row){
@@ -570,155 +371,47 @@ function sendToWhatsApp() {
   });
   if (!hasAny) { showToast('Please select at least one rice bag'); return; }
 
-  if (!detailsConfirmed) {
-    showToast('Please tap "Confirm Details & Detect Location" first');
-    document.getElementById('confirmBtn').scrollIntoView({ behavior: 'smooth', block: 'center' });
-    return;
-  }
-
-  // Synchronous navigation inside the click handler - direct to WhatsApp.
-  window.location.href = buildWhatsAppURL(confirmedLocationText);
+  // Start warming up the GPS fix RIGHT NOW, while the "Are you home?"
+  // popup is showing. By the time the customer reads it and taps a
+  // button, a fix has often already arrived - which lets us navigate
+  // instantly and synchronously on that tap (no async gap = no browser
+  // confirmation banner, direct handoff into WhatsApp).
+  startLocationWarmup();
+  document.getElementById('locationPopup').classList.add('show');
 }
 
 /* ============================================================
-   PRECISE GEOLOCATION — TIERED, CONFIRMED-FIX ACQUISITION
-   ------------------------------------------------------------
-   Goal: get as close to ~6-8m accuracy as the device/sky can
-   deliver, while never leaving the customer stuck forever if
-   they're deep between close-set houses (multipath signal
-   bounce off walls/roofs commonly limits phone GPS to roughly
-   10-20m in that situation, even with more time). So instead of
-   one fixed cutoff, we relax the acceptable radius in stages the
-   longer we wait — always keeping the single BEST *confirmed*
-   reading seen.
-
-   WHY "CONFIRMED"?
-   The accuracy value reported by the phone's location API is
-   self-reported by the OS/location provider — it is NOT
-   something we compute, and it is often wrong. In particular,
-   the very first fix(es) after watchPosition starts are usually
-   derived from WiFi/cell-tower positioning (fast, but coarse),
-   yet can carry a deceptively tight accuracy figure. Trusting
-   that number directly is exactly what causes "the app said
-   +/-5m but the pin was 50m off."
-
-   The fix: never trust a single reading's accuracy on its own.
-   A reading is only promoted to geoState.best once a SECOND,
-   independent reading lands within CONFIRM_RADIUS metres of it —
-   i.e. the fix has stabilised, which is how real GPS behaves and
-   how noisy network-based fixes usually don't. We also ignore
-   suspiciously-tight readings that arrive before MIN_GPS_WARMUP
-   has elapsed, since the GPS chipset hasn't had time to engage
-   yet at that point.
-
-   Tiers (elapsed time -> accuracy we'll accept and stop early):
-     0s  - 25s : accept <= 6m   (ideal, open-sky quality)
-     25s - 30s : accept <= 8m
-     30s - 35s : accept <= 13m
-     35s - 40s : accept <= 17m
-     40s (MAX) : stop regardless, use best CONFIRMED reading found
-                 (or, failing that, the single least-bad reading,
-                 clearly labelled as unconfirmed)
+   PRECISE GEOLOCATION - WARM-UP + INSTANT HANDOFF
+   Chrome only allows a silent, bannerless app-switch when the
+   navigation happens SYNCHRONOUSLY inside a click, with no
+   async gap. Waiting for GPS after the tap always creates that
+   gap. So instead, we start listening for GPS the moment the
+   "Are you home?" popup opens - while the customer is reading
+   it - so a fix is very often already sitting ready by the time
+   they tap "Yes". Tapping then navigates immediately and
+   synchronously, which is what skips the confirmation banner.
    ============================================================ */
-var geoState = { best: null, fallback: null, history: [], watchId: null, denied: false, unsupported: false, startTime: null };
-
-var TIERS = [
-  { until: 25000, acc: 6 },
-  { until: 30000, acc: 8 },
-  { until: 35000, acc: 13 },
-  { until: 40000, acc: 17 }
-];
-var MAX_WAIT = 40000;
-
-// Two readings must agree within this many metres before either is
-// trusted as a real fix rather than a noisy one-off.
-var CONFIRM_RADIUS = 20;
-// Ignore implausibly-tight readings that arrive before the GPS chipset
-// has plausibly had time to engage (these are almost always coarse
-// network/WiFi fixes mislabeled with a tight accuracy figure).
-var MIN_GPS_WARMUP = 3000;
-
-var TIPS = [
-  '&#128246; Standing near a window or open door helps lock the signal faster.',
-  '&#127968; If you\'re indoors, a spot closer to a wall facing the sky helps GPS see more satellites.',
-  '&#128640; We\'re holding out for the tightest fix possible — worth the extra few seconds!',
-  '&#128737;&#65039; Our delivery rider uses this exact pin, so precision now means no wrong turns later.',
-  '&#127794; Nearly there — refining between the last couple of metres.',
-  '&#128269; Cross-checking multiple satellite readings to rule out any stray signal bounce.'
-];
-
-function haversineMeters(lat1, lon1, lat2, lon2) {
-  var R = 6371000;
-  var toRad = function(d) { return d * Math.PI / 180; };
-  var dLat = toRad(lat2 - lat1);
-  var dLon = toRad(lon2 - lon1);
-  var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-          Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-          Math.sin(dLon / 2) * Math.sin(dLon / 2);
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
-}
-
-function considerReading(pos) {
-  var elapsed = Date.now() - geoState.startTime;
-
-  geoState.history.push(pos);
-  if (geoState.history.length > 6) geoState.history.shift();
-
-  // Keep a fallback (single least-bad reading) in case we never get a
-  // confirmation before time runs out - but only once the chipset has
-  // had a moment to warm up, so we don't fall back to an early junk fix.
-  if (elapsed >= MIN_GPS_WARMUP) {
-    if (!geoState.fallback || pos.coords.accuracy < geoState.fallback.coords.accuracy) {
-      geoState.fallback = pos;
-    }
-  }
-
-  // Look for any pair of readings in history that agree within
-  // CONFIRM_RADIUS metres of each other; the more accurate of the
-  // pair becomes the confirmed candidate.
-  var confirmedCandidate = null;
-  for (var i = 0; i < geoState.history.length; i++) {
-    var p = geoState.history[i];
-    for (var j = 0; j < geoState.history.length; j++) {
-      if (i === j) continue;
-      var q = geoState.history[j];
-      var d = haversineMeters(p.coords.latitude, p.coords.longitude, q.coords.latitude, q.coords.longitude);
-      if (d <= CONFIRM_RADIUS) {
-        if (!confirmedCandidate || p.coords.accuracy < confirmedCandidate.coords.accuracy) {
-          confirmedCandidate = p;
-        }
-        break;
-      }
-    }
-  }
-
-  if (confirmedCandidate) {
-    if (!geoState.best || confirmedCandidate.coords.accuracy < geoState.best.coords.accuracy) {
-      geoState.best = confirmedCandidate;
-    }
-  }
-}
+var geoState = { best: null, watchId: null, denied: false, unsupported: false };
 
 function startLocationWarmup() {
   geoState.best = null;
-  geoState.fallback = null;
-  geoState.history = [];
   geoState.denied = false;
   geoState.unsupported = false;
-  geoState.startTime = Date.now();
 
   if (!navigator.geolocation) { geoState.unsupported = true; return; }
 
   geoState.watchId = navigator.geolocation.watchPosition(
     function(pos) {
-      considerReading(pos);
-      updateLiveUI();
+      if (!geoState.best || pos.coords.accuracy < geoState.best.coords.accuracy) {
+        geoState.best = pos;
+        var accuracyEl = document.getElementById('loadingAccuracy');
+        if (accuracyEl) accuracyEl.textContent = 'Current accuracy: \u00B1' + Math.round(pos.coords.accuracy) + 'm';
+      }
     },
     function(err) {
       if (err.code === err.PERMISSION_DENIED) geoState.denied = true;
     },
-    { enableHighAccuracy: true, timeout: MAX_WAIT, maximumAge: 0 }
+    { enableHighAccuracy: true, timeout: 20000, maximumAge: 0 }
   );
 }
 
@@ -736,95 +429,81 @@ function formatLocationText(pos) {
   return lat + ', ' + lng + ' (accuracy \u00B1' + acc + 'm) https://maps.google.com/?q=' + lat + ',' + lng;
 }
 
-/* ---------- Live "locking in" UI ---------- */
-var uiTimer = null, tipTimer = null, tipIndex = 0;
-
-function accuracyColor(acc) {
-  if (acc <= 10) return 'var(--green-good)';
-  if (acc <= 25) return 'var(--gold-light)';
-  return 'var(--red-warn)';
-}
-
-function statusForAccuracy(acc, elapsed) {
-  if (acc === null) return elapsed < 4000 ? 'Searching for satellites' : 'Locking onto your signal';
-  if (acc <= 8) return 'Pinpoint lock achieved!';
-  if (acc <= 12) return 'Excellent precision — refining';
-  if (acc <= 20) return 'Good precision — tightening further';
-  return 'Refining your location';
-}
-
-function updateLiveUI() {
-  var titleEl = document.getElementById('loadingTitle');
-  var accValueEl = document.getElementById('accuracyValue');
-  var accFillEl = document.getElementById('accuracyFill');
-  var confirmStateEl = document.getElementById('confirmState');
-  if (!titleEl) return;
-
-  var elapsed = geoState.startTime ? (Date.now() - geoState.startTime) : 0;
-  // Only ever display a CONFIRMED accuracy figure, never a raw
-  // single-reading number - that's the number that used to lie.
-  var acc = geoState.best ? geoState.best.coords.accuracy : null;
-
-  titleEl.textContent = statusForAccuracy(acc, elapsed) + (acc === null ? '…' : '');
-
-  if (acc !== null) {
-    accValueEl.textContent = '\u00B1' + Math.round(acc) + 'm';
-    accValueEl.style.color = accuracyColor(acc);
-    var pct = Math.max(4, Math.min(100, 100 - ((acc - 5) / 95) * 96));
-    accFillEl.style.width = pct + '%';
-    if (confirmStateEl) confirmStateEl.innerHTML = '<b>Confirmed</b> by a second matching reading';
-  } else {
-    accValueEl.textContent = 'searching…';
-    accValueEl.style.color = '#777';
-    accFillEl.style.width = '4%';
-    if (confirmStateEl) {
-      confirmStateEl.innerHTML = geoState.fallback
-        ? 'Have a rough reading — waiting for a second one to confirm it'
-        : 'Waiting for a second reading to confirm the fix…';
-    }
-  }
-
-  var timeFillEl = document.getElementById('timeFill');
-  if (timeFillEl) {
-    var timePct = Math.min(100, (elapsed / MAX_WAIT) * 100);
-    timeFillEl.style.width = timePct + '%';
-  }
-}
-
-function startTipRotation() {
-  tipIndex = 0;
-  var tipEl = document.getElementById('tipText');
-  tipEl.innerHTML = TIPS[0];
-  tipTimer = setInterval(function() {
-    tipEl.classList.add('fade');
-    setTimeout(function() {
-      tipIndex = (tipIndex + 1) % TIPS.length;
-      tipEl.innerHTML = TIPS[tipIndex];
-      tipEl.classList.remove('fade');
-    }, 350);
-  }, 4200);
-}
-function stopTipRotation() {
-  if (tipTimer) { clearInterval(tipTimer); tipTimer = null; }
-}
-
 function showLoadingOverlay() {
-  updateLiveUI();
+  document.getElementById('loadingAccuracy').textContent = '';
   document.getElementById('locationLoading').classList.add('show');
-  startTipRotation();
-  uiTimer = setInterval(updateLiveUI, 400);
 }
 function hideLoadingOverlay() {
   document.getElementById('locationLoading').classList.remove('show');
-  stopTipRotation();
-  if (uiTimer) { clearInterval(uiTimer); uiTimer = null; }
 }
 
-function currentTierAccuracy(elapsed) {
-  for (var i = 0; i < TIERS.length; i++) {
-    if (elapsed <= TIERS[i].until) return TIERS[i].acc;
+function navigateToWhatsApp(locationText) {
+  window.location.href = buildWhatsAppURL(locationText);
+}
+
+function handleLocationChoice(isHome) {
+  document.getElementById('locationPopup').classList.remove('show');
+  var btn = document.getElementById('waBtn');
+
+  if (!isHome) {
+    stopLocationWarmup();
+    // Synchronous, still inside this click - direct handoff, no banner.
+    navigateToWhatsApp('Customer not at home - location not shared');
+    return;
   }
-  return TIERS[TIERS.length - 1].acc;
+
+  // Best case: GPS already warmed up while the popup was on screen.
+  // Navigating here is still synchronous with this click, so it goes
+  // straight into WhatsApp with no confirmation banner at all.
+  if (geoState.best) {
+    var locText = formatLocationText(geoState.best);
+    stopLocationWarmup();
+    navigateToWhatsApp(locText);
+    return;
+  }
+
+  if (geoState.unsupported) {
+    navigateToWhatsApp('Location not supported on this device');
+    return;
+  }
+
+  if (geoState.denied) {
+    navigateToWhatsApp('Location permission denied');
+    return;
+  }
+
+  // Fallback: GPS hasn't produced a fix yet (slow lock, or the
+  // permission prompt only just appeared). We have to wait a little
+  // longer here - this is the one case with an unavoidable async gap,
+  // so the browser may show its "Continue to WhatsApp?" confirmation
+  // once. It still gets there, just with one extra tap in this slower,
+  // less common case.
+  btn.disabled = true;
+  showLoadingOverlay();
+
+  var MAX_WAIT = 12000;
+  var finished = false;
+  var pollTimer = null;
+  var maxTimer = setTimeout(function() { checkAndFinish(true); }, MAX_WAIT);
+
+  function checkAndFinish(forceFinish) {
+    if (finished) return;
+    if (!forceFinish && !(geoState.best && geoState.best.coords.accuracy <= 20) && !geoState.denied) return;
+    finished = true;
+    clearTimeout(maxTimer);
+    clearInterval(pollTimer);
+    stopLocationWarmup();
+    hideLoadingOverlay();
+    btn.disabled = false;
+
+    if (geoState.denied) { navigateToWhatsApp('Location permission denied'); return; }
+    if (geoState.best) { navigateToWhatsApp(formatLocationText(geoState.best)); return; }
+    navigateToWhatsApp('Could not get precise location');
+  }
+
+  // Poll frequently so we grab a fix (or a denial) the instant it
+  // arrives, rather than always waiting out the full MAX_WAIT.
+  pollTimer = setInterval(function() { checkAndFinish(false); }, 250);
 }
 
 /* ============================================================
