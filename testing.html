@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Nellore Rice Club - Wholesale Rice Bags</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700;900&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --gold: #d4af37; --gold-light: #f7d774; --gold-dark: #a67c00;
+    --gold-shine: #fff2b3; --black: #050505; --black-mid: #0f0f0f;
+    --black-card: #161616; --black-border: #2f2f2f;
+    --white: #ffffff; --white-dim: #d6d6d6; --red-warn: #ff4d4d;
+    --green-good: #3ddc84;
+  }
+  body { font-family: 'Montserrat', sans-serif; background: var(--black); color: var(--white); min-height: 100vh; overflow-x: hidden; -webkit-overflow-scrolling: touch; -webkit-tap-highlight-color: transparent; }
+
+  header { background: var(--black-mid); border-bottom: 1px solid var(--gold-dark); padding: 22px 20px 18px; text-align: center; position: sticky; top: 0; z-index: 1000; overflow: hidden; -webkit-transform: translateZ(0); transform: translateZ(0); }
+  header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent); }
+  header::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-dark), transparent); }
+  .header-tag { font-size: 9px; font-weight: 600; letter-spacing: 4px; color: var(--gold); text-transform: uppercase; margin-bottom: 6px; }
+  .header-title { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 900; letter-spacing: 2px; background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold-light) 40%, var(--gold) 60%, var(--gold-shine) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .header-sub { font-size: 10px; color: var(--white-dim); letter-spacing: 3px; margin-top: 5px; font-weight: 300; text-transform: uppercase; }
+
+  .container { max-width: 500px; margin: 0 auto; padding: 20px 15px 30px; }
+
+  .section-title { display: flex; align-items: center; gap: 10px; font-size: 9px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin: 24px 0 12px; }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--gold-dark), transparent); }
+
+  .customer-card { background: var(--black-card); border: 1px solid var(--black-border); border-radius: 14px; padding: 18px; position: relative; overflow: hidden; }
+  .customer-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-dark), transparent); }
+  .input-group { position: relative; }
+  .input-group input { width: 100%; padding: 12px 14px 12px 42px; background: var(--black-mid); border: 1px solid var(--black-border); border-radius: 8px; color: var(--white); font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 500; outline: none; transition: border 0.25s, box-shadow 0.25s; -webkit-appearance: none; appearance: none; }
+  .input-group input::placeholder { color: #cccccc; font-weight: 400; }
+  .input-group input:focus { border-color: var(--gold-dark); box-shadow: 0 0 0 3px rgba(212,175,55,0.08); }
+  .input-group input:disabled { opacity: 0.6; }
+  .input-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 14px; pointer-events: none; }
+
+  /* --- Confirm details / location button --- */
+  .btn-confirm { width: 100%; padding: 14px; margin-top: 14px; background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: var(--black); border: none; border-radius: 10px; font-family: 'Montserrat', sans-serif; font-size: 12.5px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform 0.2s, box-shadow 0.2s, background 0.3s, color 0.3s; -webkit-appearance: none; appearance: none; }
+  .btn-confirm:active { transform: scale(0.98); }
+  .btn-confirm.confirmed { background: linear-gradient(135deg, #0d6e2f, #25D366); color: #fff; cursor: default; }
+  .btn-confirm.confirmed:active { transform: none; }
+  .confirm-hint { font-size: 10px; color: #888; text-align: center; margin-top: 8px; letter-spacing: 0.3px; line-height: 1.5; }
+  .confirm-hint.ok { color: var(--green-good); font-weight: 600; }
+
+  /* --- Wholesale notice strip --- */
+  .notice-strip { background: #1a1400; border: 1px solid var(--gold-dark); border-radius: 12px; padding: 14px 16px; margin-bottom: 16px; }
+  .notice-row { display: flex; align-items: flex-start; gap: 10px; font-size: 11.5px; color: var(--white-dim); line-height: 1.5; padding: 5px 0; }
+  .notice-row:not(:last-child) { border-bottom: 1px dashed #2a2200; }
+  .notice-row .n-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+  .notice-row b { color: var(--gold-light); }
+  .notice-footer { text-align: center; font-size: 10.5px; color: var(--gold-dark); font-style: italic; margin-top: 10px; padding-top: 10px; border-top: 1px solid #2a2200; letter-spacing: 0.3px; line-height: 1.6; }
+
+  .item { display: flex; align-items: center; background: var(--black-card); border: 1px solid var(--black-border); border-radius: 14px; padding: 14px; margin-bottom: 10px; transition: border-color 0.3s ease, background-color 0.3s ease; position: relative; overflow: hidden; cursor: default; user-select: none; -webkit-user-select: none; -webkit-transform: translateZ(0); transform: translateZ(0); }
+  .item::before { content: ''; position: absolute; inset: 0; border-radius: 14px; background: linear-gradient(135deg, rgba(212,175,55,0.05), transparent 60%); opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+  .item.active { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold-dark), 0 8px 30px rgba(212,175,55,0.18); background: #1c1800; }
+  .item.active::before { opacity: 1; }
+
+  .check-badge { position: absolute; top: 10px; right: 10px; width: 22px; height: 22px; background: linear-gradient(135deg, var(--gold-dark), var(--gold-light)); border-radius: 50%; font-size: 11px; color: var(--black); display: flex; align-items: center; justify-content: center; font-weight: 900; opacity: 0; transform: scale(0.5) translateZ(0); transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1); pointer-events: none; z-index: 6; }
+  .item.active .check-badge { opacity: 1; transform: scale(1) translateZ(0); }
+
+  .item img { width: 66px; height: 92px; object-fit: cover; object-position: center; border-radius: 8px; flex-shrink: 0; border: 1px solid #222; transition: border-color 0.3s; pointer-events: none; aspect-ratio: 3 / 4; background: #1a1a1a; display: block; }
+  .item.active img { border-color: var(--gold-dark); }
+  .img-slot { position: relative; flex-shrink: 0; }
+  .img-slot .img-tag { position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%); font-size: 7px; letter-spacing: 0.5px; color: #555; text-transform: uppercase; white-space: nowrap; }
+
+  .details { flex: 1; margin-left: 13px; min-width: 0; }
+  .item-name { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; color: #ffffff; transition: color 0.3s; line-height: 1.25; }
+  .item.active .item-name { color: var(--gold-light); }
+  .item-sub { font-size: 9px; letter-spacing: 1.2px; color: #b0b0b0; text-transform: uppercase; margin-top: 3px; font-weight: 600; transition: color 0.3s; line-height: 1.5; }
+  .item.active .item-sub { color: var(--gold-dark); }
+  .item-price { font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 600; color: var(--gold); margin-top: 7px; letter-spacing: 0.3px; }
+  .item-price .rupee { font-size: 13px; font-weight: 700; }
+  .item-price .amount { font-size: 16px; font-weight: 700; }
+  .item-price .per-bag { font-size: 11px; color: #666; font-weight: 400; margin-left: 2px; }
+
+  .qty-wrapper { display: flex; flex-direction: column; align-items: center; gap: 5px; margin-right: 30px; position: relative; z-index: 6; flex-shrink: 0; }
+  .qty-label { font-size: 8px; letter-spacing: 1.5px; color: var(--gold-dark); text-transform: uppercase; font-weight: 600; transition: color 0.3s; }
+  .item.active .qty-label { color: var(--gold); }
+  select.qty-select { padding: 9px 26px 9px 12px; border-radius: 8px; border: 1px solid var(--gold-dark); background: var(--black-mid); color: #888; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; outline: none; transition: all 0.3s; min-width: 76px; -webkit-appearance: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23a67c00' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; pointer-events: auto; }
+  .item.active select.qty-select { border-color: var(--gold); color: var(--gold-light); background-color: #1a1500; box-shadow: 0 0 0 1px var(--gold-dark), 0 3px 12px rgba(212,175,55,0.18); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23d4af37' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); }
+
+  .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-80px) translateZ(0); background: #1e0000; border: 1px solid var(--red-warn); color: var(--red-warn); font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.5px; padding: 12px 22px; border-radius: 10px; box-shadow: 0 6px 24px rgba(255,77,77,0.25); z-index: 9999; transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s; white-space: nowrap; opacity: 0; pointer-events: none; -webkit-transform: translateX(-50%) translateY(-80px) translateZ(0); }
+  .toast.show { transform: translateX(-50%) translateY(0) translateZ(0); -webkit-transform: translateX(-50%) translateY(0) translateZ(0); opacity: 1; }
+  .toast.info { background: #001a0a; border-color: var(--gold-dark); color: var(--gold-light); box-shadow: 0 6px 24px rgba(212,175,55,0.2); }
+
+  .summary-card { background: var(--black-card); border: 1px solid var(--black-border); border-radius: 14px; padding: 18px; position: relative; overflow: hidden; }
+  .summary-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-dark), transparent); }
+  .summary-customer { display: flex; align-items: center; gap: 10px; padding-bottom: 12px; margin-bottom: 4px; border-bottom: 1px solid #222; }
+  .cust-icon { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, var(--gold-dark), var(--gold)); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+  .cust-info { display: flex; flex-direction: column; }
+  .cust-label { font-size: 8px; letter-spacing: 2px; color: var(--gold-dark); text-transform: uppercase; font-weight: 700; }
+  .cust-name { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: var(--gold-light); margin-top: 1px; line-height: 1.2; }
+  .summary-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #1e1e1e; font-size: 13px; }
+  .summary-row:last-of-type { border-bottom: none; }
+  .s-name { color: var(--white); font-weight: 500; }
+  .s-qty { color: #bbbbbb; font-size: 11px; font-weight: 600; }
+  .s-price { color: var(--gold); font-weight: 700; font-size: 13px; }
+  .summary-total { display: flex; justify-content: space-between; align-items: center; padding-top: 14px; margin-top: 10px; border-top: 1px solid var(--gold-dark); }
+  .t-label { font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 700; color: var(--white-dim); letter-spacing: 1.5px; text-transform: uppercase; }
+  .t-amount { font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 700; background: linear-gradient(135deg, var(--gold-dark), var(--gold-light), var(--gold-shine)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .summary-empty { text-align: center; padding: 8px 0; color: #999; font-size: 12px; letter-spacing: 1px; font-style: italic; }
+
+  .btn-whatsapp { width: 100%; padding: 16px; margin-top: 16px; background: linear-gradient(135deg, #0d6e2f, #25D366); color: white; border: none; border-radius: 12px; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 20px rgba(37,211,102,0.2), inset 0 1px 0 rgba(255,255,255,0.1); transition: transform 0.25s, box-shadow 0.25s; position: relative; overflow: hidden; -webkit-appearance: none; appearance: none; }
+  .btn-whatsapp:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(37,211,102,0.3); }
+  .btn-whatsapp:active { transform: scale(0.98); }
+  .btn-whatsapp:disabled { opacity: 0.7; cursor: not-allowed; }
+
+  .footer-note { text-align: center; font-size: 9px; color: #2e2e2e; letter-spacing: 2px; margin-top: 14px; text-transform: uppercase; padding-bottom: 10px; }
+
+  .popup-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.82); z-index: 9998; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+  .popup-overlay.show { opacity: 1; pointer-events: all; }
+  .popup-box { background: var(--black-card); border: 1px solid var(--gold-dark); border-radius: 20px; padding: 28px 24px 24px; max-width: 340px; width: 100%; position: relative; overflow: hidden; transform: scale(0.9) translateY(20px); transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1); text-align: center; }
+  .popup-overlay.show .popup-box { transform: scale(1) translateY(0); }
+  .popup-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent); }
+  .popup-icon { font-size: 42px; margin-bottom: 12px; display: block; line-height: 1; }
+  .popup-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--gold-light); margin-bottom: 8px; line-height: 1.3; }
+  .popup-subtitle { font-size: 12px; color: #888; letter-spacing: 0.5px; line-height: 1.6; margin-bottom: 24px; }
+  .popup-subtitle span { color: var(--gold-dark); font-weight: 600; }
+  .popup-buttons { display: flex; gap: 12px; }
+  .popup-btn { flex: 1; padding: 14px 10px; border: none; border-radius: 12px; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 1px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; -webkit-appearance: none; appearance: none; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+  .popup-btn:active { transform: scale(0.96); }
+  .popup-btn .btn-emoji { font-size: 22px; }
+  .popup-btn-yes { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: var(--black); box-shadow: 0 4px 16px rgba(212,175,55,0.25); }
+  .popup-btn-no { background: var(--black-mid); color: var(--white-dim); border: 1px solid var(--black-border); }
+
+  /* --- Location loading overlay --- */
+  .loading-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.86); z-index: 9998; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+  .loading-overlay.show { opacity: 1; pointer-events: all; }
+  .loading-box { background: var(--black-card); border: 1px solid var(--gold-dark); border-radius: 20px; padding: 34px 26px 28px; max-width: 320px; width: 100%; position: relative; overflow: hidden; transform: scale(0.9) translateY(20px); transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1); text-align: center; }
+  .loading-overlay.show .loading-box { transform: scale(1) translateY(0); }
+  .loading-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent); }
+
+  .gps-spinner-wrap { position: relative; width: 64px; height: 64px; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; }
+  .gps-spinner-ring { position: absolute; inset: 0; border: 3px solid rgba(212,175,55,0.15); border-top-color: var(--gold); border-radius: 50%; animation: gps-spin 0.9s linear infinite; }
+  .gps-spinner-ring.slow { border-top-color: var(--gold-light); animation-duration: 1.6s; inset: 9px; opacity: 0.75; }
+  .gps-spinner-pin { font-size: 20px; position: relative; z-index: 2; animation: gps-pulse 1.4s ease-in-out infinite; }
+  @keyframes gps-spin { to { transform: rotate(360deg); } }
+  @keyframes gps-pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.15); opacity: 0.7; } }
+
+  .loading-title { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; color: var(--gold-light); margin-bottom: 6px; line-height: 1.3; min-height: 22px; transition: opacity 0.25s; }
+  .loading-sub { font-size: 11px; color: #999; letter-spacing: 0.3px; line-height: 1.6; margin-bottom: 16px; }
+  .loading-dots span { display: inline-block; animation: gps-dots 1.4s infinite; opacity: 0; }
+  .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes gps-dots { 0%, 20% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
+
+  /* Live accuracy meter */
+  .accuracy-wrap { margin-top: 4px; }
+  .accuracy-label-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+  .accuracy-tag { font-size: 9px; letter-spacing: 1.5px; color: #777; text-transform: uppercase; font-weight: 700; }
+  .accuracy-value { font-size: 13px; font-weight: 700; color: var(--gold); font-family: 'Montserrat', sans-serif; transition: color 0.3s; }
+  .accuracy-track { width: 100%; height: 7px; background: #221c00; border-radius: 6px; overflow: hidden; position: relative; }
+  .accuracy-fill { height: 100%; width: 4%; border-radius: 6px; background: linear-gradient(90deg, var(--red-warn), var(--gold), var(--green-good)); transition: width 0.6s cubic-bezier(0.34,1.2,0.64,1); }
+
+  /* Elapsed-time progress bar */
+  .time-track { width: 100%; height: 3px; background: #1a1a1a; border-radius: 3px; overflow: hidden; margin-top: 14px; }
+  .time-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--gold-dark), var(--gold-light)); transition: width 0.3s linear; }
+
+  /* Rotating tip */
+  .loading-tip { margin-top: 16px; padding-top: 14px; border-top: 1px dashed #2a2200; font-size: 10.5px; color: #999; line-height: 1.6; min-height: 32px; display: flex; align-items: center; justify-content: center; }
+  .loading-tip .tip-emoji { margin-right: 5px; }
+  .tip-text { transition: opacity 0.35s ease; opacity: 1; }
+  .tip-text.fade { opacity: 0; }
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<div class="popup-overlay" id="locationPopup">
+  <div class="popup-box">
+    <span class="popup-icon">&#127968;</span>
+    <div class="popup-title">Are you at Home?</div>
+    <div class="popup-subtitle">If you're home, we'll <span>capture your precise location</span> for the delivery rider. Not home right now? No problem — you can still place the order.</div>
+    <div class="popup-buttons">
+      <button class="popup-btn popup-btn-yes" onclick="handleLocationChoice(true)"><span class="btn-emoji">&#9989;</span>Yes, I'm Home</button>
+      <button class="popup-btn popup-btn-no" onclick="handleLocationChoice(false)"><span class="btn-emoji">&#128694;</span>No, I'm Not</button>
+    </div>
+  </div>
+</div>
+
+<div class="loading-overlay" id="locationLoading">
+  <div class="loading-box">
+    <div class="gps-spinner-wrap">
+      <div class="gps-spinner-ring"></div>
+      <div class="gps-spinner-ring slow"></div>
+      <span class="gps-spinner-pin">&#128205;</span>
+    </div>
+    <div class="loading-title" id="loadingTitle">Finding Your Precise Location</div>
+    <div class="loading-sub">Locking onto satellites for pinpoint accuracy<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></div>
+
+    <div class="accuracy-wrap">
+      <div class="accuracy-label-row">
+        <span class="accuracy-tag">Signal Precision</span>
+        <span class="accuracy-value" id="accuracyValue">searching&hellip;</span>
+      </div>
+      <div class="accuracy-track"><div class="accuracy-fill" id="accuracyFill"></div></div>
+    </div>
+
+    <div class="time-track"><div class="time-fill" id="timeFill"></div></div>
+
+    <div class="loading-tip"><span class="tip-emoji">&#128161;</span><span class="tip-text" id="tipText">Standing near a window or open door helps lock the signal faster.</span></div>
+  </div>
+</div>
+
+<header>
+  <div class="header-tag">&#10022; Wholesale Rice Bags &#10022;</div>
+  <div class="header-title">Nellore Rice Club</div>
+  <div class="header-sub">Best Quality &middot; Best Service</div>
+</header>
+
+<div class="container">
+
+  <div class="section-title">&#10022; Your Details</div>
+  <div class="customer-card">
+    <div class="input-group" style="margin-bottom:10px;">
+      <span class="input-icon">&#128100;</span>
+      <input type="text" id="customerName" placeholder="Full Name" autocomplete="name" autocorrect="off" autocapitalize="words" spellcheck="false" oninput="updateSummary(); resetConfirmIfChanged();"/>
+    </div>
+    <div class="input-group">
+      <span class="input-icon">&#128222;</span>
+      <input type="tel" id="customerPhone" placeholder="Phone Number (10 digits)" maxlength="10" autocomplete="tel" inputmode="numeric" pattern="[0-9]*" oninput="filterPhone(this); updateSummary(); resetConfirmIfChanged();"/>
+    </div>
+    <button class="btn-confirm" id="confirmBtn" onclick="confirmDetails()">
+      <span style="font-size:15px">&#128205;</span> Confirm Details &amp; Detect Location
+    </button>
+    <div class="confirm-hint" id="confirmHint">We'll ask if you're home now, so placing the order later is instant.</div>
+  </div>
+
+  <div class="section-title">&#10022; Delivery &amp; Payment</div>
+  <div class="notice-strip">
+    <div class="notice-row"><span class="n-icon">&#128666;</span><span><b>Free Home Delivery</b> on every order, anywhere in Nellore City.</span></div>
+    <div class="notice-row"><span class="n-icon">&#9200;</span><span><b>Next Day Delivery</b> — order today, get your bags tomorrow.</span></div>
+    <div class="notice-row"><span class="n-icon">&#128176;</span><span><b>Cash on Delivery only</b> — pay the delivery person directly.</span></div>
+    <div class="notice-row"><span class="n-icon">&#128683;</span><span><b>No credits, no pending payments.</b> Full payment compulsory at the time of delivery.</span></div>
+    <div class="notice-footer">We are wholesalers — every rupee counts towards our profit, so our margins are kept very low. Thank you for understanding.</div>
+  </div>
+
+  <div class="section-title">&#10022; Select Rice Bags</div>
+
+  <div id="rice-items"></div>
+
+  <div class="section-title">&#10022; Order Summary</div>
+  <div class="summary-card">
+    <div class="summary-empty" id="summaryEmpty">No items selected yet</div>
+    <div id="summaryCustomer"></div>
+    <div id="summaryRows"></div>
+  </div>
+
+  <button class="btn-whatsapp" id="waBtn" onclick="sendToWhatsApp()">
+    <span style="font-size:18px">&#128172;</span> Place Order on WhatsApp
+  </button>
+  <div class="footer-note">&#10022; Orders confirmed via WhatsApp only &#10022;</div>
+</div>
+
+<script>
+/* ============================================================
+   DATA — edit bag details/prices here only. Everything else
+   is generated. Replace the empty img src with your own image
+   URL later — the slot is already left open on the left side
+   of each bag.
+   ============================================================ */
+// [ id, name, subtitle, price, imgUrl ]
+var RICE_BAGS = [
+  ['r1', 'Kurnool Rice Bag', '25 Kgs &middot; Old Rice &middot; Jilakara Masura', 1450, 'Kurnool.webp'],
+  ['r2', '24 Carat Gold', '24 Kgs &middot; Old Rice &middot; Jilakara Masura &middot; From Nandhyala', 1430, 'Carat.webp'],
+  ['r3', 'Steam Rice', '25 Kgs &middot; MVR Khageshwar Brand', 1430, 'mvr.webp'],
+  ['r4', 'Molagolukulu Sannalu', '24 Kgs &middot; Old Rice &middot; Pine Apple Bag &middot; From Chirala', 1530, 'sannalu.webp']
+];
+
+var toastTimer = null;
+
+/* ============================================================
+   RENDERING
+   ============================================================ */
+function renderItems() {
+  var wrap = document.getElementById('rice-items');
+  var html = '';
+  RICE_BAGS.forEach(function(row){
+    var id = row[0], name = row[1], sub = row[2], price = row[3], img = row[4];
+    html += '<div class="item" id="' + id + '">' +
+      '<div class="check-badge">&#10003;</div>' +
+      '<div class="img-slot"><img src="' + img + '" loading="lazy" decoding="async" width="66" height="92" alt="' + name + '" onerror="this.style.opacity=0.15;"></div>' +
+      '<div class="details">' +
+        '<div class="item-name">' + name + '</div>' +
+        '<div class="item-sub">' + sub + '</div>' +
+        '<div class="item-price"><span class="rupee">&#8377;</span><span class="amount">' + price + '</span><span class="per-bag"> / bag</span></div>' +
+      '</div>' +
+      '<div class="qty-wrapper"><span class="qty-label">Quantity</span>' +
+      '<select class="qty-select" onchange="onQtyChange(this,\'' + id + '\')">' +
+        '<option value="0">-- bags</option>' +
+        [1,2,3,4,5].map(function(n){ return '<option value="' + n + '">' + n + ' bag' + (n>1?'s':'') + '</option>'; }).join('') +
+      '</select></div>' +
+    '</div>';
+  });
+  wrap.innerHTML = html;
+}
+
+function findBag(id) { for (var i=0;i<RICE_BAGS.length;i++) if (RICE_BAGS[i][0]===id) return RICE_BAGS[i]; return null; }
+
+/* ============================================================
+   INTERACTIONS
+   ============================================================ */
+function filterPhone(input) { input.value = input.value.replace(/[^0-9]/g,''); }
+
+function onQtyChange(selectEl, id) {
+  var item = document.getElementById(id);
+  var val = parseInt(selectEl.value) || 0;
+  if (val > 0) { item.classList.add('active'); } else { item.classList.remove('active'); }
+  updateSummary();
+}
+
+function updateSummary() {
+  var name = document.getElementById('customerName').value.trim();
+  var custPhone = document.getElementById('customerPhone').value.trim();
+  var grandTotal = 0, hasAny = false, html = '';
+
+  RICE_BAGS.forEach(function(row){
+    var id = row[0], bagName = row[1], price = row[3];
+    var qty = parseInt(document.getElementById(id).querySelector('select').value) || 0;
+    if (qty > 0) {
+      var it = price * qty;
+      grandTotal += it; hasAny = true;
+      html += '<div class="summary-row"><span class="s-name">' + bagName + '</span><span class="s-qty">x' + qty + '</span><span class="s-price">&#8377; ' + it.toFixed(0) + '</span></div>';
+    }
+  });
+
+  var emptyEl = document.getElementById('summaryEmpty');
+  var customerEl = document.getElementById('summaryCustomer');
+  var rowsEl = document.getElementById('summaryRows');
+
+  if (!hasAny) { emptyEl.style.display = 'block'; customerEl.innerHTML = ''; rowsEl.innerHTML = ''; return; }
+  emptyEl.style.display = 'none';
+
+  if (name) {
+    var phoneHtml = custPhone ? '<span style="font-size:11px;color:#b0b0b0;margin-top:3px;display:block;font-family:Montserrat,sans-serif;font-weight:500;">&#128222; ' + custPhone + '</span>' : '';
+    customerEl.innerHTML = '<div class="summary-customer"><div class="cust-icon">&#128100;</div><div class="cust-info"><span class="cust-label">Order for</span><span class="cust-name">' + name + '</span>' + phoneHtml + '</div></div>';
+  } else { customerEl.innerHTML = ''; }
+
+  html += '<div class="summary-total"><span class="t-label">Grand Total</span><span class="t-amount">&#8377; ' + grandTotal.toFixed(0) + '</span></div>';
+  rowsEl.innerHTML = html;
+}
+
+function showToast(msg, type) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (type === 'info' ? ' info' : '');
+  t.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(function() { t.classList.remove('show'); }, 3500);
+}
+
+function buildWhatsAppURL(locationText) {
+  var name = document.getElementById('customerName').value.trim();
+  var custPhone = document.getElementById('customerPhone').value.trim();
+  var lines = [], grandTotal = 0, count = 1;
+
+  RICE_BAGS.forEach(function(row){
+    var id = row[0], bagName = row[1], price = row[3];
+    var qty = parseInt(document.getElementById(id).querySelector('select').value) || 0;
+    if (qty > 0) {
+      var it = price * qty;
+      lines.push(count + '. ' + bagName + ' x' + qty + ' - Rs.' + it.toFixed(0));
+      grandTotal += it; count++;
+    }
+  });
+
+  var parts = [
+    'Nellore Rice Club Order',
+    '----------------------------',
+    'Name: ' + name,
+    'Phone: ' + custPhone,
+    'Location: ' + locationText,
+    '----------------------------'
+  ].concat(lines).concat([
+    '',
+    '*Total: Rs.' + grandTotal.toFixed(0) + '*',
+    '',
+    '(Cash on Delivery, Next Day Delivery, No pending payment)'
+  ]);
+
+  // Single encodeURIComponent pass at the end: safely escapes EVERY
+  // special character so nothing can ever break or truncate the
+  // wa.me query string, no matter what bag names contain.
+  var msg = encodeURIComponent(parts.join('\n'));
+  var phone = '918008970033';
+
+  // Plain wa.me link - this is WhatsApp's own official chat-link API.
+  return 'https://wa.me/' + phone + '?text=' + msg;
+}
+
+function validateDetails(focusOnError) {
+  var name = document.getElementById('customerName').value.trim();
+  var custPhone = document.getElementById('customerPhone').value.trim();
+  if (!name) {
+    showToast('Please enter your Full Name');
+    if (focusOnError) document.getElementById('customerName').focus();
+    return false;
+  }
+  if (!custPhone) {
+    showToast('Please enter your Phone Number');
+    if (focusOnError) document.getElementById('customerPhone').focus();
+    return false;
+  }
+  if (custPhone.length !== 10 || !/^[6-9][0-9]{9}$/.test(custPhone)) {
+    showToast('Enter a valid 10-digit Indian mobile number');
+    if (focusOnError) document.getElementById('customerPhone').focus();
+    return false;
+  }
+  return true;
+}
+
+/* ============================================================
+   STEP 1 — CONFIRM DETAILS: this is where ALL location tracking
+   happens now. Runs as soon as the customer taps the button
+   right under the phone field, well before the final WhatsApp
+   click, so by the time they place the order the fix is already
+   sitting ready and that final tap can navigate instantly and
+   synchronously (no Chrome "Continue to WhatsApp?" interstitial).
+   ============================================================ */
+var detailsConfirmed = false;
+var confirmedLocationText = null;
+
+function resetConfirmIfChanged() {
+  // If the customer edits name/phone after confirming, make them
+  // re-confirm so the WhatsApp message always matches the inputs.
+  if (!detailsConfirmed) return;
+  detailsConfirmed = false;
+  confirmedLocationText = null;
+  var btn = document.getElementById('confirmBtn');
+  btn.classList.remove('confirmed');
+  btn.innerHTML = '<span style="font-size:15px">&#128205;</span> Confirm Details &amp; Detect Location';
+  var hint = document.getElementById('confirmHint');
+  hint.classList.remove('ok');
+  hint.textContent = 'We\'ll ask if you\'re home now, so placing the order later is instant.';
+}
+
+function confirmDetails() {
+  if (detailsConfirmed) return; // already confirmed, nothing to do
+  if (!validateDetails(true)) return;
+
+  // Ask "Are you home?" first. Fire off the GPS listener at the same
+  // time the popup opens, so if they pick "Yes" a fix may already be
+  // improving by the time they tap.
+  startLocationWarmup();
+  document.getElementById('locationPopup').classList.add('show');
+}
+
+function finishConfirm(locationText, statusHint) {
+  var btn = document.getElementById('confirmBtn');
+  btn.disabled = false;
+  detailsConfirmed = true;
+  confirmedLocationText = locationText;
+  btn.classList.add('confirmed');
+  btn.innerHTML = '<span style="font-size:15px">&#9989;</span> Details Confirmed';
+  var hint = document.getElementById('confirmHint');
+  hint.classList.add('ok');
+  hint.textContent = statusHint;
+}
+
+function handleLocationChoice(isHome) {
+  document.getElementById('locationPopup').classList.remove('show');
+  var btn = document.getElementById('confirmBtn');
+
+  if (!isHome) {
+    // Not at home right now: skip GPS entirely, don't make them wait.
+    // We still remember whatever address text applies so the order
+    // can go through — the rider will confirm on call/WhatsApp instead.
+    stopLocationWarmup();
+    finishConfirm('Customer not at home right now - please confirm delivery address on call', 'Saved as "Not at home". You\'re all set — select your bags below.');
+    return;
+  }
+
+  // At home: run (or keep running) the tiered GPS acquisition.
+  btn.disabled = true;
+
+  // Best case: an ideal-tier fix already arrived while the popup was
+  // open — finish immediately.
+  if (geoState.best && geoState.best.coords.accuracy <= TIERS[0].acc) {
+    var locText = formatLocationText(geoState.best);
+    stopLocationWarmup();
+    finishConfirm(locText, 'Location locked (\u00B1' + Math.round(geoState.best.coords.accuracy) + 'm). You\'re all set — select your bags below.');
+    btn.disabled = false;
+    return;
+  }
+
+  if (geoState.unsupported) {
+    finishConfirm('Location not supported on this device', 'Saved. You\'re all set — select your bags below.');
+    btn.disabled = false;
+    return;
+  }
+
+  if (geoState.denied) {
+    finishConfirm('Location permission denied', 'Saved. You\'re all set — select your bags below.');
+    btn.disabled = false;
+    return;
+  }
+
+  showLoadingOverlay();
+
+  var finished = false;
+  var pollTimer = null;
+  var maxTimer = setTimeout(function() { checkAndFinish(true); }, MAX_WAIT);
+
+  function checkAndFinish(forceFinish) {
+    if (finished) return;
+    var elapsed = Date.now() - geoState.startTime;
+    var acceptAcc = currentTierAccuracy(elapsed);
+    var haveGoodEnough = geoState.best && geoState.best.coords.accuracy <= acceptAcc;
+
+    if (!forceFinish && !haveGoodEnough && !geoState.denied) return;
+
+    finished = true;
+    clearTimeout(maxTimer);
+    clearInterval(pollTimer);
+    stopLocationWarmup();
+    hideLoadingOverlay();
+    btn.disabled = false;
+
+    var locText, hintText;
+    if (geoState.best) {
+      locText = formatLocationText(geoState.best);
+      hintText = 'Location locked (\u00B1' + Math.round(geoState.best.coords.accuracy) + 'm). You\'re all set — select your bags below.';
+    } else if (geoState.denied) {
+      locText = 'Location permission denied';
+      hintText = 'Saved. You\'re all set — select your bags below.';
+    } else {
+      locText = 'Could not get precise location';
+      hintText = 'Saved. You\'re all set — select your bags below.';
+    }
+    finishConfirm(locText, hintText);
+  }
+
+  pollTimer = setInterval(function() { checkAndFinish(false); }, 300);
+}
+
+/* ============================================================
+   STEP 2 — PLACE ORDER: fires the moment the button is tapped.
+   Since location was already resolved in Step 1, this is a
+   simple synchronous redirect — no async work happens inside
+   this click, so the browser never shows an intermediate
+   confirmation screen before opening WhatsApp.
+   ============================================================ */
+function sendToWhatsApp() {
+  if (!validateDetails(true)) return;
+
+  var hasAny = false;
+  RICE_BAGS.forEach(function(row){
+    if (parseInt(document.getElementById(row[0]).querySelector('select').value) > 0) hasAny = true;
+  });
+  if (!hasAny) { showToast('Please select at least one rice bag'); return; }
+
+  if (!detailsConfirmed) {
+    showToast('Please tap "Confirm Details & Detect Location" first');
+    document.getElementById('confirmBtn').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  // Synchronous navigation inside the click handler - direct to WhatsApp.
+  window.location.href = buildWhatsAppURL(confirmedLocationText);
+}
+
+/* ============================================================
+   PRECISE GEOLOCATION — TIERED HIGH-ACCURACY ACQUISITION
+   ------------------------------------------------------------
+   Goal: get as close to ~7-8m accuracy as the device/sky can
+   deliver, while never leaving the customer stuck forever if
+   they're deep between close-set houses (multipath signal
+   bounce off walls/roofs commonly limits phone GPS to roughly
+   10-20m in that situation, even with more time). So instead of
+   one fixed cutoff, we relax the acceptable radius in stages the
+   longer we wait — always keeping the single BEST reading seen.
+
+   Tiers (elapsed time -> accuracy we'll accept and stop early):
+     0s  - 15s : accept <= 8m   (ideal, open-sky quality)
+     15s - 28s : accept <= 12m
+     28s - 42s : accept <= 20m
+     42s - 60s : accept <= 35m
+     60s (MAX) : stop regardless, use best reading found
+   ============================================================ */
+var geoState = { best: null, watchId: null, denied: false, unsupported: false, startTime: null };
+
+var TIERS = [
+  { until: 15000, acc: 8 },
+  { until: 28000, acc: 12 },
+  { until: 42000, acc: 20 },
+  { until: 60000, acc: 35 }
+];
+var MAX_WAIT = 60000;
+
+var TIPS = [
+  '&#128246; Standing near a window or open door helps lock the signal faster.',
+  '&#127968; If you\'re indoors, a spot closer to a wall facing the sky helps GPS see more satellites.',
+  '&#128640; We\'re holding out for the tightest fix possible — worth the extra few seconds!',
+  '&#128737;&#65039; Our delivery rider uses this exact pin, so precision now means no wrong turns later.',
+  '&#127794; Nearly there — refining between the last couple of metres.',
+  '&#128269; Cross-checking multiple satellite readings to rule out any stray signal bounce.'
+];
+
+function startLocationWarmup() {
+  geoState.best = null;
+  geoState.denied = false;
+  geoState.unsupported = false;
+  geoState.startTime = Date.now();
+
+  if (!navigator.geolocation) { geoState.unsupported = true; return; }
+
+  geoState.watchId = navigator.geolocation.watchPosition(
+    function(pos) {
+      if (!geoState.best || pos.coords.accuracy < geoState.best.coords.accuracy) {
+        geoState.best = pos;
+      }
+      updateLiveUI();
+    },
+    function(err) {
+      if (err.code === err.PERMISSION_DENIED) geoState.denied = true;
+    },
+    { enableHighAccuracy: true, timeout: MAX_WAIT, maximumAge: 0 }
+  );
+}
+
+function stopLocationWarmup() {
+  if (geoState.watchId !== null) {
+    navigator.geolocation.clearWatch(geoState.watchId);
+    geoState.watchId = null;
+  }
+}
+
+function formatLocationText(pos) {
+  var lat = pos.coords.latitude.toFixed(7);
+  var lng = pos.coords.longitude.toFixed(7);
+  var acc = Math.round(pos.coords.accuracy);
+  return lat + ', ' + lng + ' (accuracy \u00B1' + acc + 'm) https://maps.google.com/?q=' + lat + ',' + lng;
+}
+
+/* ---------- Live "locking in" UI ---------- */
+var uiTimer = null, tipTimer = null, tipIndex = 0;
+
+function accuracyColor(acc) {
+  if (acc <= 10) return 'var(--green-good)';
+  if (acc <= 25) return 'var(--gold-light)';
+  return 'var(--red-warn)';
+}
+
+function statusForAccuracy(acc, elapsed) {
+  if (acc === null) return elapsed < 4000 ? 'Searching for satellites' : 'Locking onto your signal';
+  if (acc <= 8) return 'Pinpoint lock achieved!';
+  if (acc <= 12) return 'Excellent precision — refining';
+  if (acc <= 20) return 'Good precision — tightening further';
+  return 'Refining your location';
+}
+
+function updateLiveUI() {
+  var titleEl = document.getElementById('loadingTitle');
+  var accValueEl = document.getElementById('accuracyValue');
+  var accFillEl = document.getElementById('accuracyFill');
+  if (!titleEl) return;
+
+  var elapsed = geoState.startTime ? (Date.now() - geoState.startTime) : 0;
+  var acc = geoState.best ? geoState.best.coords.accuracy : null;
+
+  titleEl.textContent = statusForAccuracy(acc, elapsed) + (acc === null ? '…' : '');
+
+  if (acc !== null) {
+    accValueEl.textContent = '\u00B1' + Math.round(acc) + 'm';
+    accValueEl.style.color = accuracyColor(acc);
+    // Map accuracy to a fill % — 100% at 5m or better, ~5% at 100m+.
+    var pct = Math.max(4, Math.min(100, 100 - ((acc - 5) / 95) * 96));
+    accFillEl.style.width = pct + '%';
+  } else {
+    accValueEl.textContent = 'searching…';
+    accValueEl.style.color = '#777';
+    accFillEl.style.width = '4%';
+  }
+
+  var timeFillEl = document.getElementById('timeFill');
+  if (timeFillEl) {
+    var timePct = Math.min(100, (elapsed / MAX_WAIT) * 100);
+    timeFillEl.style.width = timePct + '%';
+  }
+}
+
+function startTipRotation() {
+  tipIndex = 0;
+  var tipEl = document.getElementById('tipText');
+  tipEl.innerHTML = TIPS[0];
+  tipTimer = setInterval(function() {
+    tipEl.classList.add('fade');
+    setTimeout(function() {
+      tipIndex = (tipIndex + 1) % TIPS.length;
+      tipEl.innerHTML = TIPS[tipIndex];
+      tipEl.classList.remove('fade');
+    }, 350);
+  }, 4200);
+}
+function stopTipRotation() {
+  if (tipTimer) { clearInterval(tipTimer); tipTimer = null; }
+}
+
+function showLoadingOverlay() {
+  updateLiveUI();
+  document.getElementById('locationLoading').classList.add('show');
+  startTipRotation();
+  uiTimer = setInterval(updateLiveUI, 400);
+}
+function hideLoadingOverlay() {
+  document.getElementById('locationLoading').classList.remove('show');
+  stopTipRotation();
+  if (uiTimer) { clearInterval(uiTimer); uiTimer = null; }
+}
+
+function currentTierAccuracy(elapsed) {
+  for (var i = 0; i < TIERS.length; i++) {
+    if (elapsed <= TIERS[i].until) return TIERS[i].acc;
+  }
+  return TIERS[TIERS.length - 1].acc;
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+renderItems();
+updateSummary();
+</script>
+</body>
+</html>
