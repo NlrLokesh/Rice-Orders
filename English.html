@@ -382,18 +382,64 @@ function sendToWhatsApp() {
   });
   if (!hasAny) { showToast('Please select at least one rice bag'); return; }
 
+  // Start warming up the GPS fix RIGHT NOW, while the "Are you home?"
+  // popup is showing. By the time the customer reads it and taps a
+  // button, a fix has often already arrived - which lets us navigate
+  // instantly and synchronously on that tap (no async gap = no browser
+  // confirmation banner, direct handoff into WhatsApp).
+  startLocationWarmup();
   document.getElementById('locationPopup').classList.add('show');
 }
 
 /* ============================================================
-   PRECISE GEOLOCATION
-   Instead of accepting the first (often rough) GPS fix, this
-   watches the position stream for up to MAX_WAIT ms and keeps
-   the single most accurate reading it sees. It stops early the
-   moment a reading is at or below GOOD_ACCURACY meters, since
-   waiting longer past that point rarely helps and only slows
-   the customer down.
+   PRECISE GEOLOCATION - WARM-UP + INSTANT HANDOFF
+   Chrome only allows a silent, bannerless app-switch when the
+   navigation happens SYNCHRONOUSLY inside a click, with no
+   async gap. Waiting for GPS after the tap always creates that
+   gap. So instead, we start listening for GPS the moment the
+   "Are you home?" popup opens - while the customer is reading
+   it - so a fix is very often already sitting ready by the time
+   they tap "Yes". Tapping then navigates immediately and
+   synchronously, which is what skips the confirmation banner.
    ============================================================ */
+var geoState = { best: null, watchId: null, denied: false, unsupported: false };
+
+function startLocationWarmup() {
+  geoState.best = null;
+  geoState.denied = false;
+  geoState.unsupported = false;
+
+  if (!navigator.geolocation) { geoState.unsupported = true; return; }
+
+  geoState.watchId = navigator.geolocation.watchPosition(
+    function(pos) {
+      if (!geoState.best || pos.coords.accuracy < geoState.best.coords.accuracy) {
+        geoState.best = pos;
+        var accuracyEl = document.getElementById('loadingAccuracy');
+        if (accuracyEl) accuracyEl.textContent = 'Current accuracy: \u00B1' + Math.round(pos.coords.accuracy) + 'm';
+      }
+    },
+    function(err) {
+      if (err.code === err.PERMISSION_DENIED) geoState.denied = true;
+    },
+    { enableHighAccuracy: true, timeout: 20000, maximumAge: 0 }
+  );
+}
+
+function stopLocationWarmup() {
+  if (geoState.watchId !== null) {
+    navigator.geolocation.clearWatch(geoState.watchId);
+    geoState.watchId = null;
+  }
+}
+
+function formatLocationText(pos) {
+  var lat = pos.coords.latitude.toFixed(7);
+  var lng = pos.coords.longitude.toFixed(7);
+  var acc = Math.round(pos.coords.accuracy);
+  return lat + ', ' + lng + ' (accuracy \u00B1' + acc + 'm) https://maps.google.com/?q=' + lat + ',' + lng;
+}
+
 function showLoadingOverlay() {
   document.getElementById('loadingAccuracy').textContent = '';
   document.getElementById('locationLoading').classList.add('show');
@@ -403,89 +449,72 @@ function hideLoadingOverlay() {
 }
 
 function navigateToWhatsApp(locationText) {
-  var url = buildWhatsAppURL(locationText);
-  // Same-tab, top-level navigation - this is what lets Android/iOS
-  // hand off straight into the WhatsApp app. Opening a new tab instead
-  // breaks that handoff and forces WhatsApp's web fallback page to
-  // show up with its own "Open app" button.
-  window.location.href = url;
+  window.location.href = buildWhatsAppURL(locationText);
 }
 
 function handleLocationChoice(isHome) {
   document.getElementById('locationPopup').classList.remove('show');
   var btn = document.getElementById('waBtn');
-  btn.disabled = true;
 
   if (!isHome) {
-    btn.disabled = false;
+    stopLocationWarmup();
+    // Synchronous, still inside this click - direct handoff, no banner.
     navigateToWhatsApp('Customer not at home - location not shared');
     return;
   }
 
-  if (!navigator.geolocation) {
-    btn.disabled = false;
+  // Best case: GPS already warmed up while the popup was on screen.
+  // Navigating here is still synchronous with this click, so it goes
+  // straight into WhatsApp with no confirmation banner at all.
+  if (geoState.best) {
+    var locText = formatLocationText(geoState.best);
+    stopLocationWarmup();
+    navigateToWhatsApp(locText);
+    return;
+  }
+
+  if (geoState.unsupported) {
     navigateToWhatsApp('Location not supported on this device');
     return;
   }
 
+  if (geoState.denied) {
+    navigateToWhatsApp('Location permission denied');
+    return;
+  }
+
+  // Fallback: GPS hasn't produced a fix yet (slow lock, or the
+  // permission prompt only just appeared). We have to wait a little
+  // longer here - this is the one case with an unavoidable async gap,
+  // so the browser may show its "Continue to WhatsApp?" confirmation
+  // once. It still gets there, just with one extra tap in this slower,
+  // less common case.
+  btn.disabled = true;
   showLoadingOverlay();
 
-  var GOOD_ACCURACY = 20;   // meters - stop early once we get a fix this tight
-  var MAX_WAIT = 12000;     // ms - overall cap so the order is never stuck forever
-
-  var best = null;
-  var watchId = null;
+  var MAX_WAIT = 12000;
   var finished = false;
-  var maxTimer = null;
-  var accuracyEl = document.getElementById('loadingAccuracy');
+  var pollTimer = null;
+  var maxTimer = setTimeout(function() { checkAndFinish(true); }, MAX_WAIT);
 
-  function finish() {
+  function checkAndFinish(forceFinish) {
     if (finished) return;
+    if (!forceFinish && !(geoState.best && geoState.best.coords.accuracy <= 20) && !geoState.denied) return;
     finished = true;
-    if (maxTimer) clearTimeout(maxTimer);
-    if (watchId !== null) navigator.geolocation.clearWatch(watchId);
+    clearTimeout(maxTimer);
+    clearInterval(pollTimer);
+    stopLocationWarmup();
     hideLoadingOverlay();
     btn.disabled = false;
 
-    if (best) {
-      var lat = best.coords.latitude.toFixed(7);
-      var lng = best.coords.longitude.toFixed(7);
-      var acc = Math.round(best.coords.accuracy);
-      var locText = lat + ', ' + lng + ' (accuracy \u00B1' + acc + 'm) https://maps.google.com/?q=' + lat + ',' + lng;
-      navigateToWhatsApp(locText);
-    } else {
-      navigateToWhatsApp('Could not get precise location');
-    }
+    if (geoState.denied) { navigateToWhatsApp('Location permission denied'); return; }
+    if (geoState.best) { navigateToWhatsApp(formatLocationText(geoState.best)); return; }
+    navigateToWhatsApp('Could not get precise location');
   }
 
-  maxTimer = setTimeout(finish, MAX_WAIT);
-
-  watchId = navigator.geolocation.watchPosition(
-    function(pos) {
-      // Keep whichever reading so far has the smallest (best) accuracy radius
-      if (!best || pos.coords.accuracy < best.coords.accuracy) {
-        best = pos;
-        accuracyEl.textContent = 'Current accuracy: \u00B1' + Math.round(pos.coords.accuracy) + 'm';
-      }
-      if (pos.coords.accuracy <= GOOD_ACCURACY) {
-        finish();
-      }
-    },
-    function(err) {
-      // On permission denial, stop immediately - retrying won't help.
-      // On other errors (timeout/unavailable) keep waiting for maxTimer
-      // in case a later reading in the stream succeeds.
-      if (err.code === err.PERMISSION_DENIED) {
-        finished = true;
-        if (maxTimer) clearTimeout(maxTimer);
-        if (watchId !== null) navigator.geolocation.clearWatch(watchId);
-        hideLoadingOverlay();
-        btn.disabled = false;
-        navigateToWhatsApp('Location permission denied');
-      }
-    },
-    { enableHighAccuracy: true, timeout: MAX_WAIT, maximumAge: 0 }
-  );
+  // Poll frequently so we grab a fix (or a denial) the instant it
+  // arrives, rather than always waiting out the full MAX_WAIT.
+  pollTimer = setInterval(function() { checkAndFinish(false); }, 250);
 }
 
 /* ============================================================
