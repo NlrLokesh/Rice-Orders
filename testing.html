@@ -588,12 +588,12 @@ function sendToWhatsApp() {
 var geoState = { best: null, watchId: null, denied: false, unsupported: false, startTime: null };
 
 var TIERS = [
-  { until: 15000, acc: 8 },
-  { until: 28000, acc: 12 },
-  { until: 42000, acc: 20 },
-  { until: 60000, acc: 35 }
+  { until: 20000, acc: 6 },
+  { until: 25000, acc: 8 },
+  { until: 32000, acc: 14 },
+  { until: 40000, acc: 18 }
 ];
-var MAX_WAIT = 60000;
+var MAX_WAIT = 40000;
 
 var TIPS = [
   '&#128246; Standing near a window or open door helps lock the signal faster.',
