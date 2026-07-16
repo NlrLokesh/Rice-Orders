@@ -384,18 +384,13 @@ function hideLoadingOverlay() {
   document.getElementById('locationLoading').classList.remove('show');
 }
 
-function navigateToWhatsApp(waTab, locationText) {
+function navigateToWhatsApp(locationText) {
   var url = buildWhatsAppURL(locationText);
-  if (waTab && !waTab.closed) {
-    // Reuse the tab that was opened synchronously inside the click
-    // handler - browsers treat this as a direct user navigation, so
-    // it goes straight into WhatsApp instead of showing an "open app?"
-    // prompt or intent chooser again.
-    waTab.location.href = url;
-  } else {
-    // Popup was blocked (rare) - fall back to navigating this tab.
-    window.location.href = url;
-  }
+  // Same-tab, top-level navigation - this is what lets Android/iOS
+  // hand off straight into the WhatsApp app. Opening a new tab instead
+  // breaks that handoff and forces WhatsApp's web fallback page to
+  // show up with its own "Open app" button.
+  window.location.href = url;
 }
 
 function handleLocationChoice(isHome) {
@@ -403,28 +398,22 @@ function handleLocationChoice(isHome) {
   var btn = document.getElementById('waBtn');
   btn.disabled = true;
 
-  // Open the destination tab RIGHT NOW, synchronously, while we're still
-  // inside the click event. This is what keeps it a "direct" navigation
-  // in the browser's eyes - the actual URL gets filled in once we know
-  // the location text, further down.
-  var waTab = window.open('about:blank', '_blank');
-
   if (!isHome) {
     btn.disabled = false;
-    navigateToWhatsApp(waTab, 'Customer not at home - location not shared');
+    navigateToWhatsApp('Customer not at home - location not shared');
     return;
   }
 
   if (!navigator.geolocation) {
     btn.disabled = false;
-    navigateToWhatsApp(waTab, 'Location not supported on this device');
+    navigateToWhatsApp('Location not supported on this device');
     return;
   }
 
   showLoadingOverlay();
 
-  var GOOD_ACCURACY = 15;   // meters - stop early once we get a fix this tight
-  var MAX_WAIT = 15000;     // ms - overall cap so the order is never stuck forever
+  var GOOD_ACCURACY = 20;   // meters - stop early once we get a fix this tight
+  var MAX_WAIT = 12000;     // ms - overall cap so the order is never stuck forever
 
   var best = null;
   var watchId = null;
@@ -445,9 +434,9 @@ function handleLocationChoice(isHome) {
       var lng = best.coords.longitude.toFixed(7);
       var acc = Math.round(best.coords.accuracy);
       var locText = lat + ', ' + lng + ' (accuracy \u00B1' + acc + 'm) https://maps.google.com/?q=' + lat + ',' + lng;
-      navigateToWhatsApp(waTab, locText);
+      navigateToWhatsApp(locText);
     } else {
-      navigateToWhatsApp(waTab, 'Could not get precise location');
+      navigateToWhatsApp('Could not get precise location');
     }
   }
 
@@ -474,7 +463,7 @@ function handleLocationChoice(isHome) {
         if (watchId !== null) navigator.geolocation.clearWatch(watchId);
         hideLoadingOverlay();
         btn.disabled = false;
-        navigateToWhatsApp(waTab, 'Location permission denied');
+        navigateToWhatsApp('Location permission denied');
       }
     },
     { enableHighAccuracy: true, timeout: MAX_WAIT, maximumAge: 0 }
