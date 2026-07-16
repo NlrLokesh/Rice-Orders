@@ -119,6 +119,28 @@
   .popup-btn .btn-emoji { font-size: 22px; }
   .popup-btn-yes { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: var(--black); box-shadow: 0 4px 16px rgba(212,175,55,0.25); }
   .popup-btn-no { background: var(--black-mid); color: var(--white-dim); border: 1px solid var(--black-border); }
+
+  /* --- Location loading overlay --- */
+  .loading-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.86); z-index: 9998; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+  .loading-overlay.show { opacity: 1; pointer-events: all; }
+  .loading-box { background: var(--black-card); border: 1px solid var(--gold-dark); border-radius: 20px; padding: 34px 26px 28px; max-width: 300px; width: 100%; position: relative; overflow: hidden; transform: scale(0.9) translateY(20px); transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1); text-align: center; }
+  .loading-overlay.show .loading-box { transform: scale(1) translateY(0); }
+  .loading-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent); }
+
+  .gps-spinner-wrap { position: relative; width: 64px; height: 64px; margin: 0 auto 18px; display: flex; align-items: center; justify-content: center; }
+  .gps-spinner-ring { position: absolute; inset: 0; border: 3px solid rgba(212,175,55,0.15); border-top-color: var(--gold); border-radius: 50%; animation: gps-spin 0.9s linear infinite; }
+  .gps-spinner-ring.slow { border-top-color: var(--gold-light); animation-duration: 1.6s; inset: 9px; opacity: 0.75; }
+  .gps-spinner-pin { font-size: 20px; position: relative; z-index: 2; animation: gps-pulse 1.4s ease-in-out infinite; }
+  @keyframes gps-spin { to { transform: rotate(360deg); } }
+  @keyframes gps-pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.15); opacity: 0.7; } }
+
+  .loading-title { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; color: var(--gold-light); margin-bottom: 8px; line-height: 1.3; }
+  .loading-sub { font-size: 11.5px; color: #999; letter-spacing: 0.3px; line-height: 1.6; }
+  .loading-accuracy { margin-top: 14px; font-size: 11px; color: var(--gold-dark); font-weight: 600; letter-spacing: 0.5px; min-height: 15px; }
+  .loading-dots span { display: inline-block; animation: gps-dots 1.4s infinite; opacity: 0; }
+  .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes gps-dots { 0%, 20% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
 </style>
 </head>
 <body>
@@ -134,6 +156,19 @@
       <button class="popup-btn popup-btn-yes" onclick="handleLocationChoice(true)"><span class="btn-emoji">&#9989;</span>Yes, I'm Home</button>
       <button class="popup-btn popup-btn-no" onclick="handleLocationChoice(false)"><span class="btn-emoji">&#128694;</span>No, I'm Not</button>
     </div>
+  </div>
+</div>
+
+<div class="loading-overlay" id="locationLoading">
+  <div class="loading-box">
+    <div class="gps-spinner-wrap">
+      <div class="gps-spinner-ring"></div>
+      <div class="gps-spinner-ring slow"></div>
+      <span class="gps-spinner-pin">&#128205;</span>
+    </div>
+    <div class="loading-title">Finding Your Precise Location</div>
+    <div class="loading-sub">Please wait, this may take a few seconds<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></div>
+    <div class="loading-accuracy" id="loadingAccuracy"></div>
   </div>
 </div>
 
@@ -341,6 +376,14 @@ function sendToWhatsApp() {
    waiting longer past that point rarely helps and only slows
    the customer down.
    ============================================================ */
+function showLoadingOverlay() {
+  document.getElementById('loadingAccuracy').textContent = '';
+  document.getElementById('locationLoading').classList.add('show');
+}
+function hideLoadingOverlay() {
+  document.getElementById('locationLoading').classList.remove('show');
+}
+
 function handleLocationChoice(isHome) {
   document.getElementById('locationPopup').classList.remove('show');
   var btn = document.getElementById('waBtn');
@@ -358,7 +401,7 @@ function handleLocationChoice(isHome) {
     return;
   }
 
-  showToast('Getting your precise location...', 'info');
+  showLoadingOverlay();
 
   var GOOD_ACCURACY = 15;   // meters - stop early once we get a fix this tight
   var MAX_WAIT = 15000;     // ms - overall cap so the order is never stuck forever
@@ -367,12 +410,14 @@ function handleLocationChoice(isHome) {
   var watchId = null;
   var finished = false;
   var maxTimer = null;
+  var accuracyEl = document.getElementById('loadingAccuracy');
 
   function finish() {
     if (finished) return;
     finished = true;
     if (maxTimer) clearTimeout(maxTimer);
     if (watchId !== null) navigator.geolocation.clearWatch(watchId);
+    hideLoadingOverlay();
     btn.disabled = false;
 
     if (best) {
@@ -393,6 +438,7 @@ function handleLocationChoice(isHome) {
       // Keep whichever reading so far has the smallest (best) accuracy radius
       if (!best || pos.coords.accuracy < best.coords.accuracy) {
         best = pos;
+        accuracyEl.textContent = 'Current accuracy: \u00B1' + Math.round(pos.coords.accuracy) + 'm';
       }
       if (pos.coords.accuracy <= GOOD_ACCURACY) {
         finish();
@@ -406,6 +452,7 @@ function handleLocationChoice(isHome) {
         finished = true;
         if (maxTimer) clearTimeout(maxTimer);
         if (watchId !== null) navigator.geolocation.clearWatch(watchId);
+        hideLoadingOverlay();
         btn.disabled = false;
         window.location.href = buildWhatsAppURL('Location permission denied');
       }
