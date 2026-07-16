@@ -163,6 +163,10 @@
   .time-track { width: 100%; height: 3px; background: #1a1a1a; border-radius: 3px; overflow: hidden; margin-top: 14px; }
   .time-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--gold-dark), var(--gold-light)); transition: width 0.3s linear; }
 
+  /* Confirmation-state badge in the loading box */
+  .confirm-state { margin-top: 10px; font-size: 10px; letter-spacing: 0.8px; color: #777; text-align: center; }
+  .confirm-state b { color: var(--green-good); }
+
   /* Rotating tip */
   .loading-tip { margin-top: 16px; padding-top: 14px; border-top: 1px dashed #2a2200; font-size: 10.5px; color: #999; line-height: 1.6; min-height: 32px; display: flex; align-items: center; justify-content: center; }
   .loading-tip .tip-emoji { margin-right: 5px; }
@@ -203,6 +207,8 @@
       </div>
       <div class="accuracy-track"><div class="accuracy-fill" id="accuracyFill"></div></div>
     </div>
+
+    <div class="confirm-state" id="confirmState">Waiting for a second reading to confirm the fix&hellip;</div>
 
     <div class="time-track"><div class="time-fill" id="timeFill"></div></div>
 
@@ -481,12 +487,14 @@ function handleLocationChoice(isHome) {
   // At home: run (or keep running) the tiered GPS acquisition.
   btn.disabled = true;
 
-  // Best case: an ideal-tier fix already arrived while the popup was
-  // open — finish immediately.
+  // Best case: a CONFIRMED ideal-tier fix already arrived while the
+  // popup was open — finish immediately. Note geoState.best is only
+  // ever set once a reading has been corroborated by another reading
+  // nearby (see considerReading()), so this is safe to trust.
   if (geoState.best && geoState.best.coords.accuracy <= TIERS[0].acc) {
     var locText = formatLocationText(geoState.best);
     stopLocationWarmup();
-    finishConfirm(locText, 'Location locked (\u00B1' + Math.round(geoState.best.coords.accuracy) + 'm). You\'re all set — select your bags below.');
+    finishConfirm(locText, 'Location locked (\u00B1' + Math.round(geoState.best.coords.accuracy) + 'm, confirmed). You\'re all set — select your bags below.');
     btn.disabled = false;
     return;
   }
@@ -524,10 +532,15 @@ function handleLocationChoice(isHome) {
     hideLoadingOverlay();
     btn.disabled = false;
 
+    // Prefer a CONFIRMED reading (geoState.best). If time ran out and we
+    // never got two readings to agree, fall back to the single least-bad
+    // reading we saw, but say so honestly instead of overstating accuracy.
     var locText, hintText;
-    if (geoState.best) {
-      locText = formatLocationText(geoState.best);
-      hintText = 'Location locked (\u00B1' + Math.round(geoState.best.coords.accuracy) + 'm). You\'re all set — select your bags below.';
+    var chosen = geoState.best || geoState.fallback;
+    if (chosen) {
+      var confirmedTag = geoState.best ? 'confirmed' : 'unconfirmed - use with care';
+      locText = formatLocationText(chosen);
+      hintText = 'Location locked (\u00B1' + Math.round(chosen.coords.accuracy) + 'm, ' + confirmedTag + '). You\'re all set — select your bags below.';
     } else if (geoState.denied) {
       locText = 'Location permission denied';
       hintText = 'Saved. You\'re all set — select your bags below.';
@@ -568,32 +581,62 @@ function sendToWhatsApp() {
 }
 
 /* ============================================================
-   PRECISE GEOLOCATION — TIERED HIGH-ACCURACY ACQUISITION
+   PRECISE GEOLOCATION — TIERED, CONFIRMED-FIX ACQUISITION
    ------------------------------------------------------------
-   Goal: get as close to ~7-8m accuracy as the device/sky can
+   Goal: get as close to ~6-8m accuracy as the device/sky can
    deliver, while never leaving the customer stuck forever if
    they're deep between close-set houses (multipath signal
    bounce off walls/roofs commonly limits phone GPS to roughly
    10-20m in that situation, even with more time). So instead of
    one fixed cutoff, we relax the acceptable radius in stages the
-   longer we wait — always keeping the single BEST reading seen.
+   longer we wait — always keeping the single BEST *confirmed*
+   reading seen.
+
+   WHY "CONFIRMED"?
+   The accuracy value reported by the phone's location API is
+   self-reported by the OS/location provider — it is NOT
+   something we compute, and it is often wrong. In particular,
+   the very first fix(es) after watchPosition starts are usually
+   derived from WiFi/cell-tower positioning (fast, but coarse),
+   yet can carry a deceptively tight accuracy figure. Trusting
+   that number directly is exactly what causes "the app said
+   +/-5m but the pin was 50m off."
+
+   The fix: never trust a single reading's accuracy on its own.
+   A reading is only promoted to geoState.best once a SECOND,
+   independent reading lands within CONFIRM_RADIUS metres of it —
+   i.e. the fix has stabilised, which is how real GPS behaves and
+   how noisy network-based fixes usually don't. We also ignore
+   suspiciously-tight readings that arrive before MIN_GPS_WARMUP
+   has elapsed, since the GPS chipset hasn't had time to engage
+   yet at that point.
 
    Tiers (elapsed time -> accuracy we'll accept and stop early):
-     0s  - 15s : accept <= 8m   (ideal, open-sky quality)
-     15s - 28s : accept <= 12m
-     28s - 42s : accept <= 20m
-     42s - 60s : accept <= 35m
-     60s (MAX) : stop regardless, use best reading found
+     0s  - 25s : accept <= 6m   (ideal, open-sky quality)
+     25s - 30s : accept <= 8m
+     30s - 35s : accept <= 13m
+     35s - 40s : accept <= 17m
+     40s (MAX) : stop regardless, use best CONFIRMED reading found
+                 (or, failing that, the single least-bad reading,
+                 clearly labelled as unconfirmed)
    ============================================================ */
-var geoState = { best: null, watchId: null, denied: false, unsupported: false, startTime: null };
+var geoState = { best: null, fallback: null, history: [], watchId: null, denied: false, unsupported: false, startTime: null };
 
 var TIERS = [
-  { until: 20000, acc: 6 },
-  { until: 25000, acc: 8 },
-  { until: 32000, acc: 14 },
-  { until: 40000, acc: 18 }
+  { until: 25000, acc: 6 },
+  { until: 30000, acc: 8 },
+  { until: 35000, acc: 13 },
+  { until: 40000, acc: 17 }
 ];
 var MAX_WAIT = 40000;
+
+// Two readings must agree within this many metres before either is
+// trusted as a real fix rather than a noisy one-off.
+var CONFIRM_RADIUS = 20;
+// Ignore implausibly-tight readings that arrive before the GPS chipset
+// has plausibly had time to engage (these are almost always coarse
+// network/WiFi fixes mislabeled with a tight accuracy figure).
+var MIN_GPS_WARMUP = 3000;
 
 var TIPS = [
   '&#128246; Standing near a window or open door helps lock the signal faster.',
@@ -604,8 +647,63 @@ var TIPS = [
   '&#128269; Cross-checking multiple satellite readings to rule out any stray signal bounce.'
 ];
 
+function haversineMeters(lat1, lon1, lat2, lon2) {
+  var R = 6371000;
+  var toRad = function(d) { return d * Math.PI / 180; };
+  var dLat = toRad(lat2 - lat1);
+  var dLon = toRad(lon2 - lon1);
+  var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+          Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+          Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
+function considerReading(pos) {
+  var elapsed = Date.now() - geoState.startTime;
+
+  geoState.history.push(pos);
+  if (geoState.history.length > 6) geoState.history.shift();
+
+  // Keep a fallback (single least-bad reading) in case we never get a
+  // confirmation before time runs out - but only once the chipset has
+  // had a moment to warm up, so we don't fall back to an early junk fix.
+  if (elapsed >= MIN_GPS_WARMUP) {
+    if (!geoState.fallback || pos.coords.accuracy < geoState.fallback.coords.accuracy) {
+      geoState.fallback = pos;
+    }
+  }
+
+  // Look for any pair of readings in history that agree within
+  // CONFIRM_RADIUS metres of each other; the more accurate of the
+  // pair becomes the confirmed candidate.
+  var confirmedCandidate = null;
+  for (var i = 0; i < geoState.history.length; i++) {
+    var p = geoState.history[i];
+    for (var j = 0; j < geoState.history.length; j++) {
+      if (i === j) continue;
+      var q = geoState.history[j];
+      var d = haversineMeters(p.coords.latitude, p.coords.longitude, q.coords.latitude, q.coords.longitude);
+      if (d <= CONFIRM_RADIUS) {
+        if (!confirmedCandidate || p.coords.accuracy < confirmedCandidate.coords.accuracy) {
+          confirmedCandidate = p;
+        }
+        break;
+      }
+    }
+  }
+
+  if (confirmedCandidate) {
+    if (!geoState.best || confirmedCandidate.coords.accuracy < geoState.best.coords.accuracy) {
+      geoState.best = confirmedCandidate;
+    }
+  }
+}
+
 function startLocationWarmup() {
   geoState.best = null;
+  geoState.fallback = null;
+  geoState.history = [];
   geoState.denied = false;
   geoState.unsupported = false;
   geoState.startTime = Date.now();
@@ -614,9 +712,7 @@ function startLocationWarmup() {
 
   geoState.watchId = navigator.geolocation.watchPosition(
     function(pos) {
-      if (!geoState.best || pos.coords.accuracy < geoState.best.coords.accuracy) {
-        geoState.best = pos;
-      }
+      considerReading(pos);
       updateLiveUI();
     },
     function(err) {
@@ -661,9 +757,12 @@ function updateLiveUI() {
   var titleEl = document.getElementById('loadingTitle');
   var accValueEl = document.getElementById('accuracyValue');
   var accFillEl = document.getElementById('accuracyFill');
+  var confirmStateEl = document.getElementById('confirmState');
   if (!titleEl) return;
 
   var elapsed = geoState.startTime ? (Date.now() - geoState.startTime) : 0;
+  // Only ever display a CONFIRMED accuracy figure, never a raw
+  // single-reading number - that's the number that used to lie.
   var acc = geoState.best ? geoState.best.coords.accuracy : null;
 
   titleEl.textContent = statusForAccuracy(acc, elapsed) + (acc === null ? '…' : '');
@@ -671,13 +770,18 @@ function updateLiveUI() {
   if (acc !== null) {
     accValueEl.textContent = '\u00B1' + Math.round(acc) + 'm';
     accValueEl.style.color = accuracyColor(acc);
-    // Map accuracy to a fill % — 100% at 5m or better, ~5% at 100m+.
     var pct = Math.max(4, Math.min(100, 100 - ((acc - 5) / 95) * 96));
     accFillEl.style.width = pct + '%';
+    if (confirmStateEl) confirmStateEl.innerHTML = '<b>Confirmed</b> by a second matching reading';
   } else {
     accValueEl.textContent = 'searching…';
     accValueEl.style.color = '#777';
     accFillEl.style.width = '4%';
+    if (confirmStateEl) {
+      confirmStateEl.innerHTML = geoState.fallback
+        ? 'Have a rough reading — waiting for a second one to confirm it'
+        : 'Waiting for a second reading to confirm the fix…';
+    }
   }
 
   var timeFillEl = document.getElementById('timeFill');
