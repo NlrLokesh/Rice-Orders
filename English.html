@@ -412,8 +412,8 @@ function handleLocationChoice(isHome) {
 
   showLoadingOverlay();
 
-  var GOOD_ACCURACY = 20;   // meters - stop early once we get a fix this tight
-  var MAX_WAIT = 12000;     // ms - overall cap so the order is never stuck forever
+  var GOOD_ACCURACY = 8;   // meters - stop early once we get a fix this tight
+  var MAX_WAIT = 20000;     // ms - overall cap so the order is never stuck forever
 
   var best = null;
   var watchId = null;
