@@ -348,7 +348,25 @@ function buildWhatsAppURL(locationText) {
   // special character so nothing can ever break or truncate the
   // wa.me query string, no matter what bag names contain.
   var msg = encodeURIComponent(parts.join('\n'));
-  return 'https://wa.me/918008970033?text=' + msg;
+  var phone = '918008970033';
+  var fallback = 'https://wa.me/' + phone + '?text=' + msg;
+
+  // On Android, going through wa.me forces Chrome to load a web page
+  // first (api.whatsapp.com/send) before it can hand off to the app -
+  // that extra hop is what shows the "Continue to WhatsApp?" landing
+  // page. An intent:// URL instead tells Chrome directly "launch the
+  // WhatsApp app (com.whatsapp) with this message", skipping the web
+  // page entirely. If WhatsApp isn't installed, it falls back to the
+  // wa.me link automatically via browser_fallback_url.
+  var isAndroid = /Android/i.test(navigator.userAgent);
+  if (isAndroid) {
+    return 'intent://send/?phone=' + phone + '&text=' + msg +
+      '#Intent;scheme=smsto;package=com.whatsapp;S.browser_fallback_url=' +
+      encodeURIComponent(fallback) + ';end';
+  }
+
+  // iOS and desktop handle wa.me directly without this extra hop.
+  return fallback;
 }
 
 function sendToWhatsApp() {
@@ -412,8 +430,8 @@ function handleLocationChoice(isHome) {
 
   showLoadingOverlay();
 
-  var GOOD_ACCURACY = 8;   // meters - stop early once we get a fix this tight
-  var MAX_WAIT = 20000;     // ms - overall cap so the order is never stuck forever
+  var GOOD_ACCURACY = 20;   // meters - stop early once we get a fix this tight
+  var MAX_WAIT = 12000;     // ms - overall cap so the order is never stuck forever
 
   var best = null;
   var watchId = null;
