@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Nellore Rice Club - Wholesale Rice Bags</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700;900&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --gold: #d4af37; --gold-light: #f7d774; --gold-dark: #a67c00;
+    --gold-shine: #fff2b3; --black: #050505; --black-mid: #0f0f0f;
+    --black-card: #161616; --black-border: #2f2f2f;
+    --white: #ffffff; --white-dim: #d6d6d6; --red-warn: #ff4d4d;
+  }
+  body { font-family: 'Montserrat', sans-serif; background: var(--black); color: var(--white); min-height: 100vh; overflow-x: hidden; -webkit-overflow-scrolling: touch; -webkit-tap-highlight-color: transparent; }
+
+  header { background: var(--black-mid); border-bottom: 1px solid var(--gold-dark); padding: 22px 20px 18px; text-align: center; position: sticky; top: 0; z-index: 1000; overflow: hidden; -webkit-transform: translateZ(0); transform: translateZ(0); }
+  header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent); }
+  header::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-dark), transparent); }
+  .header-tag { font-size: 9px; font-weight: 600; letter-spacing: 4px; color: var(--gold); text-transform: uppercase; margin-bottom: 6px; }
+  .header-title { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 900; letter-spacing: 2px; background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold-light) 40%, var(--gold) 60%, var(--gold-shine) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .header-sub { font-size: 10px; color: var(--white-dim); letter-spacing: 3px; margin-top: 5px; font-weight: 300; text-transform: uppercase; }
+
+  .container { max-width: 500px; margin: 0 auto; padding: 20px 15px 30px; }
+
+  .section-title { display: flex; align-items: center; gap: 10px; font-size: 9px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin: 24px 0 12px; }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--gold-dark), transparent); }
+
+  .customer-card { background: var(--black-card); border: 1px solid var(--black-border); border-radius: 14px; padding: 18px; position: relative; overflow: hidden; }
+  .customer-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-dark), transparent); }
+  .input-group { position: relative; }
+  .input-group input { width: 100%; padding: 12px 14px 12px 42px; background: var(--black-mid); border: 1px solid var(--black-border); border-radius: 8px; color: var(--white); font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 500; outline: none; transition: border 0.25s, box-shadow 0.25s; -webkit-appearance: none; appearance: none; }
+  .input-group input::placeholder { color: #cccccc; font-weight: 400; }
+  .input-group input:focus { border-color: var(--gold-dark); box-shadow: 0 0 0 3px rgba(212,175,55,0.08); }
+  .input-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 14px; pointer-events: none; }
+
+  /* --- Wholesale notice strip --- */
+  .notice-strip { background: #1a1400; border: 1px solid var(--gold-dark); border-radius: 12px; padding: 14px 16px; margin-bottom: 16px; }
+  .notice-row { display: flex; align-items: flex-start; gap: 10px; font-size: 11.5px; color: var(--white-dim); line-height: 1.5; padding: 5px 0; }
+  .notice-row:not(:last-child) { border-bottom: 1px dashed #2a2200; }
+  .notice-row .n-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+  .notice-row b { color: var(--gold-light); }
+  .notice-footer { text-align: center; font-size: 10.5px; color: var(--gold-dark); font-style: italic; margin-top: 10px; padding-top: 10px; border-top: 1px solid #2a2200; letter-spacing: 0.3px; line-height: 1.6; }
+
+  .item { display: flex; align-items: center; background: var(--black-card); border: 1px solid var(--black-border); border-radius: 14px; padding: 14px; margin-bottom: 10px; transition: border-color 0.3s ease, background-color 0.3s ease; position: relative; overflow: hidden; cursor: default; user-select: none; -webkit-user-select: none; -webkit-transform: translateZ(0); transform: translateZ(0); }
+  .item::before { content: ''; position: absolute; inset: 0; border-radius: 14px; background: linear-gradient(135deg, rgba(212,175,55,0.05), transparent 60%); opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+  .item.active { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold-dark), 0 8px 30px rgba(212,175,55,0.18); background: #1c1800; }
+  .item.active::before { opacity: 1; }
+
+  .check-badge { position: absolute; top: 10px; right: 10px; width: 22px; height: 22px; background: linear-gradient(135deg, var(--gold-dark), var(--gold-light)); border-radius: 50%; font-size: 11px; color: var(--black); display: flex; align-items: center; justify-content: center; font-weight: 900; opacity: 0; transform: scale(0.5) translateZ(0); transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1); pointer-events: none; z-index: 6; }
+  .item.active .check-badge { opacity: 1; transform: scale(1) translateZ(0); }
+
+  .item img { width: 66px; height: 92px; object-fit: cover; object-position: center; border-radius: 8px; flex-shrink: 0; border: 1px solid #222; transition: border-color 0.3s; pointer-events: none; aspect-ratio: 3 / 4; background: #1a1a1a; display: block; }
+  .item.active img { border-color: var(--gold-dark); }
+  .img-slot { position: relative; flex-shrink: 0; }
+  .img-slot .img-tag { position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%); font-size: 7px; letter-spacing: 0.5px; color: #555; text-transform: uppercase; white-space: nowrap; }
+
+  .details { flex: 1; margin-left: 13px; min-width: 0; }
+  .item-name { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; color: #ffffff; transition: color 0.3s; line-height: 1.25; }
+  .item.active .item-name { color: var(--gold-light); }
+  .item-sub { font-size: 9px; letter-spacing: 1.2px; color: #b0b0b0; text-transform: uppercase; margin-top: 3px; font-weight: 600; transition: color 0.3s; line-height: 1.5; }
+  .item.active .item-sub { color: var(--gold-dark); }
+  .item-price { font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 600; color: var(--gold); margin-top: 7px; letter-spacing: 0.3px; }
+  .item-price .rupee { font-size: 13px; font-weight: 700; }
+  .item-price .amount { font-size: 16px; font-weight: 700; }
+  .item-price .per-bag { font-size: 11px; color: #666; font-weight: 400; margin-left: 2px; }
+
+  .qty-wrapper { display: flex; flex-direction: column; align-items: center; gap: 5px; margin-right: 30px; position: relative; z-index: 6; flex-shrink: 0; }
+  .qty-label { font-size: 8px; letter-spacing: 1.5px; color: var(--gold-dark); text-transform: uppercase; font-weight: 600; transition: color 0.3s; }
+  .item.active .qty-label { color: var(--gold); }
+  select.qty-select { padding: 9px 26px 9px 12px; border-radius: 8px; border: 1px solid var(--gold-dark); background: var(--black-mid); color: #888; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; outline: none; transition: all 0.3s; min-width: 76px; -webkit-appearance: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23a67c00' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; pointer-events: auto; }
+  .item.active select.qty-select { border-color: var(--gold); color: var(--gold-light); background-color: #1a1500; box-shadow: 0 0 0 1px var(--gold-dark), 0 3px 12px rgba(212,175,55,0.18); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23d4af37' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); }
+
+  .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-80px) translateZ(0); background: #1e0000; border: 1px solid var(--red-warn); color: var(--red-warn); font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.5px; padding: 12px 22px; border-radius: 10px; box-shadow: 0 6px 24px rgba(255,77,77,0.25); z-index: 9999; transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s; white-space: nowrap; opacity: 0; pointer-events: none; -webkit-transform: translateX(-50%) translateY(-80px) translateZ(0); }
+  .toast.show { transform: translateX(-50%) translateY(0) translateZ(0); -webkit-transform: translateX(-50%) translateY(0) translateZ(0); opacity: 1; }
+  .toast.info { background: #001a0a; border-color: var(--gold-dark); color: var(--gold-light); box-shadow: 0 6px 24px rgba(212,175,55,0.2); }
+
+  .summary-card { background: var(--black-card); border: 1px solid var(--black-border); border-radius: 14px; padding: 18px; position: relative; overflow: hidden; }
+  .summary-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-dark), transparent); }
+  .summary-customer { display: flex; align-items: center; gap: 10px; padding-bottom: 12px; margin-bottom: 4px; border-bottom: 1px solid #222; }
+  .cust-icon { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, var(--gold-dark), var(--gold)); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+  .cust-info { display: flex; flex-direction: column; }
+  .cust-label { font-size: 8px; letter-spacing: 2px; color: var(--gold-dark); text-transform: uppercase; font-weight: 700; }
+  .cust-name { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: var(--gold-light); margin-top: 1px; line-height: 1.2; }
+  .summary-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #1e1e1e; font-size: 13px; }
+  .summary-row:last-of-type { border-bottom: none; }
+  .s-name { color: var(--white); font-weight: 500; }
+  .s-qty { color: #bbbbbb; font-size: 11px; font-weight: 600; }
+  .s-price { color: var(--gold); font-weight: 700; font-size: 13px; }
+  .summary-total { display: flex; justify-content: space-between; align-items: center; padding-top: 14px; margin-top: 10px; border-top: 1px solid var(--gold-dark); }
+  .t-label { font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 700; color: var(--white-dim); letter-spacing: 1.5px; text-transform: uppercase; }
+  .t-amount { font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 700; background: linear-gradient(135deg, var(--gold-dark), var(--gold-light), var(--gold-shine)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .summary-empty { text-align: center; padding: 8px 0; color: #999; font-size: 12px; letter-spacing: 1px; font-style: italic; }
+
+  .btn-whatsapp { width: 100%; padding: 16px; margin-top: 16px; background: linear-gradient(135deg, #0d6e2f, #25D366); color: white; border: none; border-radius: 12px; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 20px rgba(37,211,102,0.2), inset 0 1px 0 rgba(255,255,255,0.1); transition: transform 0.25s, box-shadow 0.25s; position: relative; overflow: hidden; -webkit-appearance: none; appearance: none; }
+  .btn-whatsapp:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(37,211,102,0.3); }
+  .btn-whatsapp:active { transform: scale(0.98); }
+  .btn-whatsapp:disabled { opacity: 0.7; cursor: not-allowed; }
+
+  .footer-note { text-align: center; font-size: 9px; color: #2e2e2e; letter-spacing: 2px; margin-top: 14px; text-transform: uppercase; padding-bottom: 10px; }
+
+  .popup-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.82); z-index: 9998; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+  .popup-overlay.show { opacity: 1; pointer-events: all; }
+  .popup-box { background: var(--black-card); border: 1px solid var(--gold-dark); border-radius: 20px; padding: 28px 24px 24px; max-width: 340px; width: 100%; position: relative; overflow: hidden; transform: scale(0.9) translateY(20px); transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1); text-align: center; }
+  .popup-overlay.show .popup-box { transform: scale(1) translateY(0); }
+  .popup-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent); }
+  .popup-icon { font-size: 42px; margin-bottom: 12px; display: block; line-height: 1; }
+  .popup-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--gold-light); margin-bottom: 8px; line-height: 1.3; }
+  .popup-subtitle { font-size: 12px; color: #888; letter-spacing: 0.5px; line-height: 1.6; margin-bottom: 24px; }
+  .popup-subtitle span { color: var(--gold-dark); font-weight: 600; }
+  .popup-buttons { display: flex; gap: 12px; }
+  .popup-btn { flex: 1; padding: 14px 10px; border: none; border-radius: 12px; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 1px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; -webkit-appearance: none; appearance: none; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+  .popup-btn:active { transform: scale(0.96); }
+  .popup-btn .btn-emoji { font-size: 22px; }
+  .popup-btn-yes { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: var(--black); box-shadow: 0 4px 16px rgba(212,175,55,0.25); }
+  .popup-btn-no { background: var(--black-mid); color: var(--white-dim); border: 1px solid var(--black-border); }
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<div class="popup-overlay" id="locationPopup">
+  <div class="popup-box">
+    <span class="popup-icon">&#127968;</span>
+    <div class="popup-title">Are you at Home?</div>
+    <div class="popup-subtitle">We will <span>share your location</span> with the order so we can deliver right to your door.</div>
+    <div class="popup-buttons">
+      <button class="popup-btn popup-btn-yes" onclick="handleLocationChoice(true)"><span class="btn-emoji">&#9989;</span>Yes, I'm Home</button>
+      <button class="popup-btn popup-btn-no" onclick="handleLocationChoice(false)"><span class="btn-emoji">&#128694;</span>No, I'm Not</button>
+    </div>
+  </div>
+</div>
+
+<header>
+  <div class="header-tag">&#10022; Wholesale Rice Bags &#10022;</div>
+  <div class="header-title">Nellore Rice Club</div>
+  <div class="header-sub">Best Quality &middot; Best Service</div>
+</header>
+
+<div class="container">
+
+  <div class="section-title">&#10022; Your Details</div>
+  <div class="customer-card">
+    <div class="input-group" style="margin-bottom:10px;">
+      <span class="input-icon">&#128100;</span>
+      <input type="text" id="customerName" placeholder="Full Name" autocomplete="name" autocorrect="off" autocapitalize="words" spellcheck="false" oninput="updateSummary()"/>
+    </div>
+    <div class="input-group">
+      <span class="input-icon">&#128222;</span>
+      <input type="tel" id="customerPhone" placeholder="Phone Number (10 digits)" maxlength="10" autocomplete="tel" inputmode="numeric" pattern="[0-9]*" oninput="filterPhone(this); updateSummary();"/>
+    </div>
+  </div>
+
+  <div class="section-title">&#10022; Delivery &amp; Payment</div>
+  <div class="notice-strip">
+    <div class="notice-row"><span class="n-icon">&#128666;</span><span><b>Free Home Delivery</b> on every order, anywhere in Nellore City.</span></div>
+    <div class="notice-row"><span class="n-icon">&#9200;</span><span><b>Next Day Delivery</b> — order today, get your bags tomorrow.</span></div>
+    <div class="notice-row"><span class="n-icon">&#128176;</span><span><b>Cash on Delivery only</b> — pay the delivery person directly.</span></div>
+    <div class="notice-row"><span class="n-icon">&#128683;</span><span><b>No credits, no pending payments.</b> Full payment compulsory at the time of delivery.</span></div>
+    <div class="notice-footer">We are wholesalers — every rupee counts towards our profit, so our margins are kept very low. Thank you for understanding.</div>
+  </div>
+
+  <div class="section-title">&#10022; Select Rice Bags</div>
+
+  <div id="rice-items"></div>
+
+  <div class="section-title">&#10022; Order Summary</div>
+  <div class="summary-card">
+    <div class="summary-empty" id="summaryEmpty">No items selected yet</div>
+    <div id="summaryCustomer"></div>
+    <div id="summaryRows"></div>
+  </div>
+
+  <button class="btn-whatsapp" id="waBtn" onclick="sendToWhatsApp()">
+    <span style="font-size:18px">&#128172;</span> Place Order on WhatsApp
+  </button>
+  <div class="footer-note">&#10022; Orders confirmed via WhatsApp only &#10022;</div>
+</div>
+
+<script>
+/* ============================================================
+   DATA — edit bag details/prices here only. Everything else
+   is generated. Replace the empty img src with your own image
+   URL later — the slot is already left open on the left side
+   of each bag.
+   ============================================================ */
+// [ id, name, subtitle, price, imgUrl ]
+var RICE_BAGS = [
+  ['r1', 'Kurnool Rice Bag', '25 Kgs &middot; Old Rice &middot; Jilakara Masura', 1450, 'Kurnool.webp'],
+  ['r2', '24 Carat Gold', '24 Kgs &middot; Old Rice &middot; Jilakara Masura &middot; From Nandhyala', 1430, 'Carat.webp'],
+  ['r3', 'Steam Rice', '25 Kgs &middot; MVR Khageshwar Brand', 1430, 'mvr.webp'],
+  ['r4', 'Molagolukulu Sannalu', '24 Kgs &middot; Old Rice &middot; Pine Apple Bag &middot; From Chirala', 1530, 'sannalu.webp']
+];
+
+var toastTimer = null;
+
+/* ============================================================
+   RENDERING
+   ============================================================ */
+function renderItems() {
+  var wrap = document.getElementById('rice-items');
+  var html = '';
+  RICE_BAGS.forEach(function(row){
+    var id = row[0], name = row[1], sub = row[2], price = row[3], img = row[4];
+    html += '<div class="item" id="' + id + '">' +
+      '<div class="check-badge">&#10003;</div>' +
+      '<div class="img-slot"><img src="' + img + '" loading="lazy" decoding="async" width="66" height="92" alt="' + name + '" onerror="this.style.opacity=0.15;"></div>' +
+      '<div class="details">' +
+        '<div class="item-name">' + name + '</div>' +
+        '<div class="item-sub">' + sub + '</div>' +
+        '<div class="item-price"><span class="rupee">&#8377;</span><span class="amount">' + price + '</span><span class="per-bag"> / bag</span></div>' +
+      '</div>' +
+      '<div class="qty-wrapper"><span class="qty-label">Quantity</span>' +
+      '<select class="qty-select" onchange="onQtyChange(this,\'' + id + '\')">' +
+        '<option value="0">-- bags</option>' +
+        [1,2,3,4,5].map(function(n){ return '<option value="' + n + '">' + n + ' bag' + (n>1?'s':'') + '</option>'; }).join('') +
+      '</select></div>' +
+    '</div>';
+  });
+  wrap.innerHTML = html;
+}
+
+function findBag(id) { for (var i=0;i<RICE_BAGS.length;i++) if (RICE_BAGS[i][0]===id) return RICE_BAGS[i]; return null; }
+
+/* ============================================================
+   INTERACTIONS
+   ============================================================ */
+function filterPhone(input) { input.value = input.value.replace(/[^0-9]/g,''); }
+
+function onQtyChange(selectEl, id) {
+  var item = document.getElementById(id);
+  var val = parseInt(selectEl.value) || 0;
+  if (val > 0) { item.classList.add('active'); } else { item.classList.remove('active'); }
+  updateSummary();
+}
+
+function updateSummary() {
+  var name = document.getElementById('customerName').value.trim();
+  var custPhone = document.getElementById('customerPhone').value.trim();
+  var grandTotal = 0, hasAny = false, html = '';
+
+  RICE_BAGS.forEach(function(row){
+    var id = row[0], bagName = row[1], price = row[3];
+    var qty = parseInt(document.getElementById(id).querySelector('select').value) || 0;
+    if (qty > 0) {
+      var it = price * qty;
+      grandTotal += it; hasAny = true;
+      html += '<div class="summary-row"><span class="s-name">' + bagName + '</span><span class="s-qty">x' + qty + '</span><span class="s-price">&#8377; ' + it.toFixed(0) + '</span></div>';
+    }
+  });
+
+  var emptyEl = document.getElementById('summaryEmpty');
+  var customerEl = document.getElementById('summaryCustomer');
+  var rowsEl = document.getElementById('summaryRows');
+
+  if (!hasAny) { emptyEl.style.display = 'block'; customerEl.innerHTML = ''; rowsEl.innerHTML = ''; return; }
+  emptyEl.style.display = 'none';
+
+  if (name) {
+    var phoneHtml = custPhone ? '<span style="font-size:11px;color:#b0b0b0;margin-top:3px;display:block;font-family:Montserrat,sans-serif;font-weight:500;">&#128222; ' + custPhone + '</span>' : '';
+    customerEl.innerHTML = '<div class="summary-customer"><div class="cust-icon">&#128100;</div><div class="cust-info"><span class="cust-label">Order for</span><span class="cust-name">' + name + '</span>' + phoneHtml + '</div></div>';
+  } else { customerEl.innerHTML = ''; }
+
+  html += '<div class="summary-total"><span class="t-label">Grand Total</span><span class="t-amount">&#8377; ' + grandTotal.toFixed(0) + '</span></div>';
+  rowsEl.innerHTML = html;
+}
+
+function showToast(msg, type) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (type === 'info' ? ' info' : '');
+  t.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(function() { t.classList.remove('show'); }, 3500);
+}
+
+function buildWhatsAppURL(locationText) {
+  var name = document.getElementById('customerName').value.trim();
+  var custPhone = document.getElementById('customerPhone').value.trim();
+  var lines = [], grandTotal = 0, count = 1;
+
+  RICE_BAGS.forEach(function(row){
+    var id = row[0], bagName = row[1], price = row[3];
+    var qty = parseInt(document.getElementById(id).querySelector('select').value) || 0;
+    if (qty > 0) {
+      var it = price * qty;
+      lines.push(count + '. ' + bagName + ' x' + qty + ' - Rs.' + it.toFixed(0));
+      grandTotal += it; count++;
+    }
+  });
+
+  var parts = [
+    'Nellore Rice Club Order',
+    '----------------------------',
+    'Name: ' + name,
+    'Phone: ' + custPhone,
+    'Location: ' + locationText,
+    '----------------------------'
+  ].concat(lines).concat([
+    '',
+    '*Total: Rs.' + grandTotal.toFixed(0) + '*',
+    '',
+    '(Cash on Delivery, Next Day Delivery, No pending payment)'
+  ]);
+
+  // Single encodeURIComponent pass at the end: safely escapes EVERY
+  // special character so nothing can ever break or truncate the
+  // wa.me query string, no matter what bag names contain.
+  var msg = encodeURIComponent(parts.join('\n'));
+  return 'https://wa.me/918008970033?text=' + msg;
+}
+
+function sendToWhatsApp() {
+  var name = document.getElementById('customerName').value.trim();
+  var custPhone = document.getElementById('customerPhone').value.trim();
+  if (!name) { showToast('Please enter your Full Name'); document.getElementById('customerName').focus(); return; }
+  if (!custPhone) { showToast('Please enter your Phone Number'); document.getElementById('customerPhone').focus(); return; }
+  if (custPhone.length !== 10 || !/^[6-9][0-9]{9}$/.test(custPhone)) { showToast('Enter a valid 10-digit Indian mobile number'); document.getElementById('customerPhone').focus(); return; }
+
+  var hasAny = false;
+  RICE_BAGS.forEach(function(row){
+    if (parseInt(document.getElementById(row[0]).querySelector('select').value) > 0) hasAny = true;
+  });
+  if (!hasAny) { showToast('Please select at least one rice bag'); return; }
+
+  document.getElementById('locationPopup').classList.add('show');
+}
+
+/* ============================================================
+   PRECISE GEOLOCATION
+   Instead of accepting the first (often rough) GPS fix, this
+   watches the position stream for up to MAX_WAIT ms and keeps
+   the single most accurate reading it sees. It stops early the
+   moment a reading is at or below GOOD_ACCURACY meters, since
+   waiting longer past that point rarely helps and only slows
+   the customer down.
+   ============================================================ */
+function handleLocationChoice(isHome) {
+  document.getElementById('locationPopup').classList.remove('show');
+  var btn = document.getElementById('waBtn');
+  btn.disabled = true;
+
+  if (!isHome) {
+    btn.disabled = false;
+    window.location.href = buildWhatsAppURL('Customer not at home - location not shared');
+    return;
+  }
+
+  if (!navigator.geolocation) {
+    btn.disabled = false;
+    window.location.href = buildWhatsAppURL('Location not supported on this device');
+    return;
+  }
+
+  showToast('Getting your precise location...', 'info');
+
+  var GOOD_ACCURACY = 15;   // meters - stop early once we get a fix this tight
+  var MAX_WAIT = 15000;     // ms - overall cap so the order is never stuck forever
+
+  var best = null;
+  var watchId = null;
+  var finished = false;
+  var maxTimer = null;
+
+  function finish() {
+    if (finished) return;
+    finished = true;
+    if (maxTimer) clearTimeout(maxTimer);
+    if (watchId !== null) navigator.geolocation.clearWatch(watchId);
+    btn.disabled = false;
+
+    if (best) {
+      var lat = best.coords.latitude.toFixed(7);
+      var lng = best.coords.longitude.toFixed(7);
+      var acc = Math.round(best.coords.accuracy);
+      var locText = lat + ', ' + lng + ' (accuracy \u00B1' + acc + 'm) https://maps.google.com/?q=' + lat + ',' + lng;
+      window.location.href = buildWhatsAppURL(locText);
+    } else {
+      window.location.href = buildWhatsAppURL('Could not get precise location');
+    }
+  }
+
+  maxTimer = setTimeout(finish, MAX_WAIT);
+
+  watchId = navigator.geolocation.watchPosition(
+    function(pos) {
+      // Keep whichever reading so far has the smallest (best) accuracy radius
+      if (!best || pos.coords.accuracy < best.coords.accuracy) {
+        best = pos;
+      }
+      if (pos.coords.accuracy <= GOOD_ACCURACY) {
+        finish();
+      }
+    },
+    function(err) {
+      // On permission denial, stop immediately - retrying won't help.
+      // On other errors (timeout/unavailable) keep waiting for maxTimer
+      // in case a later reading in the stream succeeds.
+      if (err.code === err.PERMISSION_DENIED) {
+        finished = true;
+        if (maxTimer) clearTimeout(maxTimer);
+        if (watchId !== null) navigator.geolocation.clearWatch(watchId);
+        btn.disabled = false;
+        window.location.href = buildWhatsAppURL('Location permission denied');
+      }
+    },
+    { enableHighAccuracy: true, timeout: MAX_WAIT, maximumAge: 0 }
+  );
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+renderItems();
+updateSummary();
+</script>
+</body>
+</html>
