@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Nellore Rice Club - Wholesale Rice Bags</title>
+<title>Nellore Basket - Wholesale &amp; Combo Orders</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700;900&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -23,7 +23,7 @@
   header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent); }
   header::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-dark), transparent); }
   .header-tag { font-size: 9px; font-weight: 600; letter-spacing: 4px; color: var(--gold); text-transform: uppercase; margin-bottom: 6px; }
-  .header-title { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 900; letter-spacing: 2px; background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold-light) 40%, var(--gold) 60%, var(--gold-shine) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .header-title { font-family: 'Playfair Display', serif; font-size: 30px; font-weight: 900; letter-spacing: 2px; background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold-light) 40%, var(--gold) 60%, var(--gold-shine) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
   .header-sub { font-size: 10px; color: var(--white-dim); letter-spacing: 3px; margin-top: 5px; font-weight: 300; text-transform: uppercase; }
 
   .container { max-width: 500px; margin: 0 auto; padding: 20px 15px 30px; }
@@ -31,20 +31,32 @@
   .section-title { display: flex; align-items: center; gap: 10px; font-size: 9px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin: 24px 0 12px; }
   .section-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--gold-dark), transparent); }
 
-  .customer-card { background: var(--black-card); border: 1px solid var(--black-border); border-radius: 14px; padding: 18px; position: relative; overflow: hidden; }
-  .customer-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-dark), transparent); }
+  .customer-card, .summary-card, .notice-strip, .lock-card { background: var(--black-card); border: 1px solid var(--black-border); border-radius: 14px; padding: 18px; position: relative; overflow: hidden; }
+  .customer-card::before, .summary-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-dark), transparent); }
   .input-group { position: relative; }
   .input-group input { width: 100%; padding: 12px 14px 12px 42px; background: var(--black-mid); border: 1px solid var(--black-border); border-radius: 8px; color: var(--white); font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 500; outline: none; transition: border 0.25s, box-shadow 0.25s; -webkit-appearance: none; appearance: none; }
   .input-group input::placeholder { color: #cccccc; font-weight: 400; }
   .input-group input:focus { border-color: var(--gold-dark); box-shadow: 0 0 0 3px rgba(212,175,55,0.08); }
   .input-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 14px; pointer-events: none; }
 
-  /* --- Wholesale notice strip --- */
-  .notice-strip { background: #1a1400; border: 1px solid var(--gold-dark); border-radius: 12px; padding: 14px 16px; margin-bottom: 16px; }
+  /* --- Combo tab bar --- */
+  .combo-tabs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 4px; }
+  .combo-tab { background: var(--black-card); border: 1px solid var(--black-border); border-radius: 12px; padding: 12px 8px; text-align: center; cursor: pointer; transition: all 0.25s; -webkit-user-select: none; user-select: none; }
+  .combo-tab .ct-num { font-size: 9px; letter-spacing: 2px; color: var(--gold-dark); text-transform: uppercase; font-weight: 700; }
+  .combo-tab .ct-name { font-family: 'Playfair Display', serif; font-size: 13px; font-weight: 700; color: var(--white-dim); margin-top: 3px; line-height: 1.25; }
+  .combo-tab.active { border-color: var(--gold); background: #1c1800; box-shadow: 0 0 0 1px var(--gold-dark), 0 6px 20px rgba(212,175,55,0.15); }
+  .combo-tab.active .ct-num { color: var(--gold); }
+  .combo-tab.active .ct-name { color: var(--gold-light); }
+
+  .combo-desc { font-size: 11px; color: var(--white-dim); line-height: 1.6; background: #14110a; border: 1px solid #2a2200; border-radius: 10px; padding: 10px 12px; margin: 10px 0 16px; }
+  .combo-desc b { color: var(--gold-light); }
+
+  /* --- Notice strip --- */
   .notice-row { display: flex; align-items: flex-start; gap: 10px; font-size: 11.5px; color: var(--white-dim); line-height: 1.5; padding: 5px 0; }
   .notice-row:not(:last-child) { border-bottom: 1px dashed #2a2200; }
   .notice-row .n-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
   .notice-row b { color: var(--gold-light); }
+  .notice-strip { background: #1a1400; border: 1px solid var(--gold-dark); margin-bottom: 16px; }
   .notice-footer { text-align: center; font-size: 10.5px; color: var(--gold-dark); font-style: italic; margin-top: 10px; padding-top: 10px; border-top: 1px solid #2a2200; letter-spacing: 0.3px; line-height: 1.6; }
 
   .item { display: flex; align-items: center; background: var(--black-card); border: 1px solid var(--black-border); border-radius: 14px; padding: 14px; margin-bottom: 10px; transition: border-color 0.3s ease, background-color 0.3s ease; position: relative; overflow: hidden; cursor: default; user-select: none; -webkit-user-select: none; -webkit-transform: translateZ(0); transform: translateZ(0); }
@@ -55,63 +67,89 @@
   .check-badge { position: absolute; top: 10px; right: 10px; width: 22px; height: 22px; background: linear-gradient(135deg, var(--gold-dark), var(--gold-light)); border-radius: 50%; font-size: 11px; color: var(--black); display: flex; align-items: center; justify-content: center; font-weight: 900; opacity: 0; transform: scale(0.5) translateZ(0); transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1); pointer-events: none; z-index: 6; }
   .item.active .check-badge { opacity: 1; transform: scale(1) translateZ(0); }
 
-  .item img { width: 66px; height: 92px; object-fit: cover; object-position: center; border-radius: 8px; flex-shrink: 0; border: 1px solid #222; transition: border-color 0.3s; pointer-events: none; aspect-ratio: 3 / 4; background: #1a1a1a; display: block; }
+  .item img { width: 62px; height: 86px; object-fit: cover; object-position: center; border-radius: 8px; flex-shrink: 0; border: 1px solid #222; transition: border-color 0.3s; pointer-events: none; aspect-ratio: 3 / 4; background: #1a1a1a; display: block; }
   .item.active img { border-color: var(--gold-dark); }
-  /* Image placeholder — replace src on the <img> tag below with your own image URL later.
-     All bag photos render at a fixed 66x92 portrait size (3:4 ratio) and are cropped
-     with object-fit so mismatched source photos still line up evenly. */
   .img-slot { position: relative; flex-shrink: 0; }
-  .img-slot .img-tag { position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%); font-size: 7px; letter-spacing: 0.5px; color: #555; text-transform: uppercase; white-space: nowrap; }
 
   .details { flex: 1; margin-left: 13px; min-width: 0; }
-  .item-name { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; color: #ffffff; transition: color 0.3s; line-height: 1.25; }
+  .item-name { font-family: 'Playfair Display', serif; font-size: 14.5px; font-weight: 700; color: #ffffff; transition: color 0.3s; line-height: 1.25; }
   .item.active .item-name { color: var(--gold-light); }
-  .item-sub { font-size: 9px; letter-spacing: 1.2px; color: #b0b0b0; text-transform: uppercase; margin-top: 3px; font-weight: 600; transition: color 0.3s; line-height: 1.5; }
+  .item-sub { font-size: 9px; letter-spacing: 1px; color: #b0b0b0; text-transform: uppercase; margin-top: 3px; font-weight: 600; transition: color 0.3s; line-height: 1.5; }
   .item.active .item-sub { color: var(--gold-dark); }
-  .item-price { font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 600; color: var(--gold); margin-top: 7px; letter-spacing: 0.3px; }
-  .item-price .rupee { font-size: 13px; font-weight: 700; }
-  .item-price .amount { font-size: 16px; font-weight: 700; }
-  .item-price .per-bag { font-size: 11px; color: #666; font-weight: 400; margin-left: 2px; }
+  .item-price { font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 600; color: var(--gold); margin-top: 7px; letter-spacing: 0.3px; }
+  .item-price .rupee { font-size: 12px; font-weight: 700; }
+  .item-price .amount { font-size: 15px; font-weight: 700; }
+  .item-price .per-bag { font-size: 10.5px; color: #666; font-weight: 400; margin-left: 2px; }
+  .item-price .strike { text-decoration: line-through; color: #666; font-size: 11px; margin-right: 4px; }
 
-  .qty-wrapper { display: flex; flex-direction: column; align-items: center; gap: 5px; margin-right: 30px; position: relative; z-index: 6; flex-shrink: 0; }
+  .qty-wrapper { display: flex; flex-direction: column; align-items: center; gap: 5px; margin-right: 20px; position: relative; z-index: 6; flex-shrink: 0; }
   .qty-label { font-size: 8px; letter-spacing: 1.5px; color: var(--gold-dark); text-transform: uppercase; font-weight: 600; transition: color 0.3s; }
   .item.active .qty-label { color: var(--gold); }
-  select.qty-select { padding: 9px 26px 9px 12px; border-radius: 8px; border: 1px solid var(--gold-dark); background: var(--black-mid); color: #888; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; outline: none; transition: all 0.3s; min-width: 76px; -webkit-appearance: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23a67c00' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; pointer-events: auto; }
+  select.qty-select { padding: 9px 26px 9px 12px; border-radius: 8px; border: 1px solid var(--gold-dark); background: var(--black-mid); color: #888; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; outline: none; transition: all 0.3s; min-width: 72px; -webkit-appearance: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23a67c00' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; pointer-events: auto; }
   .item.active select.qty-select { border-color: var(--gold); color: var(--gold-light); background-color: #1a1500; box-shadow: 0 0 0 1px var(--gold-dark), 0 3px 12px rgba(212,175,55,0.18); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23d4af37' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); }
 
-  .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-80px) translateZ(0); background: #1e0000; border: 1px solid var(--red-warn); color: var(--red-warn); font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.5px; padding: 12px 22px; border-radius: 10px; box-shadow: 0 6px 24px rgba(255,77,77,0.25); z-index: 9999; transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s; white-space: nowrap; opacity: 0; pointer-events: none; -webkit-transform: translateX(-50%) translateY(-80px) translateZ(0); }
+  /* Compact row style used for List1 / List2 / List3 grocery rows (no image, denser) */
+  .g-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: var(--black-card); border: 1px solid var(--black-border); border-radius: 10px; padding: 10px 12px; margin-bottom: 8px; transition: border-color .25s, background-color .25s; }
+  .g-row.active { border-color: var(--gold-dark); background: #171400; }
+  .g-name { font-size: 12.5px; font-weight: 600; color: var(--white); line-height: 1.35; }
+  .g-name .g-note { display:block; font-size: 9.5px; color: #888; font-weight: 500; margin-top: 2px; }
+  .g-selects { display: flex; gap: 6px; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end; }
+  .g-selects .g-unit { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+  .g-selects .g-unit-label { font-size: 7.5px; letter-spacing: .5px; color: var(--gold-dark); text-transform: uppercase; font-weight: 700; }
+  select.g-select { padding: 6px 20px 6px 8px; border-radius: 6px; border: 1px solid var(--black-border); background: var(--black-mid); color: #999; font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 600; cursor: pointer; outline: none; min-width: 58px; -webkit-appearance: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='5'%3E%3Cpath d='M1 1l3.5 3 3.5-3' stroke='%23a67c00' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 7px center; }
+  select.g-select.g-has-val { border-color: var(--gold-dark); color: var(--gold-light); background-color: #1a1500; }
+  .g-select:disabled { opacity: 0.25; cursor: not-allowed; }
+
+  .glist-tabs { display: flex; gap: 6px; margin-bottom: 12px; }
+  .glist-tab { flex: 1; text-align: center; padding: 9px 4px; border-radius: 8px; border: 1px solid var(--black-border); background: var(--black-mid); font-size: 10.5px; font-weight: 700; letter-spacing: .5px; color: #999; cursor: pointer; text-transform: uppercase; }
+  .glist-tab.active { border-color: var(--gold); color: var(--gold-light); background: #1a1500; }
+
+  .lock-card { text-align: center; padding: 26px 18px; color: #888; }
+  .lock-icon { font-size: 30px; display: block; margin-bottom: 10px; opacity: .8; }
+  .lock-title { font-family: 'Playfair Display', serif; font-size: 15px; color: var(--gold-light); font-weight: 700; margin-bottom: 6px; }
+  .lock-sub { font-size: 11.5px; line-height: 1.6; color: #999; }
+  .lock-sub b { color: var(--gold-dark); }
+
+  .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-80px) translateZ(0); background: #1e0000; border: 1px solid var(--red-warn); color: var(--red-warn); font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.5px; padding: 12px 22px; border-radius: 10px; box-shadow: 0 6px 24px rgba(255,77,77,0.25); z-index: 9999; transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s; white-space: nowrap; opacity: 0; pointer-events: none; -webkit-transform: translateX(-50%) translateY(-80px) translateZ(0); max-width:88vw; overflow:hidden; text-overflow:ellipsis; }
   .toast.show { transform: translateX(-50%) translateY(0) translateZ(0); -webkit-transform: translateX(-50%) translateY(0) translateZ(0); opacity: 1; }
   .toast.info { background: #001a0a; border-color: var(--gold-dark); color: var(--gold-light); box-shadow: 0 6px 24px rgba(212,175,55,0.2); }
 
-  .summary-card { background: var(--black-card); border: 1px solid var(--black-border); border-radius: 14px; padding: 18px; position: relative; overflow: hidden; }
-  .summary-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-dark), transparent); }
   .summary-customer { display: flex; align-items: center; gap: 10px; padding-bottom: 12px; margin-bottom: 4px; border-bottom: 1px solid #222; }
   .cust-icon { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, var(--gold-dark), var(--gold)); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
   .cust-info { display: flex; flex-direction: column; }
   .cust-label { font-size: 8px; letter-spacing: 2px; color: var(--gold-dark); text-transform: uppercase; font-weight: 700; }
   .cust-name { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: var(--gold-light); margin-top: 1px; line-height: 1.2; }
-  .summary-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #1e1e1e; font-size: 13px; }
+  .summary-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #1e1e1e; font-size: 13px; gap: 8px; }
   .summary-row:last-of-type { border-bottom: none; }
   .s-name { color: var(--white); font-weight: 500; }
-  .s-qty { color: #bbbbbb; font-size: 11px; font-weight: 600; }
-  .s-price { color: var(--gold); font-weight: 700; font-size: 13px; }
+  .s-qty { color: #bbbbbb; font-size: 11px; font-weight: 600; white-space: nowrap; }
+  .s-price { color: var(--gold); font-weight: 700; font-size: 13px; white-space: nowrap; }
+  .summary-sub { display: flex; justify-content: space-between; align-items: center; padding: 10px 0 4px; font-size: 12.5px; color: var(--white-dim); }
+  .summary-discount { display: flex; justify-content: space-between; align-items: center; padding: 4px 0 4px; font-size: 12.5px; color: #7CFC9A; }
   .summary-total { display: flex; justify-content: space-between; align-items: center; padding-top: 14px; margin-top: 10px; border-top: 1px solid var(--gold-dark); }
   .t-label { font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 700; color: var(--white-dim); letter-spacing: 1.5px; text-transform: uppercase; }
   .t-amount { font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 700; background: linear-gradient(135deg, var(--gold-dark), var(--gold-light), var(--gold-shine)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
   .summary-empty { text-align: center; padding: 8px 0; color: #999; font-size: 12px; letter-spacing: 1px; font-style: italic; }
+  .summary-group-label { font-size: 9.5px; letter-spacing: 1.5px; color: var(--gold-dark); text-transform: uppercase; font-weight: 700; margin: 10px 0 4px; }
+
+  .min-warn { font-size: 11.5px; color: var(--red-warn); background: #1e0000; border: 1px solid var(--red-warn); border-radius: 10px; padding: 10px 12px; margin: 10px 0; text-align: center; line-height: 1.5; }
+
+  textarea.other-items { width: 100%; padding: 10px 12px; background: var(--black-mid); border: 1px solid var(--black-border); border-radius: 8px; color: var(--white); font-family: 'Montserrat', sans-serif; font-size: 12px; resize: vertical; min-height: 60px; outline: none; }
+  textarea.other-items:focus { border-color: var(--gold-dark); }
+  .other-note { font-size: 10.5px; color: #888; margin-top: 6px; line-height: 1.5; font-style: italic; }
 
   .btn-whatsapp { width: 100%; padding: 16px; margin-top: 16px; background: linear-gradient(135deg, #0d6e2f, #25D366); color: white; border: none; border-radius: 12px; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 20px rgba(37,211,102,0.2), inset 0 1px 0 rgba(255,255,255,0.1); transition: transform 0.25s, box-shadow 0.25s; position: relative; overflow: hidden; -webkit-appearance: none; appearance: none; }
   .btn-whatsapp:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(37,211,102,0.3); }
   .btn-whatsapp:active { transform: scale(0.98); }
-  .btn-whatsapp:disabled { opacity: 0.7; cursor: not-allowed; }
+  .btn-whatsapp:disabled { opacity: 0.5; cursor: not-allowed; }
 
   .footer-note { text-align: center; font-size: 9px; color: #2e2e2e; letter-spacing: 2px; margin-top: 14px; text-transform: uppercase; padding-bottom: 10px; }
 
-  .popup-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.82); z-index: 9998; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
-  .popup-overlay.show { opacity: 1; pointer-events: all; }
-  .popup-box { background: var(--black-card); border: 1px solid var(--gold-dark); border-radius: 20px; padding: 28px 24px 24px; max-width: 340px; width: 100%; position: relative; overflow: hidden; transform: scale(0.9) translateY(20px); transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1); text-align: center; }
-  .popup-overlay.show .popup-box { transform: scale(1) translateY(0); }
-  .popup-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent); }
+  .popup-overlay, .loading-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.82); z-index: 9998; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+  .popup-overlay.show, .loading-overlay.show { opacity: 1; pointer-events: all; }
+  .popup-box, .loading-box { background: var(--black-card); border: 1px solid var(--gold-dark); border-radius: 20px; padding: 28px 24px 24px; max-width: 340px; width: 100%; position: relative; overflow: hidden; transform: scale(0.9) translateY(20px); transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1); text-align: center; }
+  .popup-overlay.show .popup-box, .loading-overlay.show .loading-box { transform: scale(1) translateY(0); }
+  .popup-box::before, .loading-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent); }
   .popup-icon { font-size: 42px; margin-bottom: 12px; display: block; line-height: 1; }
   .popup-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--gold-light); margin-bottom: 8px; line-height: 1.3; }
   .popup-subtitle { font-size: 12px; color: #888; letter-spacing: 0.5px; line-height: 1.6; margin-bottom: 24px; }
@@ -122,6 +160,24 @@
   .popup-btn .btn-emoji { font-size: 22px; }
   .popup-btn-yes { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: var(--black); box-shadow: 0 4px 16px rgba(212,175,55,0.25); }
   .popup-btn-no { background: var(--black-mid); color: var(--white-dim); border: 1px solid var(--black-border); }
+
+  .loading-box { max-width: 300px; padding: 34px 26px 28px; }
+  .gps-spinner-wrap { position: relative; width: 64px; height: 64px; margin: 0 auto 18px; display: flex; align-items: center; justify-content: center; }
+  .gps-spinner-ring { position: absolute; inset: 0; border: 3px solid rgba(212,175,55,0.15); border-top-color: var(--gold); border-radius: 50%; animation: gps-spin 0.9s linear infinite; }
+  .gps-spinner-ring.slow { border-top-color: var(--gold-light); animation-duration: 1.6s; inset: 9px; opacity: 0.75; }
+  .gps-spinner-pin { font-size: 20px; position: relative; z-index: 2; animation: gps-pulse 1.4s ease-in-out infinite; }
+  @keyframes gps-spin { to { transform: rotate(360deg); } }
+  @keyframes gps-pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.15); opacity: 0.7; } }
+  .loading-title { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; color: var(--gold-light); margin-bottom: 8px; line-height: 1.3; }
+  .loading-sub { font-size: 11.5px; color: #999; letter-spacing: 0.3px; line-height: 1.6; }
+  .loading-accuracy { margin-top: 14px; font-size: 11px; color: var(--gold-dark); font-weight: 600; letter-spacing: 0.5px; min-height: 15px; }
+  .loading-dots span { display: inline-block; animation: gps-dots 1.4s infinite; opacity: 0; }
+  .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes gps-dots { 0%, 20% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
+
+  .combo-panel { display: none; }
+  .combo-panel.active { display: block; }
 </style>
 </head>
 <body>
@@ -140,9 +196,22 @@
   </div>
 </div>
 
+<div class="loading-overlay" id="locationLoading">
+  <div class="loading-box">
+    <div class="gps-spinner-wrap">
+      <div class="gps-spinner-ring"></div>
+      <div class="gps-spinner-ring slow"></div>
+      <span class="gps-spinner-pin">&#128205;</span>
+    </div>
+    <div class="loading-title">Finding Your Precise Location</div>
+    <div class="loading-sub">Please wait, this may take a few seconds<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></div>
+    <div class="loading-accuracy" id="loadingAccuracy"></div>
+  </div>
+</div>
+
 <header>
-  <div class="header-tag">&#10022; Wholesale Rice Bags &#10022;</div>
-  <div class="header-title">Nellore Rice Club</div>
+  <div class="header-tag">&#10022; Wholesale &amp; Combo Orders &#10022;</div>
+  <div class="header-title">Nellore Basket</div>
   <div class="header-sub">Best Quality &middot; Best Service</div>
 </header>
 
@@ -160,18 +229,44 @@
     </div>
   </div>
 
-  <div class="section-title">&#10022; Delivery &amp; Payment</div>
-  <div class="notice-strip">
-    <div class="notice-row"><span class="n-icon">&#128666;</span><span><b>Free Home Delivery</b> on every order, anywhere in Nellore City.</span></div>
-    <div class="notice-row"><span class="n-icon">&#9200;</span><span><b>Next Day Delivery</b> — order today, get your bags tomorrow.</span></div>
-    <div class="notice-row"><span class="n-icon">&#128176;</span><span><b>Cash on Delivery only</b> — pay the delivery person directly.</span></div>
-    <div class="notice-row"><span class="n-icon">&#128683;</span><span><b>No credits, no pending payments.</b> Full payment compulsory at the time of delivery.</span></div>
-    <div class="notice-footer">We are wholesalers — every rupee counts towards our profit, so our margins are kept very low. Thank you for understanding.</div>
+  <div class="section-title">&#10022; Choose Your Combo</div>
+  <div class="combo-tabs" id="comboTabs"></div>
+  <div class="combo-desc" id="comboDesc"></div>
+
+  <!-- ===================== COMBO 1 : RICE BAGS ===================== -->
+  <div class="combo-panel" id="panel-combo1">
+    <div class="section-title">&#10022; Select Rice Bags</div>
+    <div id="rice-items"></div>
+    <div id="groceries-lock-combo1"></div>
   </div>
 
-  <div class="section-title">&#10022; Select Rice Bags</div>
+  <!-- ===================== COMBO 2 : PACK A (placeholder) =========== -->
+  <div class="combo-panel" id="panel-combo2">
+    <div class="section-title">&#10022; Select Items (choose 2 or more)</div>
+    <div id="combo2-items"></div>
+    <div id="groceries-lock-combo2"></div>
+  </div>
 
-  <div id="rice-items"></div>
+  <!-- ===================== COMBO 3 : PACK B (placeholder) =========== -->
+  <div class="combo-panel" id="panel-combo3">
+    <div class="section-title">&#10022; Select Items (choose 3 or more)</div>
+    <div id="combo3-items"></div>
+    <div id="groceries-lock-combo3"></div>
+  </div>
+
+  <!-- ===================== COMBO 4 : GROCERIES ONLY ================= -->
+  <div class="combo-panel" id="panel-combo4">
+    <div class="section-title">&#10022; Delivery &amp; Payment</div>
+    <div class="notice-strip">
+      <div class="notice-row"><span class="n-icon">&#128666;</span><span><b>Free Home Delivery</b> on every order, anywhere in Nellore City.</span></div>
+      <div class="notice-row"><span class="n-icon">&#9200;</span><span><b>Next Day Delivery</b> — order today, get your items tomorrow.</span></div>
+      <div class="notice-row"><span class="n-icon">&#128176;</span><span><b>Cash on Delivery only</b> — pay the delivery person directly.</span></div>
+      <div class="notice-row"><span class="n-icon">&#128683;</span><span><b>No credits, no pending payments.</b> Full payment compulsory at the time of delivery.</span></div>
+      <div class="notice-footer">We are wholesalers — every rupee counts towards our profit, so our margins are kept very low. Thank you for understanding.</div>
+    </div>
+    <div id="combo4-min-warn"></div>
+    <div id="groceries-combo4"></div>
+  </div>
 
   <div class="section-title">&#10022; Order Summary</div>
   <div class="summary-card">
@@ -187,90 +282,587 @@
 </div>
 
 <script>
-/* ============================================================
-   DATA — edit bag details/prices here only. Everything else
-   is generated. Replace the empty img src with your own image
-   URL later — the slot is already left open on the left side
-   of each bag.
-   ============================================================ */
-// [ id, name, subtitle, price, imgUrl ]
+/* ================================================================
+   ================  EDIT EVERYTHING HERE  =======================
+   All product names / prices / images / discount rules live in
+   this CONFIG block. Nothing below this block needs to change
+   when you add, remove, rename or re-price an item.
+   ================================================================ */
+
+/* ---------- WhatsApp number that receives every order ---------- */
+var WHATSAPP_NUMBER = '918008970033';
+
+/* ---------- COMBO 1 : RICE BAGS --------------------------------
+   [ id, name, subtitle, basePricePerBag, imgUrl ]
+   Rule: buy 1 bag -> base price. Buy 2+ bags (any mix) -> every
+   bag gets RICE_BULK_DISCOUNT rupees off, and the wholesale
+   groceries list unlocks.
+------------------------------------------------------------------ */
 var RICE_BAGS = [
-  ['r1', 'Kurnool Rice Bag', '25 Kgs &middot; Old Rice &middot; Jilakara Masura', 1450, 'Kurnool.webp'],
-  ['r2', '24 Carat Gold', '24 Kgs &middot; Old Rice &middot; Jilakara Masura &middot; From Nandhyala', 1430, 'Carat.webp'],
-  ['r3', 'Steam Rice', '25 Kgs &middot; MVR Khageshwar Brand', 1430, 'mvr.webp'],
-  ['r4', 'Molagolukulu Sannalu', '24 Kgs &middot; Old Rice &middot; Pine Apple Bag &middot; From Chirala', 1530, 'sannalu.webp']
+  ['r1', 'Kurnool Rice Bag', '25 Kgs &middot; Old Rice &middot; Jilakara Masura', 1630, 'Kurnool.webp'],
+  ['r2', '24 Carat Gold', '24 Kgs &middot; Old Rice &middot; Jilakara Masura &middot; From Nandhyala', 1580, 'Carat.webp'],
+  ['r3', 'Steam Rice', '25 Kgs &middot; MVR Khageshwar Brand', 1700, 'mvr.webp'],
+  ['r4', 'Molagolukulu Sannalu', '24 Kgs &middot; Old Rice &middot; Pine Apple Bag &middot; From Chirala', 1550, 'sannalu.webp']
+];
+var RICE_BULK_DISCOUNT = 30;      // rupees off PER BAG once total bags >= 2
+var RICE_UNLOCK_MIN_BAGS = 1;     // buy at least this many bags to unlock groceries
+
+/* ---------- COMBO 2 : "Pack A" -----------------------------------
+   PLACEHOLDER ITEMS — replace with the real Combo 2 product list.
+   Same [id, name, subtitle, price, imgUrl] shape as rice bags.
+   Rule: choose COMBO2_MIN_ITEMS or more DIFFERENT items (qty>=1
+   each) to unlock the wholesale groceries list.
+------------------------------------------------------------------ */
+var COMBO2_ITEMS = [
+  ['c2a', 'Combo 2 - Item 1 (replace me)', 'Add real name / size here', 500, ''],
+  ['c2b', 'Combo 2 - Item 2 (replace me)', 'Add real name / size here', 500, ''],
+  ['c2c', 'Combo 2 - Item 3 (replace me)', 'Add real name / size here', 500, ''],
+  ['c2d', 'Combo 2 - Item 4 (replace me)', 'Add real name / size here', 500, '']
+];
+var COMBO2_MIN_ITEMS = 2;
+
+/* ---------- COMBO 3 : "Pack B" -----------------------------------
+   PLACEHOLDER ITEMS — replace with the real Combo 3 product list.
+   Rule: choose COMBO3_MIN_ITEMS or more DIFFERENT items to unlock
+   the wholesale groceries list.
+------------------------------------------------------------------ */
+var COMBO3_ITEMS = [
+  ['c3a', 'Combo 3 - Item 1 (replace me)', 'Add real name / size here', 500, ''],
+  ['c3b', 'Combo 3 - Item 2 (replace me)', 'Add real name / size here', 500, ''],
+  ['c3c', 'Combo 3 - Item 3 (replace me)', 'Add real name / size here', 500, ''],
+  ['c3d', 'Combo 3 - Item 4 (replace me)', 'Add real name / size here', 500, ''],
+  ['c3e', 'Combo 3 - Item 5 (replace me)', 'Add real name / size here', 500, '']
+];
+var COMBO3_MIN_ITEMS = 3;
+
+/* ---------- GROCERY LIST 1 (dals / rice / flours etc.) -----------
+   Two prices shown per item: half-kg and 1kg.
+   WHOLESALE_LIST1 is used inside Combo 1 / 2 / 3 (unlocked lists).
+   NORMAL_LIST1 is used in Combo 4 (groceries-only, slightly higher).
+   [ id, name, halfKgPrice(or null), oneKgPrice ]
+------------------------------------------------------------------ */
+var WHOLESALE_LIST1 = [
+  ['g1', 'Kandipappu', 67, 129], ['g2', 'Minapappu', 64, 124], ['g3', 'Verusenaga pappu', 80, 155],
+  ['g4', 'Sugar', 38, 71], ['g5', 'Idly Ravva', 24, 43], ['g6', 'Aashirwad Atta Goduma Pindi', null, 68],
+  ['g7', 'Chintapandu', 88, 170], ['g8', 'Pesara pappu', 58, 111], ['g9', 'Pachi senaga pappu', 47, 90],
+  ['g10', 'Sai Pappu', 54, 104], ['g11', 'Tella gedda', 89, 172], ['g12', 'Bellam', 51, 96],
+  ['g13', 'Yendu Mirapakayalu', 170, 325], ['g14', 'Desi Yendu Mirapakayalu', 225, 435], ['g15', 'Upma Ravva (Best)', 29, 54],
+  ['g16', 'Semiyalu Bambino (Best)', 51, 89], ['g17', 'Bansi Ravva (Best)', 30, 56], ['g18', 'Saggu Biyyam (Peddavi)', 43, 82],
+  ['g19', 'Pesallu / Green Pesalu (Peddavi)', 66, 128], ['g20', 'Minumulu', 73, 141], ['g21', 'Pottu Minapappu', 73, 141],
+  ['g22', 'Tella Senagalu (Peddavi)', 54, 103], ['g23', 'Nalla Senagalu', 44, 83], ['g24', 'Tella Alasandalu', 49, 93],
+  ['g25', 'Nalla Alasandalu', 53, 101], ['g26', 'Tella Nuvvulu', 133, 262], ['g27', 'Nalla Nuvvulu', 81, 157],
+  ['g28', 'Uppu Senagalu', 65, 126], ['g29', 'Ragi Pindi', 36, 68], ['g30', 'Senaga Pindi', 49, 94],
+  ['g31', 'Corn Flour', 33, 61], ['g32', 'Maida pindi', 25, 46], ['g33', 'Godumalu', 29, 54],
+  ['g34', 'Jonnalu', 28, 52], ['g35', 'Ragulu', 31, 57], ['g36', 'Sajjalu', 24, 44],
+  ['g37', 'Korralu', 44, 84], ['g38', 'Meal Maker', 50, 96], ['g39', 'Aatukulu', 35, 66], ['g40', 'Borugulu', 46, 87]
 ];
 
+var NORMAL_LIST1 = [
+  ['g1', 'Kandipappu', 71, 137], ['g2', 'Minapappu', 68, 132], ['g3', 'Verusenaga pappu', 84, 163],
+  ['g4', 'Sugar', 42, 79], ['g5', 'Idly Ravva', 28, 51], ['g6', 'Aashirwad Atta Goduma Pindi', null, 76],
+  ['g7', 'Chintapandu', 87, 170], ['g8', 'Pesara pappu', 62, 119], ['g9', 'Pachi senaga pappu', 51, 98],
+  ['g10', 'Sai Pappu', 58, 112], ['g11', 'Tella gedda', 93, 180], ['g12', 'Bellam', 55, 104],
+  ['g13', 'Yendu Mirapakayalu', 170, 330], ['g14', 'Desi Yendu Mirapakayalu', 225, 440], ['g15', 'Upma Ravva (Best)', 32, 62],
+  ['g16', 'Semiyalu Bambino (Best)', 57, 97], ['g17', 'Bansi Ravva (Best)', 33, 64], ['g18', 'Saggu Biyyam (Peddavi)', 46, 90],
+  ['g19', 'Pesallu / Green Pesalu (Peddavi)', 71, 136], ['g20', 'Minumulu', 78, 149], ['g21', 'Pottu Minapappu', 77, 149],
+  ['g22', 'Tella Senagalu (Peddavi)', 61, 114], ['g23', 'Nalla Senagalu', 50, 91], ['g24', 'Tella Alasandalu', 55, 101],
+  ['g25', 'Nalla Alasandalu', 59, 109], ['g26', 'Tella Nuvvulu', 139, 270], ['g27', 'Nalla Nuvvulu', 86, 165],
+  ['g28', 'Uppu Senagalu', 70, 134], ['g29', 'Ragi Pindi', 41, 76], ['g30', 'Senaga Pindi', 54, 102],
+  ['g31', 'Corn Flour', 38, 69], ['g32', 'Maida pindi', 30, 54], ['g33', 'Godumalu', 34, 62],
+  ['g34', 'Jonnalu', 33, 60], ['g35', 'Ragulu', 36, 65], ['g36', 'Sajjalu', 29, 52],
+  ['g37', 'Korralu', 49, 92], ['g38', 'Meal Maker', 56, 104], ['g39', 'Aatukulu', 40, 74], ['g40', 'Borugulu', 51, 95]
+];
+
+/* ---------- GROCERY LIST 2 (packaged items, same price in every combo) ----
+   [ id, name, unitLabel, price, maxQty ]
+   price = null items (soaps sold in 5/10rs denominations, Boost/
+   Horlicks "saram or packets" etc.) are collected via the free-text
+   "other items" box instead of a fixed dropdown, since the sheet
+   gave no fixed per-unit price for them.
+--------------------------------------------------------------------- */
+var LIST2_ITEMS = [
+  ['l2_1', 'Freedom SunFlower Oil Packet', '1 ltr', 179, 5],
+  ['l2_2', 'Freedom Rice Bran Oil Packet', '1 ltr', 176, 5],
+  ['l2_3', 'Ruchi Gold Palm Oil Big', '850 ml', 145, 5],
+  ['l2_4', 'Tata Salt', '1 Kg', 30, 5],
+  ['l2_5', 'Kallu Uppu (Tata)', '1 Kg', 18, 5],
+  ['l2_6', 'Soda Uppu (Baking Soda)', '100 gm', 10, 5],
+  ['l2_7', 'LG Inguva', '50 gm', 73, 5],
+  ['l2_8', 'Parachute Coconut Hair Oil', '275 gm', 145, 5],
+  ['l2_9', 'Pitamburam', '175 gm', 40, 5],
+  ['l2_10', 'Puja Nuvvula Nuna', '800 gm', 118, 5],
+  ['l2_11', '3 Roses Tea Powder', '250 gms', 215, 5],
+  ['l2_12', '3 Roses Tea Powder', '100 gms', 89, 5],
+  ['l2_13', 'Chakra Gold Tea Powder', '250 gms', 215, 5],
+  ['l2_14', 'Fab Liquid', '1 liter', 101, 5],
+  ['l2_15', 'Detergent Liquid Can (Best)', '5 Liters', 400, 5],
+  ['l2_16', 'Dish Wash Can (Best)', '5 Liters', 400, 5],
+  ['l2_17', 'Tide Powder', '1 kg', 137, 5],
+  ['l2_18', 'Ariel Powder', '1/2 kg', 85, 5],
+  ['l2_19', 'Surf Powder', '1 kg', 167, 5],
+  ['l2_20', 'Sleep well (Mosquito Agarbatti)', '1 box (12 Packets)', 140, 5]
+];
+
+/* ---------- GROCERY LIST 3 (spices, sold by weight) ---------------
+   sizes order: [50g, 100g, 200g, 250g, 500g, 1kg]
+   Put an explicit number for a size you want to sell, or null to
+   disable that size for that item. If you only fill in the 1kg
+   price and leave the others as the special value 'AUTO', the
+   price for that size is calculated automatically from the 1kg
+   price using SPICE_AUTO_MARGIN below — handy for new items where
+   you only know the per-kg wholesale rate.
+--------------------------------------------------------------------- */
+var SPICE_AUTO_MARGIN = { '50': 0.065, '100': 0.12, '200': 0.22, '250': 0.27, '500': 0.50, '1000': 1.0 };
+
+var LIST3_ITEMS = [
+  // id, name, [50g,100g,200g,250g,500g,1kg]
+  ['l3_1', 'Menthulu', [9, 15, 25, 32, 58, 58]],
+  ['l3_2', 'Aavalu', [10, 17, 17, 30, 69, 133]],
+  ['l3_3', 'Jilakara', [17, 31, 58, 73, 140, 275]],
+  ['l3_4', 'Miriyalu', [43, 83, 162, 203, 400, 795]],
+  ['l3_5', 'Garam Masala ( Aachi )', [23, 44, 83, 104, 206, 405]],
+  ['l3_6', 'Chicken Masala ( Aachi )', [18, 34, 63, 79, 156, 305]],
+  ['l3_7', 'Dhaniyalu Podi ( Aachi )', [14, 26, 48, 60, 118, 230]],
+  ['l3_8', 'Chilli Powder / Karam Podi ( Aachi )', [18, 33, 61, 77, 151, 295]],
+  ['l3_9', 'Tumeric Powder / Pasupu Podi ( Aachi )', [14, 26, 48, 60, 118, 230]],
+  ['l3_10', 'Kumkuma podi ( Gopuram - Maroon Colour )', [15, 27, 51, null, null, null]],
+  ['l3_11', 'Lavangalu', [56, 104, null, null, null, null]],
+  ['l3_12', 'Yalakalu 7.5mm big size', [175, 342, null, null, null, null]],
+  ['l3_13', 'Patta / Dalchina Chekka', [24, 40, 74, 92, 175, 340]],
+  ['l3_14', 'Yendu Kobbari', [null, 32, 54, 66, 123, 230]],
+  ['l3_15', 'Dhaniyalu', [null, null, null, 59, 103, 190]],
+  ['l3_16', 'Pooja Karpuram Billalu', [52, 102, null, null, null, null]],
+  ['l3_17', 'Pasupu Kommulu', [null, null, null, 75, 120, 220]],
+  ['l3_18', 'Jeedipappu', [56, 118, 198, 252, 480, 900]],
+  ['l3_19', 'Endu Draksha ( Natala Grapes Good Taste )', [35, 60, 116, 150, 275, 490]],
+  ['l3_20', 'Badam Pappu', [65, 117, 230, 292, 560, 1060]],
+  ['l3_21', 'Pista', [null, null, null, 440, 840, 1640]],
+  ['l3_22', 'Makkana', [null, null, null, 340, 640, 1240]],
+  ['l3_23', 'Sabja ginjalu', [null, null, null, 100, 160, 280]],
+  ['l3_24', 'Chia seeds', [null, null, null, 100, 160, 280]],
+  ['l3_25', 'Sun Flower Seeds', [null, null, null, 90, 140, 240]],
+  ['l3_26', 'Pumpkin Seeds', [null, null, null, 160, 280, 520]],
+  ['l3_27', 'Pucha ginjalu', [null, null, null, 200, 360, 680]],
+  ['l3_28', 'Aavisa Ginjalu / Flax Seeds', [null, null, null, 75, 110, 200]],
+  ['l3_29', 'Barlie Seeds', [null, null, null, 55, 70, 100]],
+  ['l3_30', 'haleem seeds', [null, null, null, 80, 120, 200]],
+  ['l3_31', 'Walnut', [null, null, null, 440, 840, 1640]],
+  ['l3_32', 'Karjooram ( Gokulam brand dates )', [null, null, null, 63, 121, 235]]
+];
+var SPICE_SIZES = [
+  {key: '50', label: '50g'}, {key: '100', label: '100g'}, {key: '200', label: '200g'},
+  {key: '250', label: '250g'}, {key: '500', label: '500g'}, {key: '1000', label: '1kg'}
+];
+
+/* ---------- COMBO 4 : hidden bulk-discount rule --------------------
+   Internal only — never shown to the customer, only the final
+   Subtotal / Discount / Total lines are shown.
+   - Minimum order to qualify for delivery: COMBO4_MIN_KG (from
+     List 1 half-kg/1kg items + List 3 weight-based items).
+   - Every List-1 item bought as a full "1 kg" unit counts toward
+     a "whole-kg pool". Once total order weight clears the minimum,
+     every whole-kg unit beyond the minimum is discounted by
+     COMBO4_RATE_PER_KG rupees.
+   - Two "half kg" units of the same or different List-1 items are
+     paired together and get their own smaller flat discount of
+     COMBO4_RATE_PER_HALF_PAIR rupees per pair (an unpaired leftover
+     half-kg gets no discount). This only applies to 1 KG / 1/2 KG
+     items — List 2 and List 3 items never get this per-kg discount.
+--------------------------------------------------------------------- */
+var COMBO4_MIN_KG = 8;
+var COMBO4_RATE_PER_KG = 6.5;          // rupees off per extra whole kg beyond the minimum
+var COMBO4_RATE_PER_HALF_PAIR = 3;     // rupees off per pair of half-kg items combined
+
+/* ================================================================
+   ================  END OF EDITABLE CONFIG  ======================
+   Everything below is generic rendering / calculation logic and
+   should not normally need to change.
+   ================================================================ */
+
 var toastTimer = null;
+var activeCombo = 'combo1';
+var glistTab = { combo1: 'list1', combo2: 'list1', combo3: 'list1', combo4: 'list1' };
+
+var COMBO_META = [
+  { id: 'combo1', num: 'Combo 1', name: 'Rice Bags', desc: 'Buy <b>1 or more rice bags</b> and unlock <b>wholesale prices</b> on every grocery item below. Buy <b>2+ bags</b> and get an extra ₹' + RICE_BULK_DISCOUNT + ' off every bag.' },
+  { id: 'combo2', num: 'Combo 2', name: 'Pack A', desc: 'Choose <b>' + COMBO2_MIN_ITEMS + ' or more different items</b> from this pack to unlock <b>wholesale grocery prices</b>.' },
+  { id: 'combo3', num: 'Combo 3', name: 'Pack B', desc: 'Choose <b>' + COMBO3_MIN_ITEMS + ' or more different items</b> from this pack to unlock <b>wholesale grocery prices</b>.' },
+  { id: 'combo4', num: 'Combo 4', name: 'Groceries Only', desc: 'Order groceries on their own. A minimum order of <b>' + COMBO4_MIN_KG + ' kgs</b> is required for delivery — the more you order, the more you save automatically.' }
+];
 
 /* ============================================================
-   RENDERING
+   TAB BAR + DESCRIPTION
    ============================================================ */
-function renderItems() {
-  var wrap = document.getElementById('rice-items');
+function renderComboTabs() {
+  var wrap = document.getElementById('comboTabs');
+  wrap.innerHTML = COMBO_META.map(function(c){
+    return '<div class="combo-tab' + (activeCombo === c.id ? ' active' : '') + '" onclick="switchCombo(\'' + c.id + '\')">' +
+      '<div class="ct-num">' + c.num + '</div><div class="ct-name">' + c.name + '</div></div>';
+  }).join('');
+  var meta = COMBO_META.filter(function(c){ return c.id === activeCombo; })[0];
+  document.getElementById('comboDesc').innerHTML = meta.desc;
+}
+
+function switchCombo(id) {
+  activeCombo = id;
+  document.querySelectorAll('.combo-panel').forEach(function(p){ p.classList.remove('active'); });
+  document.getElementById('panel-' + id).classList.add('active');
+  renderComboTabs();
+  updateSummary();
+}
+
+/* ============================================================
+   GENERIC ITEM GRID (rice bags / combo2 / combo3)
+   ============================================================ */
+function renderItemGrid(containerId, items, maxQty) {
+  var wrap = document.getElementById(containerId);
   var html = '';
-  RICE_BAGS.forEach(function(row){
+  items.forEach(function(row){
     var id = row[0], name = row[1], sub = row[2], price = row[3], img = row[4];
+    var opts = '<option value="0">-- qty</option>';
+    for (var n = 1; n <= (maxQty || 5); n++) opts += '<option value="' + n + '">' + n + '</option>';
     html += '<div class="item" id="' + id + '">' +
       '<div class="check-badge">&#10003;</div>' +
-      '<div class="img-slot"><img src="' + img + '" loading="lazy" decoding="async" width="66" height="92" alt="' + name + '" onerror="this.style.opacity=0.15;"></div>' +
+      (img ? '<div class="img-slot"><img src="' + img + '" loading="lazy" decoding="async" width="62" height="86" alt="' + name + '" onerror="this.parentElement.style.display=\'none\';"></div>' : '') +
       '<div class="details">' +
         '<div class="item-name">' + name + '</div>' +
         '<div class="item-sub">' + sub + '</div>' +
-        '<div class="item-price"><span class="rupee">&#8377;</span><span class="amount">' + price + '</span><span class="per-bag"> / bag</span></div>' +
+        '<div class="item-price" id="price_' + id + '"><span class="rupee">&#8377;</span><span class="amount">' + price + '</span><span class="per-bag"> / unit</span></div>' +
       '</div>' +
-      '<div class="qty-wrapper"><span class="qty-label">Quantity</span>' +
-      '<select class="qty-select" onchange="onQtyChange(this,\'' + id + '\')">' +
-        '<option value="0">-- bags</option>' +
-        [1,2,3,4,5].map(function(n){ return '<option value="' + n + '">' + n + ' bag' + (n>1?'s':'') + '</option>'; }).join('') +
-      '</select></div>' +
+      '<div class="qty-wrapper"><span class="qty-label">Qty</span>' +
+      '<select class="qty-select" onchange="onGridQtyChange(this,\'' + id + '\',\'' + containerId + '\')">' + opts + '</select></div>' +
     '</div>';
   });
   wrap.innerHTML = html;
 }
 
-function findBag(id) { for (var i=0;i<RICE_BAGS.length;i++) if (RICE_BAGS[i][0]===id) return RICE_BAGS[i]; return null; }
+function getGridQty(id) {
+  var el = document.getElementById(id);
+  if (!el) return 0;
+  var sel = el.querySelector('select');
+  return sel ? (parseInt(sel.value) || 0) : 0;
+}
 
-/* ============================================================
-   INTERACTIONS
-   ============================================================ */
-function filterPhone(input) { input.value = input.value.replace(/[^0-9]/g,''); }
-
-function onQtyChange(selectEl, id) {
+function onGridQtyChange(selectEl, id, containerId) {
   var item = document.getElementById(id);
   var val = parseInt(selectEl.value) || 0;
-  if (val > 0) { item.classList.add('active'); } else { item.classList.remove('active'); }
+  if (val > 0) item.classList.add('active'); else item.classList.remove('active');
+  if (containerId === 'rice-items') refreshRicePricing();
   updateSummary();
 }
 
-function updateSummary() {
-  var name = document.getElementById('customerName').value.trim();
-  var custPhone = document.getElementById('customerPhone').value.trim();
-  var grandTotal = 0, hasAny = false, html = '';
-
+/* ---- Rice bulk-discount live price refresh ---- */
+function totalRiceBags() {
+  var total = 0;
+  RICE_BAGS.forEach(function(row){ total += getGridQty(row[0]); });
+  return total;
+}
+function riceUnitPrice(basePrice) {
+  return totalRiceBags() >= 2 ? Math.max(0, basePrice - RICE_BULK_DISCOUNT) : basePrice;
+}
+function refreshRicePricing() {
+  var bulk = totalRiceBags() >= 2;
   RICE_BAGS.forEach(function(row){
-    var id = row[0], bagName = row[1], price = row[3];
-    var qty = parseInt(document.getElementById(id).querySelector('select').value) || 0;
-    if (qty > 0) {
-      var it = price * qty;
-      grandTotal += it; hasAny = true;
-      html += '<div class="summary-row"><span class="s-name">' + bagName + '</span><span class="s-qty">x' + qty + '</span><span class="s-price">&#8377; ' + it.toFixed(0) + '</span></div>';
+    var id = row[0], base = row[3];
+    var priceEl = document.getElementById('price_' + id);
+    if (!priceEl) return;
+    var unit = riceUnitPrice(base);
+    priceEl.innerHTML = (bulk ? '<span class="strike">&#8377;' + base + '</span>' : '') +
+      '<span class="rupee">&#8377;</span><span class="amount">' + unit + '</span><span class="per-bag"> / bag</span>';
+  });
+}
+
+/* ============================================================
+   GROCERIES SELECTOR (List 1 / List 2 / List 3), reused by
+   Combo 1, 2, 3 (locked/unlocked, wholesale prices) and
+   Combo 4 (always unlocked, normal prices).
+   ============================================================ */
+function comboUnlocked(comboId) {
+  if (comboId === 'combo1') return totalRiceBags() >= RICE_UNLOCK_MIN_BAGS;
+  if (comboId === 'combo2') return COMBO2_ITEMS.filter(function(r){ return getGridQty(r[0]) > 0; }).length >= COMBO2_MIN_ITEMS;
+  if (comboId === 'combo3') return COMBO3_ITEMS.filter(function(r){ return getGridQty(r[0]) > 0; }).length >= COMBO3_MIN_ITEMS;
+  if (comboId === 'combo4') return true;
+  return false;
+}
+
+function renderGroceriesBlock(comboId, targetElId, list1Data, isWholesale) {
+  var target = document.getElementById(targetElId);
+  var unlocked = comboUnlocked(comboId);
+
+  if (!unlocked) {
+    target.innerHTML =
+      '<div class="section-title">&#10022; Wholesale Groceries</div>' +
+      '<div class="lock-card"><span class="lock-icon">&#128274;</span>' +
+      '<div class="lock-title">Locked</div>' +
+      '<div class="lock-sub">' + lockMessage(comboId) + '</div></div>';
+    return;
+  }
+
+  var prefix = comboId; // namespaces the select IDs per combo so state doesn't clash
+  var tab = glistTab[comboId];
+
+  var html = '<div class="section-title">&#10022; ' + (isWholesale ? 'Wholesale Groceries' : 'Groceries') + '</div>';
+  html += '<div class="glist-tabs">' +
+    ['list1','list2','list3'].map(function(t,i){
+      var label = ['List 1','List 2','List 3'][i];
+      return '<div class="glist-tab' + (tab === t ? ' active' : '') + '" onclick="setGlistTab(\'' + comboId + '\',\'' + t + '\')">' + label + '</div>';
+    }).join('') + '</div>';
+
+  html += '<div id="' + prefix + '_glist1" style="display:' + (tab==='list1'?'block':'none') + '">' + buildList1Html(prefix, list1Data) + '</div>';
+  html += '<div id="' + prefix + '_glist2" style="display:' + (tab==='list2'?'block':'none') + '">' + buildList2Html(prefix) + '</div>';
+  html += '<div id="' + prefix + '_glist3" style="display:' + (tab==='list3'?'block':'none') + '">' + buildList3Html(prefix) + '</div>';
+
+  if (tab === 'list2') {
+    html += '<div class="section-title">&#10022; Other / Special Request Items</div>' +
+      '<textarea class="other-items" id="' + prefix + '_otherItems" placeholder="e.g. Boost 500gm x1, Vim soap x5, Sunrise Coffee 200gm x2..." oninput="updateSummary()"></textarea>' +
+      '<div class="other-note">Not in the list? Mention it here — we will quote you our best wholesale price. (' + 'Meeru Ma List lo lenativi kuda order cheyochu, best price lo miku estamu' + ')</div>';
+  }
+
+  target.innerHTML = html;
+}
+
+function lockMessage(comboId) {
+  if (comboId === 'combo1') return 'Select at least <b>' + RICE_UNLOCK_MIN_BAGS + ' rice bag</b> above to unlock wholesale grocery prices.';
+  if (comboId === 'combo2') return 'Select at least <b>' + COMBO2_MIN_ITEMS + ' different items</b> above to unlock wholesale grocery prices.';
+  if (comboId === 'combo3') return 'Select at least <b>' + COMBO3_MIN_ITEMS + ' different items</b> above to unlock wholesale grocery prices.';
+  return '';
+}
+
+function setGlistTab(comboId, tab) {
+  glistTab[comboId] = tab;
+  rerenderActiveGroceries();
+}
+
+function buildList1Html(prefix, list1Data) {
+  return list1Data.map(function(row){
+    var id = row[0], name = row[1], half = row[2], kg = row[3];
+    var rowId = prefix + '_' + id;
+    var halfOpts = buildQtyOptions(5);
+    var kgOpts = buildQtyOptions(5);
+    return '<div class="g-row" id="row_' + rowId + '">' +
+      '<div class="g-name">' + name + '</div>' +
+      '<div class="g-selects">' +
+        (half !== null ? '<div class="g-unit"><span class="g-unit-label">&#8377;' + half + '/&half;kg</span>' +
+          '<select class="g-select" id="' + rowId + '_half" onchange="onGListChange(\'' + prefix + '\')">' + halfOpts + '</select></div>' : '') +
+        '<div class="g-unit"><span class="g-unit-label">&#8377;' + kg + '/1kg</span>' +
+          '<select class="g-select" id="' + rowId + '_kg" onchange="onGListChange(\'' + prefix + '\')">' + kgOpts + '</select></div>' +
+      '</div></div>';
+  }).join('');
+}
+
+function buildList2Html(prefix) {
+  return LIST2_ITEMS.map(function(row){
+    var id = row[0], name = row[1], unit = row[2], price = row[3], maxQ = row[4];
+    var rowId = prefix + '_' + id;
+    return '<div class="g-row" id="row_' + rowId + '">' +
+      '<div class="g-name">' + name + '<span class="g-note">' + unit + ' &middot; &#8377;' + price + '</span></div>' +
+      '<div class="g-selects"><div class="g-unit"><span class="g-unit-label">Qty</span>' +
+      '<select class="g-select" id="' + rowId + '_qty" onchange="onGListChange(\'' + prefix + '\')">' + buildQtyOptions(maxQ) + '</select></div></div></div>';
+  }).join('');
+}
+
+function buildList3Html(prefix) {
+  return LIST3_ITEMS.map(function(row){
+    var id = row[0], name = row[1], sizes = row[2];
+    var rowId = prefix + '_' + id;
+    var selects = SPICE_SIZES.map(function(sz, idx){
+      var raw = sizes[idx];
+      if (raw === null || raw === undefined) return '';
+      var price = (raw === 'AUTO') ? Math.round(sizes[5] * SPICE_AUTO_MARGIN[sz.key]) : raw;
+      return '<div class="g-unit"><span class="g-unit-label">' + sz.label + ' &#8377;' + price + '</span>' +
+        '<select class="g-select" id="' + rowId + '_' + sz.key + '" onchange="onGListChange(\'' + prefix + '\')">' + buildQtyOptions(5) + '</select></div>';
+    }).join('');
+    return '<div class="g-row" id="row_' + rowId + '"><div class="g-name" style="margin-bottom:6px;flex-basis:100%;">' + name + '</div>' +
+      '<div class="g-selects" style="flex-basis:100%;justify-content:flex-start;">' + selects + '</div></div>';
+  }).join('');
+}
+
+function buildQtyOptions(max) {
+  var o = '<option value="0">0</option>';
+  for (var n = 1; n <= (max || 5); n++) o += '<option value="' + n + '">' + n + '</option>';
+  return o;
+}
+
+function onGListChange(prefix) {
+  // toggle active styling on the row
+  document.querySelectorAll('#' + prefix + '_glist1 .g-row, #' + prefix + '_glist2 .g-row, #' + prefix + '_glist3 .g-row').forEach(function(row){
+    var selects = row.querySelectorAll('select');
+    var any = false;
+    selects.forEach(function(s){ if (parseInt(s.value) > 0) { any = true; s.classList.add('g-has-val'); } else { s.classList.remove('g-has-val'); } });
+    if (any) row.classList.add('active'); else row.classList.remove('active');
+  });
+  updateSummary();
+}
+
+/* Collect grocery selections for a given combo prefix into a flat array
+   of {name, qty, unitLabel, unitPrice, lineTotal, weightKg, isWholeKg, isHalfKg} */
+function collectGroceries(prefix, list1Data) {
+  var out = [];
+  list1Data.forEach(function(row){
+    var id = row[0], name = row[1], half = row[2], kg = row[3];
+    var rowId = prefix + '_' + id;
+    if (half !== null) {
+      var halfSel = document.getElementById(rowId + '_half');
+      var hq = halfSel ? (parseInt(halfSel.value) || 0) : 0;
+      if (hq > 0) out.push({ name: name + ' (1/2 kg)', qty: hq, unitPrice: half, lineTotal: hq*half, weightKg: 0.5*hq, isHalfKg: true, isWholeKg: false, list: 1 });
+    }
+    var kgSel = document.getElementById(rowId + '_kg');
+    var kq = kgSel ? (parseInt(kgSel.value) || 0) : 0;
+    if (kq > 0) out.push({ name: name + ' (1 kg)', qty: kq, unitPrice: kg, lineTotal: kq*kg, weightKg: 1*kq, isHalfKg: false, isWholeKg: true, list: 1 });
+  });
+  LIST2_ITEMS.forEach(function(row){
+    var id = row[0], name = row[1], unit = row[2], price = row[3];
+    var rowId = prefix + '_' + id;
+    var sel = document.getElementById(rowId + '_qty');
+    var q = sel ? (parseInt(sel.value) || 0) : 0;
+    if (q > 0) out.push({ name: name + ' (' + unit + ')', qty: q, unitPrice: price, lineTotal: q*price, weightKg: 0, isHalfKg: false, isWholeKg: false, list: 2 });
+  });
+  LIST3_ITEMS.forEach(function(row){
+    var id = row[0], name = row[1], sizes = row[2];
+    var rowId = prefix + '_' + id;
+    SPICE_SIZES.forEach(function(sz, idx){
+      var raw = sizes[idx];
+      if (raw === null || raw === undefined) return;
+      var price = (raw === 'AUTO') ? Math.round(sizes[5] * SPICE_AUTO_MARGIN[sz.key]) : raw;
+      var sel = document.getElementById(rowId + '_' + sz.key);
+      var q = sel ? (parseInt(sel.value) || 0) : 0;
+      if (q > 0) out.push({ name: name + ' (' + sz.label + ')', qty: q, unitPrice: price, lineTotal: q*price, weightKg: 0, isHalfKg: false, isWholeKg: false, list: 3 });
+    });
+  });
+  return out;
+}
+
+function getOtherItemsText(prefix) {
+  var el = document.getElementById(prefix + '_otherItems');
+  return el ? el.value.trim() : '';
+}
+
+/* ============================================================
+   COMBO 4 hidden discount calculation
+   ============================================================ */
+function computeCombo4Discount(groceries) {
+  var wholeKgCount = 0, halfKgCount = 0;
+  groceries.forEach(function(g){
+    if (g.list === 1) {
+      if (g.isWholeKg) wholeKgCount += g.qty;
+      if (g.isHalfKg) halfKgCount += g.qty;
     }
   });
+  var pairCount = Math.floor(halfKgCount / 2);
+  var oddHalfLeftover = halfKgCount % 2;
+  var totalWeightKg = wholeKgCount * 1 + halfKgCount * 0.5;
 
+  var eligible = totalWeightKg >= COMBO4_MIN_KG;
+  var mainExtraKg = eligible ? Math.max(0, wholeKgCount - COMBO4_MIN_KG) : 0;
+  var mainDiscount = mainExtraKg * COMBO4_RATE_PER_KG;
+  var pairDiscount = eligible ? (pairCount * COMBO4_RATE_PER_HALF_PAIR) : 0;
+  var discount = eligible ? (mainDiscount + pairDiscount) : 0;
+
+  return { eligible: eligible, totalWeightKg: totalWeightKg, discount: discount };
+}
+
+/* ============================================================
+   MASTER SUMMARY RENDER
+   ============================================================ */
+function rerenderActiveGroceries() {
+  renderGroceriesBlock('combo1', 'groceries-lock-combo1', WHOLESALE_LIST1, true);
+  renderGroceriesBlock('combo2', 'groceries-lock-combo2', WHOLESALE_LIST1, true);
+  renderGroceriesBlock('combo3', 'groceries-lock-combo3', WHOLESALE_LIST1, true);
+  renderGroceriesBlock('combo4', 'groceries-combo4', NORMAL_LIST1, false);
+}
+
+function filterPhone(input) { input.value = input.value.replace(/[^0-9]/g,''); }
+
+function buildOrderData() {
+  var name = document.getElementById('customerName').value.trim();
+  var phone = document.getElementById('customerPhone').value.trim();
+  var lines = [];       // {name, qty, unitPrice, lineTotal}
+  var subtotal = 0;
+  var discount = 0;
+  var comboLabel = COMBO_META.filter(function(c){ return c.id === activeCombo; })[0].name;
+  var min8Blocked = false;
+  var otherItemsText = '';
+
+  if (activeCombo === 'combo1') {
+    RICE_BAGS.forEach(function(row){
+      var id = row[0], name2 = row[1], base = row[3];
+      var q = getGridQty(id);
+      if (q > 0) {
+        var unit = riceUnitPrice(base);
+        lines.push({ name: name2, qty: q, unitPrice: unit, lineTotal: q*unit, group: 'Rice Bags' });
+        subtotal += q*unit;
+      }
+    });
+    if (comboUnlocked('combo1')) {
+      var g1 = collectGroceries('combo1', WHOLESALE_LIST1);
+      g1.forEach(function(g){ lines.push({ name: g.name, qty: g.qty, unitPrice: g.unitPrice, lineTotal: g.lineTotal, group: 'Wholesale Groceries' }); subtotal += g.lineTotal; });
+      otherItemsText = getOtherItemsText('combo1');
+    }
+  } else if (activeCombo === 'combo2' || activeCombo === 'combo3') {
+    var items = activeCombo === 'combo2' ? COMBO2_ITEMS : COMBO3_ITEMS;
+    items.forEach(function(row){
+      var id = row[0], name2 = row[1], price = row[3];
+      var q = getGridQty(id);
+      if (q > 0) { lines.push({ name: name2, qty: q, unitPrice: price, lineTotal: q*price, group: comboLabel }); subtotal += q*price; }
+    });
+    if (comboUnlocked(activeCombo)) {
+      var g23 = collectGroceries(activeCombo, WHOLESALE_LIST1);
+      g23.forEach(function(g){ lines.push({ name: g.name, qty: g.qty, unitPrice: g.unitPrice, lineTotal: g.lineTotal, group: 'Wholesale Groceries' }); subtotal += g.lineTotal; });
+      otherItemsText = getOtherItemsText(activeCombo);
+    }
+  } else if (activeCombo === 'combo4') {
+    var g4 = collectGroceries('combo4', NORMAL_LIST1);
+    g4.forEach(function(g){ lines.push({ name: g.name, qty: g.qty, unitPrice: g.unitPrice, lineTotal: g.lineTotal, group: 'Groceries' }); subtotal += g.lineTotal; });
+    otherItemsText = getOtherItemsText('combo4');
+    var calc = computeCombo4Discount(g4);
+    discount = calc.discount;
+    min8Blocked = g4.length > 0 && !calc.eligible;
+    var warnEl = document.getElementById('combo4-min-warn');
+    if (warnEl) {
+      if (g4.length > 0 && !calc.eligible) {
+        warnEl.innerHTML = '<div class="min-warn">Minimum order for delivery is <b>' + COMBO4_MIN_KG + ' kgs</b>. Your current order is about <b>' + calc.totalWeightKg.toFixed(1) + ' kg</b> — please add more items to qualify.</div>';
+      } else { warnEl.innerHTML = ''; }
+    }
+  }
+
+  return { name: name, phone: phone, lines: lines, subtotal: subtotal, discount: discount, final: Math.max(0, subtotal - discount), comboLabel: comboLabel, min8Blocked: min8Blocked, otherItemsText: otherItemsText };
+}
+
+function updateSummary() {
+  var data = buildOrderData();
   var emptyEl = document.getElementById('summaryEmpty');
   var customerEl = document.getElementById('summaryCustomer');
   var rowsEl = document.getElementById('summaryRows');
 
-  if (!hasAny) { emptyEl.style.display = 'block'; customerEl.innerHTML = ''; rowsEl.innerHTML = ''; return; }
+  if (data.lines.length === 0 && !data.otherItemsText) {
+    emptyEl.style.display = 'block'; customerEl.innerHTML = ''; rowsEl.innerHTML = '';
+    return;
+  }
   emptyEl.style.display = 'none';
 
-  if (name) {
-    var phoneHtml = custPhone ? '<span style="font-size:11px;color:#b0b0b0;margin-top:3px;display:block;font-family:Montserrat,sans-serif;font-weight:500;">&#128222; ' + custPhone + '</span>' : '';
-    customerEl.innerHTML = '<div class="summary-customer"><div class="cust-icon">&#128100;</div><div class="cust-info"><span class="cust-label">Order for</span><span class="cust-name">' + name + '</span>' + phoneHtml + '</div></div>';
-  } else { customerEl.innerHTML = ''; }
+  if (data.name) {
+    var phoneHtml = data.phone ? '<span style="font-size:11px;color:#b0b0b0;margin-top:3px;display:block;font-family:Montserrat,sans-serif;font-weight:500;">&#128222; ' + data.phone + '</span>' : '';
+    customerEl.innerHTML = '<div class="summary-customer"><div class="cust-icon">&#128100;</div><div class="cust-info"><span class="cust-label">Order for &middot; ' + data.comboLabel + '</span><span class="cust-name">' + data.name + '</span>' + phoneHtml + '</div></div>';
+  } else {
+    customerEl.innerHTML = '<div style="font-size:10px;letter-spacing:2px;color:var(--gold-dark);text-transform:uppercase;font-weight:700;margin-bottom:6px;">' + data.comboLabel + '</div>';
+  }
 
-  html += '<div class="summary-total"><span class="t-label">Grand Total</span><span class="t-amount">&#8377; ' + grandTotal.toFixed(0) + '</span></div>';
+  var html = '';
+  var lastGroup = null;
+  data.lines.forEach(function(l){
+    if (l.group !== lastGroup) { html += '<div class="summary-group-label">' + l.group + '</div>'; lastGroup = l.group; }
+    html += '<div class="summary-row"><span class="s-name">' + l.name + '</span><span class="s-qty">x' + l.qty + '</span><span class="s-price">&#8377; ' + l.lineTotal.toFixed(0) + '</span></div>';
+  });
+  if (data.otherItemsText) {
+    html += '<div class="summary-group-label">Other / Special Request</div>' +
+      '<div class="summary-row"><span class="s-name" style="font-style:italic;">' + data.otherItemsText.replace(/</g,'&lt;') + '</span></div>';
+  }
+
+  if (data.discount > 0) {
+    html += '<div class="summary-sub"><span>Subtotal</span><span>&#8377; ' + data.subtotal.toFixed(0) + '</span></div>';
+    html += '<div class="summary-discount"><span>Discount</span><span>&minus; &#8377; ' + data.discount.toFixed(0) + '</span></div>';
+  }
+  html += '<div class="summary-total"><span class="t-label">Grand Total</span><span class="t-amount">&#8377; ' + data.final.toFixed(0) + '</span></div>';
   rowsEl.innerHTML = html;
 }
 
@@ -283,96 +875,114 @@ function showToast(msg, type) {
   toastTimer = setTimeout(function() { t.classList.remove('show'); }, 3500);
 }
 
+/* ============================================================
+   WHATSAPP MESSAGE BUILD
+   ============================================================ */
 function buildWhatsAppURL(locationText) {
-  var name = document.getElementById('customerName').value.trim();
-  var custPhone = document.getElementById('customerPhone').value.trim();
-  var lines = [], grandTotal = 0, count = 1;
+  var data = buildOrderData();
+  var lines = ['Nellore Basket Order', '----------------------------',
+    'Name: ' + data.name, 'Phone: ' + data.phone, 'Combo: ' + data.comboLabel,
+    'Location: ' + locationText, '----------------------------'];
 
-  RICE_BAGS.forEach(function(row){
-    var id = row[0], bagName = row[1], price = row[3];
-    var qty = parseInt(document.getElementById(id).querySelector('select').value) || 0;
-    if (qty > 0) {
-      var it = price * qty;
-      lines.push(count + '. ' + bagName + ' x' + qty + ' - Rs.' + it.toFixed(0));
-      grandTotal += it; count++;
-    }
+  var count = 1;
+  data.lines.forEach(function(l){
+    lines.push(count + '. ' + l.name + ' x' + l.qty + ' - Rs.' + l.lineTotal.toFixed(0));
+    count++;
   });
+  if (data.otherItemsText) lines.push('Other / Special Request: ' + data.otherItemsText);
 
-  var parts = [
-    'Nellore Rice Club Order',
-    '----------------------------',
-    'Name: ' + name,
-    'Phone: ' + custPhone,
-    'Location: ' + locationText,
-    '----------------------------'
-  ].concat(lines).concat([
-    '',
-    '*Total: Rs.' + grandTotal.toFixed(0) + '*',
-    '',
-    '(Cash on Delivery, Next Day Delivery, No pending payment)'
-  ]);
+  lines.push('');
+  if (data.discount > 0) {
+    lines.push('Subtotal: Rs.' + data.subtotal.toFixed(0));
+    lines.push('Discount: -Rs.' + data.discount.toFixed(0));
+  }
+  lines.push('*Total: Rs.' + data.final.toFixed(0) + '*');
+  lines.push('');
+  lines.push('(Cash on Delivery, Next Day Delivery, No pending payment)');
 
-  // Single encodeURIComponent pass at the end: safely escapes EVERY
-  // special character so nothing can ever break or truncate the
-  // wa.me query string, no matter what bag names contain.
-  var msg = encodeURIComponent(parts.join('\n'));
-  return 'https://wa.me/918008970033?text=' + msg;
+  var msg = encodeURIComponent(lines.join('\n'));
+  return 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + msg;
 }
 
 function sendToWhatsApp() {
   var name = document.getElementById('customerName').value.trim();
-  var custPhone = document.getElementById('customerPhone').value.trim();
+  var phone = document.getElementById('customerPhone').value.trim();
   if (!name) { showToast('Please enter your Full Name'); document.getElementById('customerName').focus(); return; }
-  if (!custPhone) { showToast('Please enter your Phone Number'); document.getElementById('customerPhone').focus(); return; }
-  if (custPhone.length !== 10 || !/^[6-9][0-9]{9}$/.test(custPhone)) { showToast('Enter a valid 10-digit Indian mobile number'); document.getElementById('customerPhone').focus(); return; }
+  if (!phone) { showToast('Please enter your Phone Number'); document.getElementById('customerPhone').focus(); return; }
+  if (phone.length !== 10 || !/^[6-9][0-9]{9}$/.test(phone)) { showToast('Enter a valid 10-digit Indian mobile number'); document.getElementById('customerPhone').focus(); return; }
 
-  var hasAny = false;
-  RICE_BAGS.forEach(function(row){
-    if (parseInt(document.getElementById(row[0]).querySelector('select').value) > 0) hasAny = true;
-  });
-  if (!hasAny) { showToast('Please select at least one rice bag'); return; }
+  var data = buildOrderData();
+  if (data.lines.length === 0 && !data.otherItemsText) { showToast('Please select at least one item'); return; }
+  if (data.min8Blocked) { showToast('Minimum order for Combo 4 is ' + COMBO4_MIN_KG + ' kgs'); return; }
 
+  if (activeCombo !== 'combo4' && !comboUnlocked(activeCombo) === false) {
+    // no-op guard placeholder (kept simple: unlocked groceries are optional, base combo items alone can still be ordered)
+  }
+
+  startLocationWarmup();
   document.getElementById('locationPopup').classList.add('show');
 }
+
+/* ============================================================
+   PRECISE GEOLOCATION - WARM-UP + INSTANT HANDOFF
+   ============================================================ */
+var geoState = { best: null, watchId: null, denied: false, unsupported: false };
+
+function startLocationWarmup() {
+  geoState.best = null; geoState.denied = false; geoState.unsupported = false;
+  if (!navigator.geolocation) { geoState.unsupported = true; return; }
+  geoState.watchId = navigator.geolocation.watchPosition(
+    function(pos) {
+      if (!geoState.best || pos.coords.accuracy < geoState.best.coords.accuracy) {
+        geoState.best = pos;
+        var accuracyEl = document.getElementById('loadingAccuracy');
+        if (accuracyEl) accuracyEl.textContent = 'Current accuracy: \u00B1' + Math.round(pos.coords.accuracy) + 'm';
+      }
+    },
+    function(err) { if (err.code === err.PERMISSION_DENIED) geoState.denied = true; },
+    { enableHighAccuracy: true, timeout: 20000, maximumAge: 0 }
+  );
+}
+function stopLocationWarmup() { if (geoState.watchId !== null) { navigator.geolocation.clearWatch(geoState.watchId); geoState.watchId = null; } }
+function formatLocationText(pos) {
+  var lat = pos.coords.latitude.toFixed(7), lng = pos.coords.longitude.toFixed(7), acc = Math.round(pos.coords.accuracy);
+  return lat + ', ' + lng + ' (accuracy \u00B1' + acc + 'm) https://maps.google.com/?q=' + lat + ',' + lng;
+}
+function showLoadingOverlay() { document.getElementById('loadingAccuracy').textContent = ''; document.getElementById('locationLoading').classList.add('show'); }
+function hideLoadingOverlay() { document.getElementById('locationLoading').classList.remove('show'); }
+function navigateToWhatsApp(locationText) { window.location.href = buildWhatsAppURL(locationText); }
 
 function handleLocationChoice(isHome) {
   document.getElementById('locationPopup').classList.remove('show');
   var btn = document.getElementById('waBtn');
-  btn.disabled = true;
-  if (!isHome) { btn.disabled = false; window.location.href = buildWhatsAppURL('Customer not at home - location not shared'); return; }
-  showToast('Getting your location...', 'info');
-  var locationDone = false;
-  function openWhatsApp(locText) {
-    if (locationDone) return; locationDone = true; btn.disabled = false;
-    window.location.href = buildWhatsAppURL(locText);
+  if (!isHome) { stopLocationWarmup(); navigateToWhatsApp('Customer not at home - location not shared'); return; }
+  if (geoState.best) { var locText = formatLocationText(geoState.best); stopLocationWarmup(); navigateToWhatsApp(locText); return; }
+  if (geoState.unsupported) { navigateToWhatsApp('Location not supported on this device'); return; }
+  if (geoState.denied) { navigateToWhatsApp('Location permission denied'); return; }
+
+  btn.disabled = true; showLoadingOverlay();
+  var MAX_WAIT = 12000, finished = false, pollTimer = null;
+  var maxTimer = setTimeout(function() { checkAndFinish(true); }, MAX_WAIT);
+  function checkAndFinish(forceFinish) {
+    if (finished) return;
+    if (!forceFinish && !(geoState.best && geoState.best.coords.accuracy <= 20) && !geoState.denied) return;
+    finished = true; clearTimeout(maxTimer); clearInterval(pollTimer); stopLocationWarmup(); hideLoadingOverlay(); btn.disabled = false;
+    if (geoState.denied) { navigateToWhatsApp('Location permission denied'); return; }
+    if (geoState.best) { navigateToWhatsApp(formatLocationText(geoState.best)); return; }
+    navigateToWhatsApp('Could not get precise location');
   }
-  var fallbackTimer = setTimeout(function() { openWhatsApp('Location timed out'); }, 10000);
-  if (!navigator.geolocation) { clearTimeout(fallbackTimer); openWhatsApp('Location not supported'); return; }
-  navigator.geolocation.getCurrentPosition(
-    function(pos) {
-      clearTimeout(fallbackTimer);
-      var lat = pos.coords.latitude.toFixed(7), lng = pos.coords.longitude.toFixed(7), acc = Math.round(pos.coords.accuracy);
-      openWhatsApp(lat + ', ' + lng + ' (±' + acc + 'm) https://maps.google.com/?q=' + lat + ',' + lng);
-    },
-    function(err) {
-      clearTimeout(fallbackTimer);
-      navigator.geolocation.getCurrentPosition(
-        function(pos2) {
-          var lat2 = pos2.coords.latitude.toFixed(7), lng2 = pos2.coords.longitude.toFixed(7), acc2 = Math.round(pos2.coords.accuracy);
-          openWhatsApp(lat2 + ', ' + lng2 + ' (±' + acc2 + 'm) https://maps.google.com/?q=' + lat2 + ',' + lng2);
-        },
-        function() { openWhatsApp(err.code === 1 ? 'Location permission denied' : 'Location not available'); },
-        { enableHighAccuracy: false, timeout: 5000, maximumAge: 30000 }
-      );
-    },
-    { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
-  );
+  pollTimer = setInterval(function() { checkAndFinish(false); }, 250);
 }
 
 /* ============================================================
    INIT
    ============================================================ */
-renderItems();
+renderComboTabs();
+renderItemGrid('rice-items', RICE_BAGS, 10);
+renderItemGrid('combo2-items', COMBO2_ITEMS, 5);
+renderItemGrid('combo3-items', COMBO3_ITEMS, 5);
+document.getElementById('panel-combo1').classList.add('active');
+rerenderActiveGroceries();
 updateSummary();
 </script>
 </body>
