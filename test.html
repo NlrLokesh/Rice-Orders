@@ -58,23 +58,16 @@ header::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; h
 .notice-footer { text-align: center; font-size: 10.5px; color: var(--gold-dark); font-style: italic; margin-top: 10px; padding-top: 10px; border-top: 1px solid #2a2200; letter-spacing: 0.3px; line-height: 1.6; }
 
 .combo-note { background: var(--black-card); border: 1px solid var(--black-border); border-radius: 14px; padding: 6px 16px; margin-bottom: 6px; }
-.combo-note-row { display: flex; gap: 12px; padding: 14px 0; align-items: flex-start; }
+.combo-note-row { display: flex; gap: 12px; padding: 14px 4px; align-items: center; cursor: pointer; transition: background-color .2s; border-radius: 10px; }
 .combo-note-row:not(:last-child) { border-bottom: 1px solid #1e1e1e; }
+.combo-note-row:hover, .combo-note-row:active { background: #1a1600; }
 .combo-note-num { flex-shrink: 0; width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: var(--black); font-family: 'Playfair Display', serif; font-weight: 900; font-size: 14px; display: flex; align-items: center; justify-content: center; }
-.combo-note-title { font-family: 'Playfair Display', serif; font-size: 14.5px; font-weight: 700; color: var(--gold-light); margin-bottom: 3px; }
-.combo-note-desc { font-size: 11.5px; color: var(--white-dim); line-height: 1.55; }
-
-/* ---------- combo selector cards ---------- */
-.combo-grid { display: flex; flex-direction: column; gap: 12px; }
-.combo-card { background: var(--black-card); border: 1px solid var(--black-border); border-radius: 14px; padding: 16px; display: flex; align-items: center; gap: 14px; cursor: pointer; transition: border-color .25s, transform .2s, background .25s; position: relative; overflow: hidden; }
-.combo-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-dark), transparent); }
-.combo-card:active { transform: scale(0.98); }
-.combo-card:hover { border-color: var(--gold-dark); background: #1a1600; }
-.combo-icon { width: 46px; height: 46px; border-radius: 12px; background: linear-gradient(135deg, var(--gold-dark), var(--gold)); display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
-.combo-card-body { flex: 1; min-width: 0; }
-.combo-card-title { font-family: 'Playfair Display', serif; font-size: 15.5px; font-weight: 700; color: var(--white); }
-.combo-card-sub { font-size: 10.5px; color: #999; margin-top: 3px; letter-spacing: 0.3px; }
-.combo-arrow { font-size: 18px; color: var(--gold-dark); flex-shrink: 0; }
+.combo-note-body { flex: 1; min-width: 0; }
+.combo-note-title-row { display: flex; align-items: center; gap: 6px; }
+.combo-note-title { font-family: 'Playfair Display', serif; font-size: 14.5px; font-weight: 700; color: var(--gold-light); }
+.combo-note-desc { font-size: 11.5px; color: var(--white-dim); line-height: 1.55; margin-top: 3px; }
+.combo-note-arrow { font-size: 16px; color: var(--gold-dark); flex-shrink: 0; transition: transform .2s; }
+.combo-note-row:hover .combo-note-arrow, .combo-note-row:active .combo-note-arrow { transform: translateX(3px); color: var(--gold); }
 
 /* ---------- back button ---------- */
 .back-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
@@ -264,10 +257,7 @@ select.qty-select:disabled, select.weight-select:disabled { opacity: 0.4; cursor
     <div class="section-title">&#10022; Combo Details</div>
     <div class="combo-note" id="comboNoteList"></div>
 
-    <div class="section-title">&#10022; Select Your Combo</div>
-    <div class="combo-grid" id="comboGrid"></div>
-
-    <div class="footer-note">&#10022; Orders confirmed via WhatsApp only &#10022;</div>
+    <div class="footer-note">&#10022; Tap any combo above to view details &amp; place an order &#10022;</div>
   </div>
 
   <!-- ============================================================
@@ -591,27 +581,24 @@ var toastTimer = null;
    =========================================  RENDERING  ==========================================
    ================================================================================================ */
 
+// Each row here IS the navigation into that combo's page — tap the title (or anywhere on the
+// row) and it opens Combo N's dedicated page directly, arrow and all. No separate selector needed.
 function comboNoteHTML() {
   var items = [
-    ['1','Rice Bag Combo','Buy any 1 rice bag (24–25 Kgs) and unlock wholesale prices on our entire groceries list.'],
-    ['2','Pick 2+ Combo','Choose 2 or more items (any combination) from the Combo 2 list and unlock wholesale grocery prices.'],
-    ['3','Pick 3+ Combo','Choose 3 or more items — or the same item 3+ times — from the Combo 3 list and unlock wholesale grocery prices.'],
-    ['4','Groceries Only','Order groceries directly. Minimum 8 Kgs required for delivery — bigger orders automatically save more.']
+    ['1','combo1','Rice Bag Combo','Buy any 1 rice bag (24–25 Kgs) and unlock wholesale prices on our entire groceries list.'],
+    ['2','combo2','Pick 2+ Combo','Choose 2 or more items (any combination) from the Combo 2 list and unlock wholesale grocery prices.'],
+    ['3','combo3','Pick 3+ Combo','Choose 3 or more items — or the same item 3+ times — from the Combo 3 list and unlock wholesale grocery prices.'],
+    ['4','combo4','Groceries Only','Order groceries directly. Minimum 8 Kgs required for delivery — bigger orders automatically save more.']
   ];
   return items.map(function(it){
-    return '<div class="combo-note-row"><div class="combo-note-num">'+it[0]+'</div><div><div class="combo-note-title">Combo '+it[0]+' — '+it[1]+'</div><div class="combo-note-desc">'+it[2]+'</div></div></div>';
-  }).join('');
-}
-
-function comboGridHTML() {
-  var cards = [
-    ['combo1','&#127806;','Combo 1 · Rice Bag','Rice bag unlocks wholesale groceries'],
-    ['combo2','&#128722;','Combo 2 · Pick 2+','Any 2+ items unlock wholesale groceries'],
-    ['combo3','&#128230;','Combo 3 · Pick 3+','3+ items unlock wholesale groceries'],
-    ['combo4','&#129365;','Combo 4 · Groceries Only','Min 8 Kgs, bigger orders save more']
-  ];
-  return cards.map(function(c){
-    return '<div class="combo-card" onclick="goToCombo(\''+c[0]+'\')"><div class="combo-icon">'+c[1]+'</div><div class="combo-card-body"><div class="combo-card-title">'+c[2]+'</div><div class="combo-card-sub">'+c[3]+'</div></div><div class="combo-arrow">&#8594;</div></div>';
+    return '<div class="combo-note-row" onclick="goToCombo(\''+it[1]+'\')">' +
+      '<div class="combo-note-num">'+it[0]+'</div>' +
+      '<div class="combo-note-body">' +
+        '<div class="combo-note-title-row"><span class="combo-note-title">Combo '+it[0]+' — '+it[2]+'</span></div>' +
+        '<div class="combo-note-desc">'+it[3]+'</div>' +
+      '</div>' +
+      '<span class="combo-note-arrow">&#8594;</span>' +
+    '</div>';
   }).join('');
 }
 
@@ -1175,7 +1162,6 @@ function handleLocationChoice(isHome) {
    =============================================  INIT  ===========================================
    ================================================================================================ */
 document.getElementById('comboNoteList').innerHTML = comboNoteHTML();
-document.getElementById('comboGrid').innerHTML = comboGridHTML();
 
 renderRiceItems();
 renderComboItemList('combo2Items', COMBO2_ITEMS, 'combo2');
