@@ -2,836 +2,1560 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0f0f0f">
+<meta name="description" content="Nellore Basket — wholesale rice and groceries with free home delivery in Nellore city.">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Nellore Rice Club - Wholesale Rice Bags</title>
+<title>Nellore Basket — Wholesale Rice &amp; Groceries</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700;900&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700;900&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- ================================================================================================
+     NELLORE BASKET — single file site
+     ------------------------------------------------------------------------------------------------
+     FILE MAP (search for these banners):
+       1. CSS / THEME
+       2. HTML MARKUP  (home + 4 combo views)
+       3. DATA         <-- the ONLY block you normally edit (prices, products, images, rules)
+       4. STATE
+       5. PRICE CALCULATIONS
+       6. RENDERING
+       7. COMBO LOGIC (locks)
+       8. SUMMARY
+       9. NAVIGATION + TOAST
+      10. LOCATION (GPS)
+      11. WHATSAPP ORDER
+      12. INIT
+     ================================================================================================ -->
+
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --gold: #d4af37; --gold-light: #f7d774; --gold-dark: #a67c00;
-    --gold-shine: #fff2b3; --black: #050505; --black-mid: #0f0f0f;
-    --black-card: #161616; --black-border: #2f2f2f;
-    --white: #ffffff; --white-dim: #d6d6d6; --red-warn: #ff4d4d;
-    --green-good: #3ddc84;
-  }
-  body { font-family: 'Montserrat', sans-serif; background: var(--black); color: var(--white); min-height: 100vh; overflow-x: hidden; -webkit-overflow-scrolling: touch; -webkit-tap-highlight-color: transparent; }
+/* ================================================================================================
+   1. CSS / THEME  — change the colours here to re-theme the entire site at once.
+   ================================================================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --gold: #d4af37; --gold-light: #f7d774; --gold-dark: #a67c00;
+  --gold-shine: #fff2b3; --black: #050505; --black-mid: #0f0f0f;
+  --black-card: #161616; --black-border: #2f2f2f;
+  --white: #ffffff; --white-dim: #d6d6d6; --red-warn: #ff4d4d;
+  --green: #25D366; --green-dark: #0d6e2f; --green-soft: #7CFC9B;
+  --header-h: 96px;                 /* measured at runtime; sticky tabs sit directly below it */
+  --page-pad: 15px;
+}
+html { -webkit-text-size-adjust: 100%; }
+body {
+  font-family: 'Montserrat', sans-serif; background: var(--black); color: var(--white);
+  min-height: 100vh; overflow-x: hidden; -webkit-overflow-scrolling: touch;
+  -webkit-tap-highlight-color: transparent;
+}
+button, select, input { font-family: inherit; }
+:focus-visible { outline: 2px solid var(--gold-light); outline-offset: 2px; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 
-  header { background: var(--black-mid); border-bottom: 1px solid var(--gold-dark); padding: 22px 20px 18px; text-align: center; position: sticky; top: 0; z-index: 1000; overflow: hidden; -webkit-transform: translateZ(0); transform: translateZ(0); }
-  header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent); }
-  header::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-dark), transparent); }
-  .header-tag { font-size: 9px; font-weight: 600; letter-spacing: 4px; color: var(--gold); text-transform: uppercase; margin-bottom: 6px; }
-  .header-title { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 900; letter-spacing: 2px; background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold-light) 40%, var(--gold) 60%, var(--gold-shine) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-  .header-sub { font-size: 10px; color: var(--white-dim); letter-spacing: 3px; margin-top: 5px; font-weight: 300; text-transform: uppercase; }
+/* ---------- header ---------- */
+header { background: var(--black-mid); border-bottom: 1px solid var(--gold-dark); padding: 18px 20px 14px; text-align: center; position: sticky; top: 0; z-index: 1000; overflow: hidden; transform: translateZ(0); }
+header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent); }
+.header-tag { font-size: 9px; font-weight: 600; letter-spacing: 4px; color: var(--gold); text-transform: uppercase; margin-bottom: 6px; }
+.header-title { font-family: 'Playfair Display', serif; font-size: 29px; font-weight: 900; letter-spacing: 1.5px; background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold-light) 40%, var(--gold) 60%, var(--gold-shine) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.15; }
+.header-sub { font-size: 10px; color: var(--white-dim); letter-spacing: 3px; margin-top: 5px; font-weight: 300; text-transform: uppercase; }
 
-  .container { max-width: 500px; margin: 0 auto; padding: 20px 15px 30px; }
+.container { max-width: 520px; margin: 0 auto; padding: 18px var(--page-pad) 44px; }
 
-  .section-title { display: flex; align-items: center; gap: 10px; font-size: 9px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin: 24px 0 12px; }
-  .section-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--gold-dark), transparent); }
+.view { display: none; }
+.view.active { display: block; }
+.section-title { display: flex; align-items: center; gap: 10px; font-size: 9px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin: 24px 0 12px; }
+.section-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--gold-dark), transparent); }
 
-  .customer-card { background: var(--black-card); border: 1px solid var(--black-border); border-radius: 14px; padding: 18px; position: relative; overflow: hidden; }
-  .customer-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-dark), transparent); }
-  .input-group { position: relative; }
-  .input-group input { width: 100%; padding: 12px 14px 12px 42px; background: var(--black-mid); border: 1px solid var(--black-border); border-radius: 8px; color: var(--white); font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 500; outline: none; transition: border 0.25s, box-shadow 0.25s; -webkit-appearance: none; appearance: none; }
-  .input-group input::placeholder { color: #cccccc; font-weight: 400; }
-  .input-group input:focus { border-color: var(--gold-dark); box-shadow: 0 0 0 3px rgba(212,175,55,0.08); }
-  .input-group input:disabled { opacity: 0.6; }
-  .input-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 14px; pointer-events: none; }
+/* ---------- customer details ---------- */
+.customer-card { background: var(--black-card); border: 1px solid var(--black-border); border-radius: 14px; padding: 18px; position: relative; overflow: hidden; }
+.customer-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-dark), transparent); }
+.input-group { position: relative; }
+.input-group + .input-group { margin-top: 10px; }
+.input-group input { width: 100%; padding: 13px 14px 13px 42px; background: var(--black-mid); border: 1px solid var(--black-border); border-radius: 8px; color: var(--white); font-size: 14px; font-weight: 500; outline: none; transition: border-color .25s, box-shadow .25s; -webkit-appearance: none; appearance: none; }
+.input-group input::placeholder { color: #9a9a9a; font-weight: 400; }
+.input-group input:focus { border-color: var(--gold-dark); box-shadow: 0 0 0 3px rgba(212,175,55,.08); }
+.input-group input.invalid { border-color: var(--red-warn); }
+.input-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 14px; pointer-events: none; }
 
-  /* --- Confirm details / location button --- */
-  .btn-confirm { width: 100%; padding: 14px; margin-top: 14px; background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: var(--black); border: none; border-radius: 10px; font-family: 'Montserrat', sans-serif; font-size: 12.5px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform 0.2s, box-shadow 0.2s, background 0.3s, color 0.3s; -webkit-appearance: none; appearance: none; }
-  .btn-confirm:active { transform: scale(0.98); }
-  .btn-confirm.confirmed { background: linear-gradient(135deg, #0d6e2f, #25D366); color: #fff; cursor: default; }
-  .btn-confirm.confirmed:active { transform: none; }
-  .confirm-hint { font-size: 10px; color: #888; text-align: center; margin-top: 8px; letter-spacing: 0.3px; line-height: 1.5; }
-  .confirm-hint.ok { color: var(--green-good); font-weight: 600; }
+/* ---------- delivery notice ---------- */
+.notice-strip { background: #1a1400; border: 1px solid var(--gold-dark); border-radius: 12px; padding: 14px 16px; }
+.notice-row { display: flex; align-items: flex-start; gap: 10px; font-size: 11.5px; color: var(--white-dim); line-height: 1.5; padding: 6px 0; }
+.notice-row:not(:last-of-type) { border-bottom: 1px dashed #2a2200; }
+.notice-row .n-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+.notice-row b { color: var(--gold-light); }
+.notice-footer { text-align: center; font-size: 10.5px; color: var(--gold-dark); font-style: italic; margin-top: 10px; padding-top: 10px; border-top: 1px solid #2a2200; line-height: 1.6; }
 
-  /* --- Wholesale notice strip --- */
-  .notice-strip { background: #1a1400; border: 1px solid var(--gold-dark); border-radius: 12px; padding: 14px 16px; margin-bottom: 16px; }
-  .notice-row { display: flex; align-items: flex-start; gap: 10px; font-size: 11.5px; color: var(--white-dim); line-height: 1.5; padding: 5px 0; }
-  .notice-row:not(:last-child) { border-bottom: 1px dashed #2a2200; }
-  .notice-row .n-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
-  .notice-row b { color: var(--gold-light); }
-  .notice-footer { text-align: center; font-size: 10.5px; color: var(--gold-dark); font-style: italic; margin-top: 10px; padding-top: 10px; border-top: 1px solid #2a2200; letter-spacing: 0.3px; line-height: 1.6; }
+/* ---------- combo cards (home) ---------- */
+.combo-note { background: var(--black-card); border: 1px solid var(--black-border); border-radius: 14px; padding: 4px 14px; }
+.combo-note-row { display: flex; gap: 12px; padding: 15px 4px; align-items: center; cursor: pointer; transition: background-color .2s; border-radius: 10px; width: 100%; background: none; border: none; text-align: left; color: inherit; }
+.combo-note-row:not(:last-child) { border-bottom: 1px solid #1e1e1e; }
+.combo-note-row:hover, .combo-note-row:active { background: #1a1600; }
+.combo-note-num { flex-shrink: 0; width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: var(--black); font-family: 'Playfair Display', serif; font-weight: 900; font-size: 14px; display: flex; align-items: center; justify-content: center; }
+.combo-note-body { flex: 1; min-width: 0; }
+.combo-note-title { font-family: 'Playfair Display', serif; font-size: 14.5px; font-weight: 700; color: var(--gold-light); display: block; }
+.combo-note-desc { font-size: 11.5px; color: var(--white-dim); line-height: 1.55; margin-top: 3px; }
+.combo-note-arrow { font-size: 16px; color: var(--gold-dark); flex-shrink: 0; transition: transform .2s, color .2s; }
+.combo-note-row:hover .combo-note-arrow, .combo-note-row:active .combo-note-arrow { transform: translateX(3px); color: var(--gold); }
 
-  .item { display: flex; align-items: center; background: var(--black-card); border: 1px solid var(--black-border); border-radius: 14px; padding: 14px; margin-bottom: 10px; transition: border-color 0.3s ease, background-color 0.3s ease; position: relative; overflow: hidden; cursor: default; user-select: none; -webkit-user-select: none; -webkit-transform: translateZ(0); transform: translateZ(0); }
-  .item::before { content: ''; position: absolute; inset: 0; border-radius: 14px; background: linear-gradient(135deg, rgba(212,175,55,0.05), transparent 60%); opacity: 0; transition: opacity 0.3s; pointer-events: none; }
-  .item.active { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold-dark), 0 8px 30px rgba(212,175,55,0.18); background: #1c1800; }
-  .item.active::before { opacity: 1; }
+/* ---------- back bar ---------- */
+.back-row { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+.back-btn { display: inline-flex; align-items: center; gap: 6px; background: var(--black-card); border: 1px solid var(--black-border); color: var(--gold-light); font-size: 12px; font-weight: 600; padding: 10px 16px; border-radius: 10px; cursor: pointer; transition: border-color .2s, background .2s; }
+.back-btn:hover { border-color: var(--gold-dark); background: #1a1600; }
+.back-btn:active { transform: scale(.97); }
+.combo-page-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 800; color: var(--gold-light); flex: 1; min-width: 0; }
 
-  .check-badge { position: absolute; top: 10px; right: 10px; width: 22px; height: 22px; background: linear-gradient(135deg, var(--gold-dark), var(--gold-light)); border-radius: 50%; font-size: 11px; color: var(--black); display: flex; align-items: center; justify-content: center; font-weight: 900; opacity: 0; transform: scale(0.5) translateZ(0); transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1); pointer-events: none; z-index: 6; }
-  .item.active .check-badge { opacity: 1; transform: scale(1) translateZ(0); }
+/* ---------- product card: [image] [details] [control] ---------- */
+.item { display: flex; align-items: center; background: var(--black-card); border: 1px solid var(--black-border); border-radius: 14px; padding: 12px; margin-bottom: 10px; transition: border-color .25s, background-color .25s; position: relative; overflow: hidden; }
+.item::before { content: ''; position: absolute; inset: 0; border-radius: 14px; background: linear-gradient(135deg, rgba(212,175,55,.05), transparent 60%); opacity: 0; transition: opacity .25s; pointer-events: none; }
+.item.active { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold-dark), 0 8px 26px rgba(212,175,55,.16); background: #1c1800; }
+.item.active::before { opacity: 1; }
+.item.item-disabled { opacity: .5; }
+.check-badge { position: absolute; top: 8px; right: 8px; width: 20px; height: 20px; background: linear-gradient(135deg, var(--gold-dark), var(--gold-light)); border-radius: 50%; font-size: 11px; color: var(--black); display: flex; align-items: center; justify-content: center; font-weight: 900; opacity: 0; transform: scale(.5); transition: opacity .2s, transform .2s; pointer-events: none; z-index: 4; }
+.item.active .check-badge { opacity: 1; transform: scale(1); }
 
-  .item img { width: 66px; height: 92px; object-fit: cover; object-position: center; border-radius: 8px; flex-shrink: 0; border: 1px solid #222; transition: border-color 0.3s; pointer-events: none; aspect-ratio: 3 / 4; background: #1a1a1a; display: block; }
-  .item.active img { border-color: var(--gold-dark); }
-  .img-slot { position: relative; flex-shrink: 0; }
-  .img-slot .img-tag { position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%); font-size: 7px; letter-spacing: 0.5px; color: #555; text-transform: uppercase; white-space: nowrap; }
+.img-slot { position: relative; flex-shrink: 0; width: 56px; height: 72px; border-radius: 8px; border: 1px solid #222; background: #1a1a1a; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.item.active .img-slot { border-color: var(--gold-dark); }
+.img-slot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.img-slot img.img-failed { display: none; }
+.img-ph { font-size: 20px; opacity: .3; }
+.img-slot img + .img-ph { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; }
+.img-slot img.img-failed + .img-ph { display: flex; }
 
-  .details { flex: 1; margin-left: 13px; min-width: 0; }
-  .item-name { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; color: #ffffff; transition: color 0.3s; line-height: 1.25; }
-  .item.active .item-name { color: var(--gold-light); }
-  .item-sub { font-size: 9px; letter-spacing: 1.2px; color: #b0b0b0; text-transform: uppercase; margin-top: 3px; font-weight: 600; transition: color 0.3s; line-height: 1.5; }
-  .item.active .item-sub { color: var(--gold-dark); }
-  .item-price { font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 600; color: var(--gold); margin-top: 7px; letter-spacing: 0.3px; }
-  .item-price .rupee { font-size: 13px; font-weight: 700; }
-  .item-price .amount { font-size: 16px; font-weight: 700; }
-  .item-price .per-bag { font-size: 11px; color: #666; font-weight: 400; margin-left: 2px; }
+.details { flex: 1; margin-left: 12px; min-width: 0; }
+.item-name { font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 700; color: #fff; line-height: 1.3; overflow-wrap: anywhere; }
+.item.active .item-name { color: var(--gold-light); }
+.item-sub { font-size: 9.5px; letter-spacing: .8px; color: #b0b0b0; text-transform: uppercase; margin-top: 4px; font-weight: 600; line-height: 1.5; overflow-wrap: anywhere; }
+.item.active .item-sub { color: var(--gold-dark); }
+.item-price { font-size: 13px; font-weight: 600; color: var(--gold); margin-top: 7px; }
+.item-price .amount { font-size: 15px; font-weight: 700; }
+.item-price .per-unit { font-size: 10px; color: #7a7a7a; font-weight: 400; margin-left: 3px; }
+.item-price.tbd { color: #888; font-style: italic; font-size: 11px; font-weight: 500; }
+.item-chosen { font-size: 10.5px; font-weight: 700; color: var(--green-soft); margin-top: 6px; display: none; }
+.item.active .item-chosen { display: block; }
 
-  .qty-wrapper { display: flex; flex-direction: column; align-items: center; gap: 5px; margin-right: 30px; position: relative; z-index: 6; flex-shrink: 0; }
-  .qty-label { font-size: 8px; letter-spacing: 1.5px; color: var(--gold-dark); text-transform: uppercase; font-weight: 600; transition: color 0.3s; }
-  .item.active .qty-label { color: var(--gold); }
-  select.qty-select { padding: 9px 26px 9px 12px; border-radius: 8px; border: 1px solid var(--gold-dark); background: var(--black-mid); color: #888; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; outline: none; transition: all 0.3s; min-width: 76px; -webkit-appearance: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23a67c00' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; pointer-events: auto; }
-  .item.active select.qty-select { border-color: var(--gold); color: var(--gold-light); background-color: #1a1500; box-shadow: 0 0 0 1px var(--gold-dark), 0 3px 12px rgba(212,175,55,0.18); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23d4af37' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); }
+.qty-wrapper { display: flex; flex-direction: column; align-items: stretch; gap: 4px; margin-left: 10px; flex-shrink: 0; position: relative; z-index: 3; }
+.qty-label { font-size: 7.5px; letter-spacing: 1.3px; color: var(--gold-dark); text-transform: uppercase; font-weight: 700; text-align: center; }
+.item.active .qty-label { color: var(--gold); }
+select.picker { padding: 10px 24px 10px 10px; border-radius: 8px; border: 1px solid var(--gold-dark); background-color: var(--black-mid); color: #9a9a9a; font-size: 11.5px; font-weight: 600; cursor: pointer; outline: none; transition: border-color .25s, color .25s, background-color .25s; min-width: 74px; max-width: 150px; -webkit-appearance: none; appearance: none; text-overflow: ellipsis; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23a67c00' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; }
+.item.active select.picker { border-color: var(--gold); color: var(--gold-light); background-color: #1a1500; box-shadow: 0 0 0 1px var(--gold-dark); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23d4af37' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); }
+select.picker:disabled { opacity: .4; cursor: not-allowed; }
+select.picker-wide { min-width: 132px; font-size: 11px; }
 
-  .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-80px) translateZ(0); background: #1e0000; border: 1px solid var(--red-warn); color: var(--red-warn); font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.5px; padding: 12px 22px; border-radius: 10px; box-shadow: 0 6px 24px rgba(255,77,77,0.25); z-index: 9999; transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s; white-space: nowrap; opacity: 0; pointer-events: none; -webkit-transform: translateX(-50%) translateY(-80px) translateZ(0); }
-  .toast.show { transform: translateX(-50%) translateY(0) translateZ(0); -webkit-transform: translateX(-50%) translateY(0) translateZ(0); opacity: 1; }
-  .toast.info { background: #001a0a; border-color: var(--gold-dark); color: var(--gold-light); box-shadow: 0 6px 24px rgba(212,175,55,0.2); }
+/* ---------- lock / unlock ---------- */
+.locked-box { background: var(--black-card); border: 1px dashed var(--black-border); border-radius: 14px; padding: 26px 18px; text-align: center; }
+.locked-icon { font-size: 26px; margin-bottom: 8px; display: block; }
+.locked-title { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; color: var(--white-dim); margin-bottom: 5px; }
+.locked-sub { font-size: 11.5px; color: #949494; line-height: 1.55; }
+.unlock-banner { background: linear-gradient(135deg, #1a1400, #241c00); border: 1px solid var(--gold); border-radius: 12px; padding: 12px 14px; font-size: 11.5px; color: var(--gold-light); text-align: center; margin-bottom: 14px; font-weight: 600; line-height: 1.5; }
+.info-banner { background: var(--black-card); border: 1px solid var(--black-border); border-radius: 12px; padding: 12px 14px; font-size: 11.5px; color: var(--white-dim); text-align: center; margin-bottom: 14px; line-height: 1.6; }
+.info-banner b { color: var(--gold-light); }
 
-  .summary-card { background: var(--black-card); border: 1px solid var(--black-border); border-radius: 14px; padding: 18px; position: relative; overflow: hidden; }
-  .summary-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-dark), transparent); }
-  .summary-customer { display: flex; align-items: center; gap: 10px; padding-bottom: 12px; margin-bottom: 4px; border-bottom: 1px solid #222; }
-  .cust-icon { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, var(--gold-dark), var(--gold)); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
-  .cust-info { display: flex; flex-direction: column; }
-  .cust-label { font-size: 8px; letter-spacing: 2px; color: var(--gold-dark); text-transform: uppercase; font-weight: 700; }
-  .cust-name { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: var(--gold-light); margin-top: 1px; line-height: 1.2; }
-  .summary-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #1e1e1e; font-size: 13px; }
-  .summary-row:last-of-type { border-bottom: none; }
-  .s-name { color: var(--white); font-weight: 500; }
-  .s-qty { color: #bbbbbb; font-size: 11px; font-weight: 600; }
-  .s-price { color: var(--gold); font-weight: 700; font-size: 13px; }
-  .summary-total { display: flex; justify-content: space-between; align-items: center; padding-top: 14px; margin-top: 10px; border-top: 1px solid var(--gold-dark); }
-  .t-label { font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 700; color: var(--white-dim); letter-spacing: 1.5px; text-transform: uppercase; }
-  .t-amount { font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 700; background: linear-gradient(135deg, var(--gold-dark), var(--gold-light), var(--gold-shine)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-  .summary-empty { text-align: center; padding: 8px 0; color: #999; font-size: 12px; letter-spacing: 1px; font-style: italic; }
+/* ---------- weight progress (combo 4) ---------- */
+.progress-wrap { background: var(--black-card); border: 1px solid var(--black-border); border-radius: 12px; padding: 13px 15px; margin-bottom: 14px; }
+.progress-top { display: flex; justify-content: space-between; align-items: baseline; font-size: 11.5px; color: var(--white-dim); margin-bottom: 9px; gap: 10px; }
+.progress-top b { color: var(--gold-light); font-size: 13px; }
+.progress-bar { height: 7px; border-radius: 6px; background: #242424; overflow: hidden; }
+.progress-fill { height: 100%; width: 0%; border-radius: 6px; background: linear-gradient(90deg, var(--gold-dark), var(--gold-light)); transition: width .3s ease; }
+.progress-fill.done { background: linear-gradient(90deg, var(--green-dark), var(--green)); }
+.progress-note { font-size: 10.5px; color: #949494; margin-top: 8px; line-height: 1.5; }
 
-  .btn-whatsapp { width: 100%; padding: 16px; margin-top: 16px; background: linear-gradient(135deg, #0d6e2f, #25D366); color: white; border: none; border-radius: 12px; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 20px rgba(37,211,102,0.2), inset 0 1px 0 rgba(255,255,255,0.1); transition: transform 0.25s, box-shadow 0.25s; position: relative; overflow: hidden; -webkit-appearance: none; appearance: none; }
-  .btn-whatsapp:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(37,211,102,0.3); }
-  .btn-whatsapp:active { transform: scale(0.98); }
-  .btn-whatsapp:disabled { opacity: 0.7; cursor: not-allowed; }
+/* ---------- sticky grocery tabs ---------- */
+.grocery-tabs { position: sticky; top: calc(var(--header-h) - 1px); z-index: 500; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; background: var(--black); margin: 0 calc(var(--page-pad) * -1) 12px; padding: 10px var(--page-pad); border-bottom: 1px solid #1c1c1c; }
+.grocery-tabs::-webkit-scrollbar { display: none; }
+.grocery-tab { flex-shrink: 0; padding: 10px 16px; border-radius: 20px; background: var(--black-card); border: 1px solid var(--black-border); color: var(--white-dim); font-size: 11px; font-weight: 700; cursor: pointer; transition: background .2s, color .2s, border-color .2s; white-space: nowrap; }
+.grocery-tab[aria-selected="true"] { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: var(--black); border-color: var(--gold); }
+.grocery-panel { display: none; }
+.grocery-panel.active { display: block; }
+.panel-note { font-size: 10.5px; color: #8c8c8c; margin: -2px 0 12px; line-height: 1.5; }
 
-  .footer-note { text-align: center; font-size: 9px; color: #2e2e2e; letter-spacing: 2px; margin-top: 14px; text-transform: uppercase; padding-bottom: 10px; }
+/* ---------- summary ---------- */
+.summary-card { background: var(--black-card); border: 1px solid var(--black-border); border-radius: 14px; padding: 18px; position: relative; overflow: hidden; }
+.summary-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-dark), transparent); }
+.summary-customer { display: flex; align-items: center; gap: 10px; padding-bottom: 12px; margin-bottom: 4px; border-bottom: 1px solid #222; }
+.cust-icon { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, var(--gold-dark), var(--gold)); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+.cust-label { font-size: 8px; letter-spacing: 2px; color: var(--gold-dark); text-transform: uppercase; font-weight: 700; display: block; }
+.cust-name { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: var(--gold-light); line-height: 1.25; display: block; }
+.cust-phone { font-size: 11px; color: #b0b0b0; font-weight: 500; display: block; margin-top: 2px; }
+.summary-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #1e1e1e; font-size: 12.5px; gap: 8px; }
+.summary-row:last-of-type { border-bottom: none; }
+.s-name { color: var(--white); font-weight: 500; flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.s-qty { color: #bbb; font-size: 10.5px; font-weight: 600; white-space: nowrap; }
+.s-price { color: var(--gold); font-weight: 700; font-size: 12.5px; white-space: nowrap; }
+.summary-sub { display: flex; justify-content: space-between; gap: 10px; padding: 9px 0; font-size: 12.5px; color: var(--white-dim); border-top: 1px dashed #262626; }
+.summary-sub.discount { color: var(--green-soft); font-weight: 700; }
+.summary-warn { display: flex; gap: 8px; padding: 10px 0 2px; font-size: 11.5px; color: var(--red-warn); line-height: 1.5; border-top: 1px dashed #262626; margin-top: 6px; }
+.summary-total { display: flex; justify-content: space-between; align-items: center; padding-top: 14px; margin-top: 10px; border-top: 1px solid var(--gold-dark); gap: 10px; }
+.t-label { font-size: 11px; font-weight: 700; color: var(--white-dim); letter-spacing: 1.5px; text-transform: uppercase; }
+.t-amount { font-size: 20px; font-weight: 700; background: linear-gradient(135deg, var(--gold-dark), var(--gold-light), var(--gold-shine)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.summary-empty { text-align: center; padding: 10px 0; color: #999; font-size: 12px; font-style: italic; }
 
-  .popup-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.82); z-index: 9998; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
-  .popup-overlay.show { opacity: 1; pointer-events: all; }
-  .popup-box { background: var(--black-card); border: 1px solid var(--gold-dark); border-radius: 20px; padding: 28px 24px 24px; max-width: 340px; width: 100%; position: relative; overflow: hidden; transform: scale(0.9) translateY(20px); transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1); text-align: center; }
-  .popup-overlay.show .popup-box { transform: scale(1) translateY(0); }
-  .popup-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent); }
-  .popup-icon { font-size: 42px; margin-bottom: 12px; display: block; line-height: 1; }
-  .popup-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--gold-light); margin-bottom: 8px; line-height: 1.3; }
-  .popup-subtitle { font-size: 12px; color: #888; letter-spacing: 0.5px; line-height: 1.6; margin-bottom: 24px; }
-  .popup-subtitle span { color: var(--gold-dark); font-weight: 600; }
-  .popup-buttons { display: flex; gap: 12px; }
-  .popup-btn { flex: 1; padding: 14px 10px; border: none; border-radius: 12px; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 1px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; -webkit-appearance: none; appearance: none; display: flex; flex-direction: column; align-items: center; gap: 5px; }
-  .popup-btn:active { transform: scale(0.96); }
-  .popup-btn .btn-emoji { font-size: 22px; }
-  .popup-btn-yes { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: var(--black); box-shadow: 0 4px 16px rgba(212,175,55,0.25); }
-  .popup-btn-no { background: var(--black-mid); color: var(--white-dim); border: 1px solid var(--black-border); }
+.btn-whatsapp { width: 100%; padding: 17px; margin-top: 16px; background: linear-gradient(135deg, var(--green-dark), var(--green)); color: #fff; border: none; border-radius: 12px; font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 18px rgba(37,211,102,.2); transition: transform .2s, box-shadow .2s; }
+.btn-whatsapp:hover { transform: translateY(-2px); box-shadow: 0 8px 26px rgba(37,211,102,.3); }
+.btn-whatsapp:active { transform: scale(.98); }
+.footer-note { text-align: center; font-size: 9px; color: #3a3a3a; letter-spacing: 2px; margin-top: 16px; text-transform: uppercase; }
 
-  /* --- Location loading overlay --- */
-  .loading-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.86); z-index: 9998; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
-  .loading-overlay.show { opacity: 1; pointer-events: all; }
-  .loading-box { background: var(--black-card); border: 1px solid var(--gold-dark); border-radius: 20px; padding: 34px 26px 28px; max-width: 320px; width: 100%; position: relative; overflow: hidden; transform: scale(0.9) translateY(20px); transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1); text-align: center; }
-  .loading-overlay.show .loading-box { transform: scale(1) translateY(0); }
-  .loading-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent); }
+/* ---------- toast ---------- */
+.toast { position: fixed; top: 16px; left: 50%; transform: translateX(-50%) translateY(-100px); background: #1e0000; border: 1px solid var(--red-warn); color: var(--red-warn); font-size: 12px; font-weight: 600; padding: 12px 20px; border-radius: 10px; box-shadow: 0 6px 24px rgba(255,77,77,.25); z-index: 9999; transition: transform .35s cubic-bezier(.34,1.56,.64,1), opacity .25s; opacity: 0; pointer-events: none; max-width: min(92vw, 420px); text-align: center; line-height: 1.45; }
+.toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+.toast.info { background: #131000; border-color: var(--gold-dark); color: var(--gold-light); box-shadow: 0 6px 24px rgba(212,175,55,.2); }
 
-  .gps-spinner-wrap { position: relative; width: 64px; height: 64px; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; }
-  .gps-spinner-ring { position: absolute; inset: 0; border: 3px solid rgba(212,175,55,0.15); border-top-color: var(--gold); border-radius: 50%; animation: gps-spin 0.9s linear infinite; }
-  .gps-spinner-ring.slow { border-top-color: var(--gold-light); animation-duration: 1.6s; inset: 9px; opacity: 0.75; }
-  .gps-spinner-pin { font-size: 20px; position: relative; z-index: 2; animation: gps-pulse 1.4s ease-in-out infinite; }
-  @keyframes gps-spin { to { transform: rotate(360deg); } }
-  @keyframes gps-pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.15); opacity: 0.7; } }
+/* ---------- popups ---------- */
+.popup-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.84); z-index: 9998; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity .25s; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+.popup-overlay.show { opacity: 1; pointer-events: all; }
+.popup-box { background: var(--black-card); border: 1px solid var(--gold-dark); border-radius: 20px; padding: 28px 24px 24px; max-width: 340px; width: 100%; position: relative; overflow: hidden; transform: scale(.92) translateY(16px); transition: transform .3s cubic-bezier(.34,1.56,.64,1); text-align: center; }
+.popup-overlay.show .popup-box { transform: scale(1) translateY(0); }
+.popup-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent); }
+.popup-icon { font-size: 40px; margin-bottom: 12px; display: block; line-height: 1; }
+.popup-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--gold-light); margin-bottom: 8px; line-height: 1.3; }
+.popup-subtitle { font-size: 12px; color: #9a9a9a; line-height: 1.6; margin-bottom: 22px; }
+.popup-subtitle span { color: var(--gold-dark); font-weight: 600; }
+.popup-buttons { display: flex; gap: 12px; }
+.popup-btn { flex: 1; padding: 14px 10px; border: none; border-radius: 12px; font-size: 12.5px; font-weight: 700; cursor: pointer; transition: transform .2s; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.popup-btn:active { transform: scale(.96); }
+.popup-btn .btn-emoji { font-size: 22px; }
+.popup-btn-yes { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: var(--black); }
+.popup-btn-no { background: var(--black-mid); color: var(--white-dim); border: 1px solid var(--black-border); }
 
-  .loading-title { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; color: var(--gold-light); margin-bottom: 6px; line-height: 1.3; min-height: 22px; transition: opacity 0.25s; }
-  .loading-sub { font-size: 11px; color: #999; letter-spacing: 0.3px; line-height: 1.6; margin-bottom: 16px; }
-  .loading-dots span { display: inline-block; animation: gps-dots 1.4s infinite; opacity: 0; }
-  .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
-  .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
-  @keyframes gps-dots { 0%, 20% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
+.gps-spinner-wrap { position: relative; width: 62px; height: 62px; margin: 0 auto 18px; display: flex; align-items: center; justify-content: center; }
+.gps-spinner-ring { position: absolute; inset: 0; border: 3px solid rgba(212,175,55,.15); border-top-color: var(--gold); border-radius: 50%; animation: gps-spin .9s linear infinite; }
+.gps-spinner-ring.slow { border-top-color: var(--gold-light); animation-duration: 1.6s; inset: 9px; opacity: .75; }
+.gps-spinner-pin { font-size: 20px; position: relative; z-index: 2; }
+@keyframes gps-spin { to { transform: rotate(360deg); } }
+.loading-title { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; color: var(--gold-light); margin-bottom: 8px; }
+.loading-sub { font-size: 11.5px; color: #9a9a9a; line-height: 1.6; }
+.loading-accuracy { margin-top: 14px; font-size: 11px; color: var(--gold-dark); font-weight: 600; min-height: 15px; }
 
-  /* Live accuracy meter */
-  .accuracy-wrap { margin-top: 4px; }
-  .accuracy-label-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
-  .accuracy-tag { font-size: 9px; letter-spacing: 1.5px; color: #777; text-transform: uppercase; font-weight: 700; }
-  .accuracy-value { font-size: 13px; font-weight: 700; color: var(--gold); font-family: 'Montserrat', sans-serif; transition: color 0.3s; }
-  .accuracy-track { width: 100%; height: 7px; background: #221c00; border-radius: 6px; overflow: hidden; position: relative; }
-  .accuracy-fill { height: 100%; width: 4%; border-radius: 6px; background: linear-gradient(90deg, var(--red-warn), var(--gold), var(--green-good)); transition: width 0.6s cubic-bezier(0.34,1.2,0.64,1); }
+@media (prefers-reduced-motion: reduce) { * { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
 
-  /* Elapsed-time progress bar */
-  .time-track { width: 100%; height: 3px; background: #1a1a1a; border-radius: 3px; overflow: hidden; margin-top: 14px; }
-  .time-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--gold-dark), var(--gold-light)); transition: width 0.3s linear; }
-
-  /* Confirmation-state badge in the loading box */
-  .confirm-state { margin-top: 10px; font-size: 10px; letter-spacing: 0.8px; color: #777; text-align: center; }
-  .confirm-state b { color: var(--green-good); }
-
-  /* Rotating tip */
-  .loading-tip { margin-top: 16px; padding-top: 14px; border-top: 1px dashed #2a2200; font-size: 10.5px; color: #999; line-height: 1.6; min-height: 32px; display: flex; align-items: center; justify-content: center; }
-  .loading-tip .tip-emoji { margin-right: 5px; }
-  .tip-text { transition: opacity 0.35s ease; opacity: 1; }
-  .tip-text.fade { opacity: 0; }
+/* ---------- small phones (360px and below) ---------- */
+@media (max-width: 380px) {
+  :root { --page-pad: 12px; }
+  .item { padding: 10px; }
+  .img-slot { width: 48px; height: 62px; }
+  .details { margin-left: 10px; }
+  .item-name { font-size: 13px; }
+  select.picker { min-width: 68px; font-size: 11px; padding: 9px 22px 9px 8px; }
+  select.picker-wide { min-width: 118px; font-size: 10.5px; }
+  .qty-wrapper { margin-left: 8px; }
+  .header-title { font-size: 25px; }
+}
 </style>
 </head>
 <body>
 
-<div class="toast" id="toast"></div>
+<!-- ================================================================================================
+     2. HTML MARKUP
+     ================================================================================================ -->
 
-<div class="popup-overlay" id="locationPopup">
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<div class="popup-overlay" id="locationPopup" role="dialog" aria-modal="true" aria-labelledby="locPopupTitle">
   <div class="popup-box">
-    <span class="popup-icon">&#127968;</span>
-    <div class="popup-title">Are you at Home?</div>
-    <div class="popup-subtitle">If you're home, we'll <span>capture your precise location</span> for the delivery rider. Not home right now? No problem — you can still place the order.</div>
+    <span class="popup-icon" aria-hidden="true">&#127968;</span>
+    <div class="popup-title" id="locPopupTitle">Are you at home?</div>
+    <div class="popup-subtitle">We will <span>share your location</span> with the order so we can deliver right to your door.</div>
     <div class="popup-buttons">
-      <button class="popup-btn popup-btn-yes" onclick="handleLocationChoice(true)"><span class="btn-emoji">&#9989;</span>Yes, I'm Home</button>
-      <button class="popup-btn popup-btn-no" onclick="handleLocationChoice(false)"><span class="btn-emoji">&#128694;</span>No, I'm Not</button>
+      <button class="popup-btn popup-btn-yes" data-loc="yes"><span class="btn-emoji" aria-hidden="true">&#9989;</span>Yes, I'm home</button>
+      <button class="popup-btn popup-btn-no" data-loc="no"><span class="btn-emoji" aria-hidden="true">&#128694;</span>No, I'm not</button>
     </div>
   </div>
 </div>
 
-<div class="loading-overlay" id="locationLoading">
-  <div class="loading-box">
-    <div class="gps-spinner-wrap">
+<div class="popup-overlay" id="locationLoading" role="dialog" aria-modal="true" aria-labelledby="locLoadTitle">
+  <div class="popup-box">
+    <div class="gps-spinner-wrap" aria-hidden="true">
       <div class="gps-spinner-ring"></div>
       <div class="gps-spinner-ring slow"></div>
       <span class="gps-spinner-pin">&#128205;</span>
     </div>
-    <div class="loading-title" id="loadingTitle">Finding Your Precise Location</div>
-    <div class="loading-sub">Locking onto satellites for pinpoint accuracy<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></div>
-
-    <div class="accuracy-wrap">
-      <div class="accuracy-label-row">
-        <span class="accuracy-tag">Signal Precision</span>
-        <span class="accuracy-value" id="accuracyValue">searching&hellip;</span>
-      </div>
-      <div class="accuracy-track"><div class="accuracy-fill" id="accuracyFill"></div></div>
-    </div>
-
-    <div class="confirm-state" id="confirmState">Waiting for a second reading to confirm the fix&hellip;</div>
-
-    <div class="time-track"><div class="time-fill" id="timeFill"></div></div>
-
-    <div class="loading-tip"><span class="tip-emoji">&#128161;</span><span class="tip-text" id="tipText">Standing near a window or open door helps lock the signal faster.</span></div>
+    <div class="loading-title" id="locLoadTitle">Finding your location</div>
+    <div class="loading-sub">This takes a few seconds. Keep this screen open.</div>
+    <div class="loading-accuracy" id="loadingAccuracy"></div>
   </div>
 </div>
 
 <header>
-  <div class="header-tag">&#10022; Wholesale Rice Bags &#10022;</div>
-  <div class="header-title">Nellore Rice Club</div>
-  <div class="header-sub">Best Quality &middot; Best Service</div>
+  <div class="header-tag">&#10022; Wholesale Rice &amp; Groceries &#10022;</div>
+  <div class="header-title">Nellore Basket</div>
+  <div class="header-sub">Best Quality &middot; Best Price &middot; Best Service</div>
 </header>
 
 <div class="container">
 
-  <div class="section-title">&#10022; Your Details</div>
-  <div class="customer-card">
-    <div class="input-group" style="margin-bottom:10px;">
-      <span class="input-icon">&#128100;</span>
-      <input type="text" id="customerName" placeholder="Full Name" autocomplete="name" autocorrect="off" autocapitalize="words" spellcheck="false" oninput="updateSummary(); resetConfirmIfChanged();"/>
+  <!-- ============================ VIEW: HOME ============================ -->
+  <section class="view active" id="view-home" aria-label="Home">
+
+    <h2 class="section-title">&#10022; Your details</h2>
+    <div class="customer-card">
+      <div class="input-group">
+        <span class="input-icon" aria-hidden="true">&#128100;</span>
+        <label class="sr-only" for="customerName">Full name</label>
+        <input type="text" id="customerName" placeholder="Full name" autocomplete="name" autocapitalize="words" spellcheck="false">
+      </div>
+      <div class="input-group">
+        <span class="input-icon" aria-hidden="true">&#128222;</span>
+        <label class="sr-only" for="customerPhone">Phone number, 10 digits</label>
+        <input type="tel" id="customerPhone" placeholder="Phone number (10 digits)" maxlength="10" autocomplete="tel" inputmode="numeric">
+      </div>
     </div>
-    <div class="input-group">
-      <span class="input-icon">&#128222;</span>
-      <input type="tel" id="customerPhone" placeholder="Phone Number (10 digits)" maxlength="10" autocomplete="tel" inputmode="numeric" pattern="[0-9]*" oninput="filterPhone(this); updateSummary(); resetConfirmIfChanged();"/>
+
+    <h2 class="section-title">&#10022; Delivery &amp; payment</h2>
+    <div class="notice-strip">
+      <div class="notice-row"><span class="n-icon" aria-hidden="true">&#128666;</span><span><b>Free home delivery</b> on every order, anywhere in Nellore city.</span></div>
+      <div class="notice-row"><span class="n-icon" aria-hidden="true">&#9200;</span><span><b>Next day delivery</b> — order today, get your items tomorrow.</span></div>
+      <div class="notice-row"><span class="n-icon" aria-hidden="true">&#128176;</span><span><b>Cash on delivery only</b> — pay the delivery person directly.</span></div>
+      <div class="notice-row"><span class="n-icon" aria-hidden="true">&#128683;</span><span><b>No credit, no pending payments.</b> Full payment at the time of delivery.</span></div>
+      <div class="notice-footer">We are wholesalers — our margins are kept very low. Thank you for understanding.</div>
     </div>
-    <button class="btn-confirm" id="confirmBtn" onclick="confirmDetails()">
-      <span style="font-size:15px">&#128205;</span> Confirm Details &amp; Detect Location
-    </button>
-    <div class="confirm-hint" id="confirmHint">We'll ask if you're home now, so placing the order later is instant.</div>
-  </div>
 
-  <div class="section-title">&#10022; Delivery &amp; Payment</div>
-  <div class="notice-strip">
-    <div class="notice-row"><span class="n-icon">&#128666;</span><span><b>Free Home Delivery</b> on every order, anywhere in Nellore City.</span></div>
-    <div class="notice-row"><span class="n-icon">&#9200;</span><span><b>Next Day Delivery</b> — order today, get your bags tomorrow.</span></div>
-    <div class="notice-row"><span class="n-icon">&#128176;</span><span><b>Cash on Delivery only</b> — pay the delivery person directly.</span></div>
-    <div class="notice-row"><span class="n-icon">&#128683;</span><span><b>No credits, no pending payments.</b> Full payment compulsory at the time of delivery.</span></div>
-    <div class="notice-footer">We are wholesalers — every rupee counts towards our profit, so our margins are kept very low. Thank you for understanding.</div>
-  </div>
+    <h2 class="section-title">&#10022; Combo details</h2>
+    <div class="combo-note" id="comboNoteList"></div>
 
-  <div class="section-title">&#10022; Select Rice Bags</div>
+    <p class="footer-note">&#10022; Tap any combo to open it and place an order &#10022;</p>
+  </section>
 
-  <div id="rice-items"></div>
+  <!-- ============================ VIEW: COMBO 1 ============================ -->
+  <section class="view" id="view-combo1" aria-label="Combo 1, rice bag combo">
+    <div class="back-row">
+      <button class="back-btn" data-back="1">&#8592; Back</button>
+      <h2 class="combo-page-title">Combo 1 &middot; Rice bag</h2>
+    </div>
+    <div class="info-banner">Buy any <b>1 rice bag</b> and wholesale grocery prices unlock automatically.</div>
 
-  <div class="section-title">&#10022; Order Summary</div>
-  <div class="summary-card">
-    <div class="summary-empty" id="summaryEmpty">No items selected yet</div>
-    <div id="summaryCustomer"></div>
-    <div id="summaryRows"></div>
-  </div>
+    <h3 class="section-title">&#10022; Step 1 &middot; Select rice bag</h3>
+    <div id="riceItems"></div>
 
-  <button class="btn-whatsapp" id="waBtn" onclick="sendToWhatsApp()">
-    <span style="font-size:18px">&#128172;</span> Place Order on WhatsApp
-  </button>
-  <div class="footer-note">&#10022; Orders confirmed via WhatsApp only &#10022;</div>
+    <h3 class="section-title">&#10022; Step 2 &middot; Wholesale groceries</h3>
+    <div id="combo1-lock" class="locked-box">
+      <span class="locked-icon" aria-hidden="true">&#128274;</span>
+      <div class="locked-title">&#128274; Buy 1 rice bag to unlock</div>
+      <div class="locked-sub">Choose any rice bag above and wholesale grocery prices open here.</div>
+    </div>
+    <div id="combo1-groceries" hidden>
+      <div class="unlock-banner">&#127881; Wholesale grocery prices unlocked</div>
+      <div id="combo1-grocery-lists"></div>
+    </div>
+
+    <h3 class="section-title">&#10022; Order summary</h3>
+    <div class="summary-card" id="combo1-summary-card"><div class="summary-empty">No items selected yet</div></div>
+    <button class="btn-whatsapp" data-order="combo1"><span aria-hidden="true" style="font-size:18px">&#128172;</span> Place order on WhatsApp</button>
+  </section>
+
+  <!-- ============================ VIEW: COMBO 2 ============================ -->
+  <section class="view" id="view-combo2" aria-label="Combo 2, pick 2 or more">
+    <div class="back-row">
+      <button class="back-btn" data-back="1">&#8592; Back</button>
+      <h2 class="combo-page-title">Combo 2 &middot; Pick 2+</h2>
+    </div>
+    <div class="info-banner">Choose any <b>2 or more items</b> below (any combination) to unlock wholesale grocery prices.</div>
+
+    <h3 class="section-title">&#10022; Step 1 &middot; Combo 2 items</h3>
+    <div id="combo2Items"></div>
+
+    <h3 class="section-title">&#10022; Step 2 &middot; Wholesale groceries</h3>
+    <div id="combo2-lock" class="locked-box">
+      <span class="locked-icon" aria-hidden="true">&#128274;</span>
+      <div class="locked-title">&#128274; Select 2+ items to unlock</div>
+      <div class="locked-sub">You have selected <span id="combo2-count">0</span> so far.</div>
+    </div>
+    <div id="combo2-groceries" hidden>
+      <div class="unlock-banner">&#127881; Wholesale grocery prices unlocked</div>
+      <div id="combo2-grocery-lists"></div>
+    </div>
+
+    <h3 class="section-title">&#10022; Order summary</h3>
+    <div class="summary-card" id="combo2-summary-card"><div class="summary-empty">No items selected yet</div></div>
+    <button class="btn-whatsapp" data-order="combo2"><span aria-hidden="true" style="font-size:18px">&#128172;</span> Place order on WhatsApp</button>
+  </section>
+
+  <!-- ============================ VIEW: COMBO 3 ============================ -->
+  <section class="view" id="view-combo3" aria-label="Combo 3, pick 3 or more">
+    <div class="back-row">
+      <button class="back-btn" data-back="1">&#8592; Back</button>
+      <h2 class="combo-page-title">Combo 3 &middot; Pick 3+</h2>
+    </div>
+    <div class="info-banner">Choose <b>3 or more</b> in total — 3 different items, or the same item 3 times — to unlock wholesale grocery prices.</div>
+
+    <h3 class="section-title">&#10022; Step 1 &middot; Combo 3 items</h3>
+    <div id="combo3Items"></div>
+
+    <h3 class="section-title">&#10022; Step 2 &middot; Wholesale groceries</h3>
+    <div id="combo3-lock" class="locked-box">
+      <span class="locked-icon" aria-hidden="true">&#128274;</span>
+      <div class="locked-title">&#128274; Select 3+ items to unlock</div>
+      <div class="locked-sub">You have selected <span id="combo3-count">0</span> so far.</div>
+    </div>
+    <div id="combo3-groceries" hidden>
+      <div class="unlock-banner">&#127881; Wholesale grocery prices unlocked</div>
+      <div id="combo3-grocery-lists"></div>
+    </div>
+
+    <h3 class="section-title">&#10022; Order summary</h3>
+    <div class="summary-card" id="combo3-summary-card"><div class="summary-empty">No items selected yet</div></div>
+    <button class="btn-whatsapp" data-order="combo3"><span aria-hidden="true" style="font-size:18px">&#128172;</span> Place order on WhatsApp</button>
+  </section>
+
+  <!-- ============================ VIEW: COMBO 4 ============================ -->
+  <section class="view" id="view-combo4" aria-label="Combo 4, groceries only">
+    <div class="back-row">
+      <button class="back-btn" data-back="1">&#8592; Back</button>
+      <h2 class="combo-page-title">Combo 4 &middot; Groceries only</h2>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-top"><span>Minimum order: <b>8 Kg</b></span><span id="combo4-weight-now">0 Kg selected</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="combo4-progress-fill"></div></div>
+      <div class="progress-note" id="combo4-progress-note">Weight counts List 1 staples. Extra savings are applied automatically on larger orders.</div>
+    </div>
+
+    <h3 class="section-title">&#10022; Groceries</h3>
+    <div id="combo4-grocery-lists"></div>
+
+    <h3 class="section-title">&#10022; Order summary</h3>
+    <div class="summary-card" id="combo4-summary-card"><div class="summary-empty">No items selected yet</div></div>
+    <button class="btn-whatsapp" data-order="combo4"><span aria-hidden="true" style="font-size:18px">&#128172;</span> Place order on WhatsApp</button>
+  </section>
+
 </div>
 
 <script>
-/* ============================================================
-   DATA — edit bag details/prices here only. Everything else
-   is generated. Replace the empty img src with your own image
-   URL later — the slot is already left open on the left side
-   of each bag.
-   ============================================================ */
-// [ id, name, subtitle, price, imgUrl ]
+/* ================================================================================================
+   3. DATA  —  THE ONLY BLOCK YOU NORMALLY EDIT
+   ------------------------------------------------------------------------------------------------
+   Every price on the site is written as  buying price + margin  =  selling price.
+   Change a buying price or a margin here and the whole site updates: cards, dropdowns,
+   order summary, discounts and the WhatsApp message.
+
+   NOTE FOR THE OWNER: the numbers below were carried over from your current live site, where they
+   were already final selling prices. They are therefore entered as  buyingPrice = old price,
+   margin = 0.  Whenever you know the real buying price for an item, split it:
+        buyingPrice: 1500, margin: 130     ->   customer sees 1630 (exactly as before)
+   ================================================================================================ */
+
+/* ==========================================================
+   STORE OWNER SETTINGS
+   ========================================================== */
+var STORE_CONFIG = {
+  WHATSAPP_NUMBER: '918008970033',   // the number that receives every order
+
+  // --- Combo 1: rice bulk discount (applies across ALL rice types combined) ---
+  RICE_BULK_MIN_QTY: 2,              // total bags needed to trigger the discount
+  RICE_BULK_DISCOUNT_PER_BAG: 30,    // rupees off EVERY bag once the above is reached
+
+  // --- Combo unlock rules ---
+  COMBO2_MIN_QTY: 2,                 // total qualifying quantity needed in Combo 2
+  COMBO3_MIN_QTY: 3,                 // total qualifying quantity needed in Combo 3
+
+  // --- Combo 4: minimum order + hidden bulk discount (List 1 only) ---
+  COMBO4_MIN_KG: 8,                  // minimum List 1 weight required for delivery
+  COMBO4_FULL_KG_DISCOUNT: 6.5,      // rupees off per eligible 1 Kg unit beyond the minimum
+  COMBO4_HALF_KG_PAIR_DISCOUNT: 3,   // rupees off per eligible pair of 500 g units beyond the minimum
+
+  // --- List 1 dropdown range: 500 g steps, from 500 g up to LIST1_MAX_KG ---
+  LIST1_MAX_KG: 10,
+  LIST1_STEP_KG: 0.5,
+
+  // --- Maximum quantity a customer can pick in one dropdown ---
+  MAX_RICE_QTY: 5,
+  MAX_ITEM_QTY: 6
+};
+
+/* ==========================================================
+   RICE PRODUCTS  (Combo 1)
+   Add a bag = add one object. bagWeight is shown to the customer.
+   ========================================================== */
 var RICE_BAGS = [
-  ['r1', 'Kurnool Rice Bag', '25 Kgs &middot; Old Rice &middot; Jilakara Masura', 1450, 'Kurnool.webp'],
-  ['r2', '24 Carat Gold', '24 Kgs &middot; Old Rice &middot; Jilakara Masura &middot; From Nandhyala', 1430, 'Carat.webp'],
-  ['r3', 'Steam Rice', '25 Kgs &middot; MVR Khageshwar Brand', 1430, 'mvr.webp'],
-  ['r4', 'Molagolukulu Sannalu', '24 Kgs &middot; Old Rice &middot; Pine Apple Bag &middot; From Chirala', 1530, 'sannalu.webp']
+  { id:'r1', name:'Kurnool Rice Bag',      description:'25 Kgs · Old rice · Jilakara Masura',                 image:'Kurnool.webp', buyingPrice:1630, margin:0, bagWeight:25 },
+  { id:'r2', name:'24 Carat Gold',         description:'24 Kgs · Old rice · Jilakara Masura · From Nandyala', image:'Carat.webp',   buyingPrice:1580, margin:0, bagWeight:24 },
+  { id:'r3', name:'Steam Rice',            description:'25 Kgs · MVR Khageshwar brand',                       image:'mvr.webp',     buyingPrice:1670, margin:0, bagWeight:25 },
+  { id:'r4', name:'Molagolukulu Sannalu',  description:'24 Kgs · Old rice · Pineapple bag · From Chirala',    image:'sannalu.webp', buyingPrice:1550, margin:0, bagWeight:24 }
 ];
 
-var toastTimer = null;
+/* ==========================================================
+   COMBO 2 PRODUCTS  (qualifying list — total quantity >= COMBO2_MIN_QTY)
+   TODO: OWNER WILL UPDATE — this is the reference list from the current site.
+   ========================================================== */
+var COMBO2_ITEMS = [
+  { id:'c2_1', name:'Freedom Sunflower Oil',  description:'1 Litre packet', image:'', buyingPrice:179, margin:0 },
+  { id:'c2_2', name:'GRB Neyyi (Ghee)',       description:'200 gms',        image:'', buyingPrice:180, margin:0 },
+  { id:'c2_3', name:'Tata Salt',              description:'1 Kg',           image:'', buyingPrice:30,  margin:0 },
+  { id:'c2_4', name:'3 Roses Tea Powder',     description:'250 gms',        image:'', buyingPrice:215, margin:0 },
+  { id:'c2_5', name:'Parachute Coconut Oil',  description:'275 gm',         image:'', buyingPrice:146, margin:0 }
+];
 
-/* ============================================================
-   RENDERING
-   ============================================================ */
-function renderItems() {
-  var wrap = document.getElementById('rice-items');
-  var html = '';
-  RICE_BAGS.forEach(function(row){
-    var id = row[0], name = row[1], sub = row[2], price = row[3], img = row[4];
-    html += '<div class="item" id="' + id + '">' +
-      '<div class="check-badge">&#10003;</div>' +
-      '<div class="img-slot"><img src="' + img + '" loading="lazy" decoding="async" width="66" height="92" alt="' + name + '" onerror="this.style.opacity=0.15;"></div>' +
+/* ==========================================================
+   COMBO 3 PRODUCTS  (qualifying list — total quantity >= COMBO3_MIN_QTY)
+   TODO: OWNER WILL UPDATE — this is the reference list from the current site.
+   ========================================================== */
+var COMBO3_ITEMS = [
+  { id:'c3_1', name:'Ruchi Gold Palm Oil',    description:'850 ml',     image:'', buyingPrice:153, margin:0 },
+  { id:'c3_2', name:'Kallu Uppu (Tata)',      description:'1 Kg',       image:'', buyingPrice:18,  margin:0 },
+  { id:'c3_3', name:'Dish Wash Can (Best)',   description:'5 Litres',   image:'', buyingPrice:400, margin:0 },
+  { id:'c3_4', name:'Phenyl Liquid (Best)',   description:'500 gms',    image:'', buyingPrice:185, margin:0 }
+];
+
+/* ==========================================================
+   LIST 1 — weight-based kirana staples
+   ----------------------------------------------------------
+   This is the ONLY list where the wholesale price differs from the normal price.
+     wholesale -> used in Combo 1, 2, 3 (after the combo unlocks)
+     normal    -> used in Combo 4
+   You only ever enter the 500 g price and the 1 Kg price. Every other weight in the dropdown
+   (1.5 Kg, 2 Kg ... up to LIST1_MAX_KG) is built automatically from those two numbers:
+     2.5 Kg = two 1 Kg prices + one 500 g price.
+   To add a product, copy one row and change the values. `image` may be left as '' .
+   ========================================================== */
+var LIST1 = [
+  { id:'l1', name:'Kandipappu', image:'',
+    wholesale:{ buyingPrice500g:68, margin500g:0, buyingPrice1kg:129, margin1kg:0 },
+    normal:   { buyingPrice500g:72, margin500g:0, buyingPrice1kg:137, margin1kg:0 } },
+  { id:'l2', name:'Minapappu', image:'',
+    wholesale:{ buyingPrice500g:65, margin500g:0, buyingPrice1kg:124, margin1kg:0 },
+    normal:   { buyingPrice500g:69, margin500g:0, buyingPrice1kg:132, margin1kg:0 } },
+  { id:'l3', name:'Verusenaga Pappu', image:'',
+    wholesale:{ buyingPrice500g:81, margin500g:0, buyingPrice1kg:155, margin1kg:0 },
+    normal:   { buyingPrice500g:85, margin500g:0, buyingPrice1kg:163, margin1kg:0 } },
+  { id:'l4', name:'Sugar', image:'',
+    wholesale:{ buyingPrice500g:39, margin500g:0, buyingPrice1kg:71, margin1kg:0 },
+    normal:   { buyingPrice500g:43, margin500g:0, buyingPrice1kg:79, margin1kg:0 } },
+  { id:'l5', name:'Idly Ravva', image:'',
+    wholesale:{ buyingPrice500g:25, margin500g:0, buyingPrice1kg:43, margin1kg:0 },
+    normal:   { buyingPrice500g:29, margin500g:0, buyingPrice1kg:51, margin1kg:0 } },
+  { id:'l6', name:'Aashirwad Atta (Goduma Pindi)', image:'',
+    wholesale:{ buyingPrice500g:39, margin500g:0, buyingPrice1kg:68, margin1kg:0 },
+    normal:   { buyingPrice500g:43, margin500g:0, buyingPrice1kg:75, margin1kg:0 } },
+  { id:'l7', name:'Chintapandu (1st quality guaranteed)', image:'',
+    wholesale:{ buyingPrice500g:103, margin500g:0, buyingPrice1kg:195, margin1kg:0 },
+    normal:   { buyingPrice500g:105, margin500g:0, buyingPrice1kg:200, margin1kg:0 } },
+  { id:'l8', name:'Pesara Pappu', image:'',
+    wholesale:{ buyingPrice500g:59, margin500g:0, buyingPrice1kg:111, margin1kg:0 },
+    normal:   { buyingPrice500g:63, margin500g:0, buyingPrice1kg:119, margin1kg:0 } },
+  { id:'l9', name:'Pachi Senaga Pappu', image:'',
+    wholesale:{ buyingPrice500g:48, margin500g:0, buyingPrice1kg:90, margin1kg:0 },
+    normal:   { buyingPrice500g:52, margin500g:0, buyingPrice1kg:98, margin1kg:0 } },
+  { id:'l10', name:'Sai Pappu', image:'',
+    wholesale:{ buyingPrice500g:55, margin500g:0, buyingPrice1kg:104, margin1kg:0 },
+    normal:   { buyingPrice500g:59, margin500g:0, buyingPrice1kg:112, margin1kg:0 } },
+  { id:'l11', name:'Tella Gedda', image:'',
+    wholesale:{ buyingPrice500g:90, margin500g:0, buyingPrice1kg:172, margin1kg:0 },
+    normal:   { buyingPrice500g:94, margin500g:0, buyingPrice1kg:180, margin1kg:0 } },
+  { id:'l12', name:'Bellam', image:'',
+    wholesale:{ buyingPrice500g:51, margin500g:0, buyingPrice1kg:94, margin1kg:0 },
+    normal:   { buyingPrice500g:55, margin500g:0, buyingPrice1kg:102, margin1kg:0 } },
+  { id:'l13', name:'Bellam Powder', image:'',
+    wholesale:{ buyingPrice500g:40, margin500g:0, buyingPrice1kg:71, margin1kg:0 },
+    normal:   { buyingPrice500g:45, margin500g:0, buyingPrice1kg:80, margin1kg:0 } },
+  { id:'l14', name:'Yendu Mirapakayalu (1st quality, more karam)', image:'',
+    wholesale:{ buyingPrice500g:170, margin500g:0, buyingPrice1kg:325, margin1kg:0 },
+    normal:   { buyingPrice500g:170, margin500g:0, buyingPrice1kg:330, margin1kg:0 } },
+  { id:'l15', name:'Desi Yendu Mirapakayalu (1st quality, less karam)', image:'',
+    wholesale:{ buyingPrice500g:225, margin500g:0, buyingPrice1kg:435, margin1kg:0 },
+    normal:   { buyingPrice500g:225, margin500g:0, buyingPrice1kg:440, margin1kg:0 } },
+  { id:'l16', name:'Upma Ravva (Best)', image:'',
+    wholesale:{ buyingPrice500g:30, margin500g:0, buyingPrice1kg:54, margin1kg:0 },
+    normal:   { buyingPrice500g:34, margin500g:0, buyingPrice1kg:62, margin1kg:0 } },
+  { id:'l17', name:'Semiyalu (Bambino, Best)', image:'',
+    wholesale:{ buyingPrice500g:53, margin500g:0, buyingPrice1kg:89, margin1kg:0 },
+    normal:   { buyingPrice500g:57, margin500g:0, buyingPrice1kg:97, margin1kg:0 } },
+  { id:'l18', name:'Bansi Ravva (Best)', image:'',
+    wholesale:{ buyingPrice500g:30, margin500g:0, buyingPrice1kg:54, margin1kg:0 },
+    normal:   { buyingPrice500g:34, margin500g:0, buyingPrice1kg:62, margin1kg:0 } },
+  { id:'l19', name:'Saggu Biyyam (Peddavi)', image:'',
+    wholesale:{ buyingPrice500g:46, margin500g:0, buyingPrice1kg:86, margin1kg:0 },
+    normal:   { buyingPrice500g:50, margin500g:0, buyingPrice1kg:94, margin1kg:0 } },
+  { id:'l20', name:'Pesallu / Green Pesalu (Peddavi)', image:'',
+    wholesale:{ buyingPrice500g:67, margin500g:0, buyingPrice1kg:128, margin1kg:0 },
+    normal:   { buyingPrice500g:71, margin500g:0, buyingPrice1kg:136, margin1kg:0 } },
+  { id:'l21', name:'Minumulu', image:'',
+    wholesale:{ buyingPrice500g:74, margin500g:0, buyingPrice1kg:141, margin1kg:0 },
+    normal:   { buyingPrice500g:78, margin500g:0, buyingPrice1kg:149, margin1kg:0 } },
+  { id:'l22', name:'Pottu Minapappu', image:'',
+    wholesale:{ buyingPrice500g:74, margin500g:0, buyingPrice1kg:141, margin1kg:0 },
+    normal:   { buyingPrice500g:78, margin500g:0, buyingPrice1kg:149, margin1kg:0 } },
+  { id:'l23', name:'Tella Senagalu (Peddavi)', image:'',
+    wholesale:{ buyingPrice500g:55, margin500g:0, buyingPrice1kg:103, margin1kg:0 },
+    normal:   { buyingPrice500g:60, margin500g:0, buyingPrice1kg:114, margin1kg:0 } },
+  { id:'l24', name:'Nalla Senagalu', image:'',
+    wholesale:{ buyingPrice500g:45, margin500g:0, buyingPrice1kg:83, margin1kg:0 },
+    normal:   { buyingPrice500g:49, margin500g:0, buyingPrice1kg:91, margin1kg:0 } },
+  { id:'l25', name:'Tella Alasandalu', image:'',
+    wholesale:{ buyingPrice500g:50, margin500g:0, buyingPrice1kg:93, margin1kg:0 },
+    normal:   { buyingPrice500g:54, margin500g:0, buyingPrice1kg:101, margin1kg:0 } },
+  { id:'l26', name:'Nalla Alasandalu', image:'',
+    wholesale:{ buyingPrice500g:54, margin500g:0, buyingPrice1kg:101, margin1kg:0 },
+    normal:   { buyingPrice500g:58, margin500g:0, buyingPrice1kg:109, margin1kg:0 } },
+  { id:'l27', name:'Tella Nuvvulu', image:'',
+    wholesale:{ buyingPrice500g:134, margin500g:0, buyingPrice1kg:262, margin1kg:0 },
+    normal:   { buyingPrice500g:138, margin500g:0, buyingPrice1kg:270, margin1kg:0 } },
+  { id:'l28', name:'Nalla Nuvvulu', image:'',
+    wholesale:{ buyingPrice500g:82, margin500g:0, buyingPrice1kg:157, margin1kg:0 },
+    normal:   { buyingPrice500g:86, margin500g:0, buyingPrice1kg:165, margin1kg:0 } },
+  { id:'l29', name:'Uppu Senagalu', image:'',
+    wholesale:{ buyingPrice500g:66, margin500g:0, buyingPrice1kg:126, margin1kg:0 },
+    normal:   { buyingPrice500g:70, margin500g:0, buyingPrice1kg:134, margin1kg:0 } },
+  { id:'l30', name:'Ragi Pindi', image:'',
+    wholesale:{ buyingPrice500g:37, margin500g:0, buyingPrice1kg:68, margin1kg:0 },
+    normal:   { buyingPrice500g:41, margin500g:0, buyingPrice1kg:76, margin1kg:0 } },
+  { id:'l31', name:'Senaga Pindi', image:'',
+    wholesale:{ buyingPrice500g:50, margin500g:0, buyingPrice1kg:94, margin1kg:0 },
+    normal:   { buyingPrice500g:54, margin500g:0, buyingPrice1kg:102, margin1kg:0 } },
+  { id:'l32', name:'Corn Flour', image:'',
+    wholesale:{ buyingPrice500g:34, margin500g:0, buyingPrice1kg:61, margin1kg:0 },
+    normal:   { buyingPrice500g:38, margin500g:0, buyingPrice1kg:69, margin1kg:0 } },
+  { id:'l33', name:'Maida Pindi', image:'',
+    wholesale:{ buyingPrice500g:26, margin500g:0, buyingPrice1kg:46, margin1kg:0 },
+    normal:   { buyingPrice500g:30, margin500g:0, buyingPrice1kg:54, margin1kg:0 } },
+  { id:'l34', name:'Godumalu', image:'',
+    wholesale:{ buyingPrice500g:30, margin500g:0, buyingPrice1kg:54, margin1kg:0 },
+    normal:   { buyingPrice500g:34, margin500g:0, buyingPrice1kg:62, margin1kg:0 } },
+  { id:'l35', name:'Jonnalu', image:'',
+    wholesale:{ buyingPrice500g:29, margin500g:0, buyingPrice1kg:52, margin1kg:0 },
+    normal:   { buyingPrice500g:33, margin500g:0, buyingPrice1kg:60, margin1kg:0 } },
+  { id:'l36', name:'Ragulu', image:'',
+    wholesale:{ buyingPrice500g:32, margin500g:0, buyingPrice1kg:57, margin1kg:0 },
+    normal:   { buyingPrice500g:36, margin500g:0, buyingPrice1kg:65, margin1kg:0 } },
+  { id:'l37', name:'Sajjalu', image:'',
+    wholesale:{ buyingPrice500g:25, margin500g:0, buyingPrice1kg:44, margin1kg:0 },
+    normal:   { buyingPrice500g:29, margin500g:0, buyingPrice1kg:52, margin1kg:0 } },
+  { id:'l38', name:'Korralu', image:'',
+    wholesale:{ buyingPrice500g:45, margin500g:0, buyingPrice1kg:84, margin1kg:0 },
+    normal:   { buyingPrice500g:49, margin500g:0, buyingPrice1kg:92, margin1kg:0 } },
+  { id:'l39', name:'Meal Maker', image:'',
+    wholesale:{ buyingPrice500g:51, margin500g:0, buyingPrice1kg:96, margin1kg:0 },
+    normal:   { buyingPrice500g:56, margin500g:0, buyingPrice1kg:104, margin1kg:0 } },
+  { id:'l40', name:'Aatukulu', image:'',
+    wholesale:{ buyingPrice500g:36, margin500g:0, buyingPrice1kg:66, margin1kg:0 },
+    normal:   { buyingPrice500g:40, margin500g:0, buyingPrice1kg:74, margin1kg:0 } },
+  { id:'l41', name:'Borugulu', image:'',
+    wholesale:{ buyingPrice500g:46, margin500g:0, buyingPrice1kg:86, margin1kg:0 },
+    normal:   { buyingPrice500g:50, margin500g:0, buyingPrice1kg:94, margin1kg:0 } }
+];
+
+/* ==========================================================
+   LIST 2 — branded / fixed quantity products
+   Same price in every combo (no wholesale/normal split).
+   Set buyingPrice: null  ->  the card shows "Price on request" and the dropdown is disabled.
+   ========================================================== */
+var LIST2 = [
+  { id:'p1',  name:'Freedom Sunflower Oil Packet', description:'1 Ltr',    image:'', buyingPrice:179,  margin:0 },
+  { id:'p2',  name:'Freedom Rice Bran Oil Packet', description:'1 Ltr',    image:'', buyingPrice:176,  margin:0 },
+  { id:'p3',  name:'Ruchi Gold Palm Oil (Big)',    description:'850 ml',   image:'', buyingPrice:153,  margin:0 },
+  { id:'p4',  name:'Tata Salt',                    description:'1 Kg',     image:'', buyingPrice:30,   margin:0 },
+  { id:'p5',  name:'Kallu Uppu (Tata)',            description:'1 Kg',     image:'', buyingPrice:18,   margin:0 },
+  { id:'p6',  name:'Soda Uppu (Baking Soda)',      description:'100 gm',   image:'', buyingPrice:10,   margin:0 },
+  { id:'p7',  name:'LG Inguva',                    description:'50 gm',    image:'', buyingPrice:73,   margin:0 },
+  { id:'p8',  name:'GRB Neyyi (Ghee)',             description:'200 gms',  image:'', buyingPrice:180,  margin:0 },
+  { id:'p9',  name:'Parachute Coconut Hair Oil',   description:'275 gm',   image:'', buyingPrice:146,  margin:0 },
+  { id:'p10', name:'Pitamburam',                   description:'175 gm',   image:'', buyingPrice:40,   margin:0 },
+  { id:'p11', name:'Puja Nuvvula Nuna',            description:'800 gm',   image:'', buyingPrice:118,  margin:0 },
+  { id:'p12', name:'Detergent Liquid Can (Best)',  description:'5 Litres · ₹15 less on 2nd exchange', image:'', buyingPrice:400, margin:0 },
+  { id:'p13', name:'Dish Wash Can (Best)',         description:'5 Litres · ₹15 less on 2nd exchange', image:'', buyingPrice:400, margin:0 },
+  { id:'p14', name:'Smoke Acid (Wash Room, Best)', description:'',         image:'', buyingPrice:65,   margin:0 },
+  { id:'p15', name:'Phenyl Liquid (Wash Room, Best)', description:'500 gms · flavours available', image:'', buyingPrice:185, margin:0 },
+  { id:'p16', name:'Room Freshener (Best)',        description:'Flavours available', image:'', buyingPrice:85, margin:0 },
+  { id:'p17', name:'Drain Cleaner Powder',         description:'50 gms',   image:'', buyingPrice:27,   margin:0 },
+  { id:'p18', name:'3 Roses Tea Powder',           description:'250 gms',  image:'', buyingPrice:215,  margin:0 },
+  // --- price not fixed yet: buyingPrice null shows "Price on request" ---
+  { id:'p19', name:'Tea Powders',                  description:'',         image:'', buyingPrice:null, margin:0 },
+  { id:'p20', name:'Coffee Powders',               description:'',         image:'', buyingPrice:null, margin:0 },
+  { id:'p21', name:'Fab Liquid',                   description:'',         image:'', buyingPrice:null, margin:0 },
+  { id:'p22', name:'Tide Powder',                  description:'',         image:'', buyingPrice:null, margin:0 },
+  { id:'p23', name:'Ariel Powder',                 description:'',         image:'', buyingPrice:null, margin:0 },
+  { id:'p24', name:'Surf Powder',                  description:'',         image:'', buyingPrice:null, margin:0 },
+  { id:'p25', name:'Mosquito Agarbatti',           description:'',         image:'', buyingPrice:null, margin:0 },
+  { id:'p26', name:'Vim / EXO Soaps, Rin',         description:'₹5 / ₹10 soaps', image:'', buyingPrice:null, margin:0 },
+  { id:'p27', name:'Boost',                        description:'Saram or box', image:'', buyingPrice:null, margin:0 },
+  { id:'p28', name:'Horlicks',                     description:'Saram or box', image:'', buyingPrice:null, margin:0 },
+  { id:'p29', name:'Shampoos',                     description:'Saram or box', image:'', buyingPrice:null, margin:0 },
+  { id:'p30', name:'Comfort Liquid',               description:'',         image:'', buyingPrice:null, margin:0 },
+  { id:'p31', name:'Sabeena Powder',               description:'',         image:'', buyingPrice:null, margin:0 },
+  { id:'p32', name:'Crispy and Shine (Blue packet)', description:'',       image:'', buyingPrice:null, margin:0 }
+];
+
+/* ==========================================================
+   LIST 3 — spices / seeds / dry fruits   (one dropdown per product)
+   Same price in every combo.
+   ----------------------------------------------------------
+   How pricing works for each item:
+     1. weightOverrides[grams]  -> if present, that exact selling price is used.
+     2. otherwise (buyingPrice1Kg + margin) x the ratio in WEIGHT_FALLBACK_RATIO is used.
+     3. availableWeights        -> optional. If given, ONLY these weights appear in the dropdown.
+                                   If not given, the dropdown shows every weight that has a price.
+   Example of a brand-new item where you only know the 1 Kg cost:
+     { id:'s99', name:'New Spice', image:'', buyingPrice1Kg:100, margin:20,
+       availableWeights:[250,500,1000], weightOverrides:{} }
+   ========================================================== */
+var WEIGHT_ORDER = [50, 100, 200, 250, 500, 1000];
+var WEIGHT_LABELS = { 50:'50 gm', 100:'100 gm', 200:'200 gm', 250:'250 gm', 500:'500 gm', 1000:'1 Kg' };
+var WEIGHT_FALLBACK_RATIO = { 50:0.09, 100:0.14, 200:0.24, 250:0.29, 500:0.52, 1000:1 };
+
+var LIST3 = [
+  { id:'s1',  name:'Menthulu',                          image:'', buyingPrice1Kg:110,  margin:0, weightOverrides:{50:10,100:15,200:25,250:32,500:58,1000:110} },
+  { id:'s2',  name:'Aavalu',                            image:'', buyingPrice1Kg:133,  margin:0, weightOverrides:{50:11,100:17,200:30,250:37,500:69,1000:133} },
+  { id:'s3',  name:'Jilakara',                          image:'', buyingPrice1Kg:275,  margin:0, weightOverrides:{50:18,100:31,200:58,250:73,500:140,1000:275} },
+  { id:'s4',  name:'Miriyalu',                          image:'', buyingPrice1Kg:795,  margin:0, weightOverrides:{50:44,100:83,200:162,250:203,500:400,1000:795} },
+  { id:'s5',  name:'Garam Masala (Aachi)',              image:'', buyingPrice1Kg:405,  margin:0, weightOverrides:{50:24,100:44,200:83,250:104,500:203,1000:405} },
+  { id:'s6',  name:'Chicken Masala (Aachi)',            image:'', buyingPrice1Kg:305,  margin:0, weightOverrides:{50:19,100:34,200:63,250:79,500:156,1000:305} },
+  { id:'s7',  name:'Dhaniyala Podi (Aachi)',            image:'', buyingPrice1Kg:230,  margin:0, weightOverrides:{50:15,100:26,200:48,250:60,500:118,1000:230} },
+  { id:'s8',  name:'Chilli Powder / Karam Podi (Aachi)',image:'', buyingPrice1Kg:295,  margin:0, weightOverrides:{50:19,100:33,200:61,250:77,500:151,1000:295} },
+  { id:'s9',  name:'Turmeric Powder / Pasupu Podi (Aachi)', image:'', buyingPrice1Kg:230, margin:0, weightOverrides:{50:15,100:26,200:48,250:60,500:118,1000:230} },
+  { id:'s10', name:'Kumkuma Podi (Gopuram, maroon)',    image:'', buyingPrice1Kg:null, margin:0, availableWeights:[50,100,200], weightOverrides:{50:16,100:27,200:51} },
+  { id:'s11', name:'Lavangalu',                         image:'', buyingPrice1Kg:null, margin:0, availableWeights:[50,100], weightOverrides:{50:61,100:114} },
+  { id:'s12', name:'Yalakalu (7.5 mm big size)',        image:'', buyingPrice1Kg:null, margin:0, availableWeights:[50,100], weightOverrides:{50:204,100:400} },
+  { id:'s13', name:'Patta / Dalchina Chekka',           image:'', buyingPrice1Kg:340,  margin:0, weightOverrides:{50:24,100:40,200:74,250:92,500:175,1000:340} },
+  { id:'s14', name:'Yendu Kobbari',                     image:'', buyingPrice1Kg:230,  margin:0, availableWeights:[100,200,250,500,1000], weightOverrides:{100:32,200:54,250:66,500:123,1000:230} },
+  { id:'s15', name:'Dhaniyalu',                         image:'', buyingPrice1Kg:190,  margin:0, availableWeights:[250,500,1000], weightOverrides:{250:59,500:103,1000:190} },
+  { id:'s16', name:'Pooja Karpuram Billalu',            image:'', buyingPrice1Kg:null, margin:0, availableWeights:[50,100], weightOverrides:{50:52,100:102} },
+  { id:'s17', name:'Pasupu Kommulu',                    image:'', buyingPrice1Kg:220,  margin:0, availableWeights:[250,500,1000], weightOverrides:{250:75,500:120,1000:220} },
+  { id:'s18', name:'Jeedipappu (Cashew)',               image:'', buyingPrice1Kg:910,  margin:0, weightOverrides:{50:60,100:102,200:200,250:255,500:485,1000:910} },
+  { id:'s19', name:'Endu Draksha (Raisins)',            image:'', buyingPrice1Kg:490,  margin:0, weightOverrides:{50:40,100:60,200:116,250:150,500:275,1000:490} },
+  { id:'s20', name:'Badam Pappu (California almonds)',  image:'', buyingPrice1Kg:1110, margin:0, weightOverrides:{50:70,100:125,200:240,250:305,500:585,1000:1110} },
+  { id:'s21', name:'Pista (Salted)',                    image:'', buyingPrice1Kg:1640, margin:0, availableWeights:[250,500,1000], weightOverrides:{250:440,500:840,1000:1640} },
+  { id:'s22', name:'Makkana',                           image:'', buyingPrice1Kg:1240, margin:0, availableWeights:[250,500,1000], weightOverrides:{250:340,500:640,1000:1240} },
+  { id:'s23', name:'Sabja Ginjalu',                     image:'', buyingPrice1Kg:300,  margin:0, availableWeights:[250,500,1000], weightOverrides:{250:105,500:170,1000:300} },
+  { id:'s24', name:'Chia Seeds',                        image:'', buyingPrice1Kg:320,  margin:0, availableWeights:[250,500,1000], weightOverrides:{250:110,500:180,1000:320} },
+  { id:'s25', name:'Sunflower Seeds',                   image:'', buyingPrice1Kg:240,  margin:0, availableWeights:[250,500,1000], weightOverrides:{250:90,500:140,1000:240} },
+  { id:'s26', name:'Pumpkin Seeds',                     image:'', buyingPrice1Kg:520,  margin:0, availableWeights:[250,500,1000], weightOverrides:{250:160,500:280,1000:520} },
+  { id:'s27', name:'Pucha Ginjalu',                     image:'', buyingPrice1Kg:680,  margin:0, availableWeights:[250,500,1000], weightOverrides:{250:200,500:360,1000:680} },
+  { id:'s28', name:'Aavisa Ginjalu / Flax Seeds',       image:'', buyingPrice1Kg:180,  margin:0, availableWeights:[250,500,1000], weightOverrides:{250:75,500:110,1000:180} },
+  { id:'s29', name:'Barley Seeds',                      image:'', buyingPrice1Kg:100,  margin:0, availableWeights:[250,500,1000], weightOverrides:{250:55,500:70,1000:100} },
+  { id:'s30', name:'Haleem Seeds',                      image:'', buyingPrice1Kg:200,  margin:0, availableWeights:[250,500,1000], weightOverrides:{250:80,500:120,1000:200} },
+  { id:'s31', name:'Karjooram (Gokulam dates)',         image:'', buyingPrice1Kg:238,  margin:0, availableWeights:[250,500,1000], weightOverrides:{250:64,500:122,1000:238} }
+];
+
+/* ==========================================================
+   COMBO RULES — the four pages, their labels and their conditions in one place.
+   ========================================================== */
+var COMBO_RULES = {
+  combo1: { key:'combo1', number:'1', name:'Rice Bag Combo',  pageTitle:'Combo 1 · Rice bag',
+            orderTitle:'Combo 1 — Rice Bag Combo', priceMode:'wholesale',
+            homeDesc:'Buy 1 rice bag and unlock wholesale prices on groceries.' },
+  combo2: { key:'combo2', number:'2', name:'Pick 2+ Combo',   pageTitle:'Combo 2 · Pick 2+',
+            orderTitle:'Combo 2 — Pick 2+ Combo', priceMode:'wholesale',
+            homeDesc:'Choose any 2 or more qualifying products to unlock wholesale grocery prices.' },
+  combo3: { key:'combo3', number:'3', name:'Pick 3+ Combo',   pageTitle:'Combo 3 · Pick 3+',
+            orderTitle:'Combo 3 — Pick 3+ Combo', priceMode:'wholesale',
+            homeDesc:'Choose 3 or more qualifying quantities to unlock wholesale grocery prices.' },
+  combo4: { key:'combo4', number:'4', name:'Groceries Only',  pageTitle:'Combo 4 · Groceries only',
+            orderTitle:'Combo 4 — Groceries Only', priceMode:'normal',
+            homeDesc:'Buy groceries directly with an 8 Kg minimum order.' }
+};
+
+/* ================================================================================================
+   4. STATE  — what the customer has selected right now. Nothing here needs editing.
+   ================================================================================================ */
+function newGroceryState() { return { list1:{}, list2:{}, list3:{} }; }
+var state = {
+  customer: { name:'', phone:'' },
+  combo1: { rice:{},  groceries:newGroceryState() },
+  combo2: { items:{}, groceries:newGroceryState() },
+  combo3: { items:{}, groceries:newGroceryState() },
+  combo4: { items:{}, groceries:newGroceryState() }
+};
+var toastTimer = null;
+var pendingComboKey = null;
+
+/* ================================================================================================
+   5. PRICE CALCULATIONS  — one rounding rule, one place.
+   ================================================================================================ */
+
+// The single rounding rule for the whole site: prices are whole rupees.
+function roundPrice(value) { return Math.round(value); }
+
+// selling price = buying price + margin. Returns null when no buying price is configured.
+function sellingPrice(buying, margin) {
+  if (buying === null || buying === undefined || buying === '') return null;
+  return roundPrice(Number(buying) + Number(margin || 0));
+}
+
+// "₹1,630" — never "₹1630.00".
+function money(value) {
+  var n = Math.round(Number(value) * 100) / 100;
+  var text = (n % 1 === 0) ? Math.round(n).toLocaleString('en-IN') : n.toFixed(2);
+  return '\u20B9' + text;
+}
+
+function esc(text) {
+  return String(text === null || text === undefined ? '' : text)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function sumValues(obj) { var total = 0; for (var k in obj) total += obj[k]; return total; }
+
+/* ---------- List 1 helpers ---------- */
+// Which prices apply for this combo: wholesale (combos 1-3) or normal (combo 4).
+function list1Prices(item, mode) {
+  var p = (mode === 'wholesale') ? item.wholesale : item.normal;
+  return {
+    half: sellingPrice(p.buyingPrice500g, p.margin500g),
+    full: sellingPrice(p.buyingPrice1kg,  p.margin1kg)
+  };
+}
+// Split any weight into 1 Kg units + a leftover 500 g unit. Used by BOTH pricing and the Combo 4
+// discount engine so they can never disagree.
+function splitWeight(kg) {
+  var steps = Math.round(kg / STORE_CONFIG.LIST1_STEP_KG);   // number of 500 g units
+  return { fullUnits: Math.floor(steps / 2), halfUnits: steps % 2 };
+}
+function list1LinePrice(item, mode, kg) {
+  var p = list1Prices(item, mode);
+  var s = splitWeight(kg);
+  return roundPrice(s.fullUnits * p.full + s.halfUnits * p.half);
+}
+function formatWeightLabel(kg) {
+  if (kg < 1) return Math.round(kg * 1000) + ' g';
+  return (kg % 1 === 0 ? kg.toFixed(0) : kg.toFixed(1)) + ' Kg';
+}
+function list1WeightOptions(item, mode) {
+  var options = [];
+  var max = STORE_CONFIG.LIST1_MAX_KG, step = STORE_CONFIG.LIST1_STEP_KG;
+  for (var i = 1; i * step <= max + 0.0001; i++) {
+    var kg = Math.round(i * step * 1000) / 1000;
+    options.push({ kg:kg, label:formatWeightLabel(kg), price:list1LinePrice(item, mode, kg) });
+  }
+  return options;
+}
+
+/* ---------- List 3 helpers ---------- */
+function list3Price(item, grams) {
+  if (item.weightOverrides && item.weightOverrides[grams] !== undefined && item.weightOverrides[grams] !== null) {
+    return roundPrice(item.weightOverrides[grams]);
+  }
+  var base = sellingPrice(item.buyingPrice1Kg, item.margin);
+  if (base === null) return null;
+  var ratio = WEIGHT_FALLBACK_RATIO[grams];
+  if (ratio === undefined) return null;
+  return roundPrice(base * ratio);
+}
+function list3Options(item) {
+  var allowed = item.availableWeights && item.availableWeights.length ? item.availableWeights : WEIGHT_ORDER;
+  return WEIGHT_ORDER.filter(function (g) { return allowed.indexOf(g) !== -1; })
+    .map(function (g) { return { grams:g, label:WEIGHT_LABELS[g], price:list3Price(item, g) }; })
+    .filter(function (o) { return o.price !== null; });
+}
+
+/* ---------- order line builders ---------- */
+// Combo 1 rice: 2+ bags in total (any mix of types) takes the bulk discount off EVERY bag.
+function computeRiceLines() {
+  var lines = [], total = 0;
+  var bagCount = sumValues(state.combo1.rice);
+  var bulk = bagCount >= STORE_CONFIG.RICE_BULK_MIN_QTY;
+  RICE_BAGS.forEach(function (bag) {
+    var qty = state.combo1.rice[bag.id] || 0;
+    if (qty <= 0) return;
+    var base = sellingPrice(bag.buyingPrice, bag.margin);
+    if (base === null) return;
+    var unit = bulk ? base - STORE_CONFIG.RICE_BULK_DISCOUNT_PER_BAG : base;
+    var line = roundPrice(unit * qty);
+    total += line;
+    lines.push({ name:bag.name, qtyLabel:qty + ' bag' + (qty > 1 ? 's' : '') + (bulk ? ' · bulk rate' : ''), price:line });
+  });
+  return { lines:lines, total:total, bulk:bulk, bagCount:bagCount };
+}
+
+function computeComboItemLines(comboKey, catalog) {
+  var lines = [], total = 0, store = state[comboKey].items;
+  catalog.forEach(function (item) {
+    var qty = store[item.id] || 0;
+    if (qty <= 0) return;
+    var price = sellingPrice(item.buyingPrice, item.margin);
+    if (price === null) return;
+    var line = roundPrice(price * qty);
+    total += line;
+    lines.push({ name:item.name, qtyLabel:'x' + qty, price:line });
+  });
+  return { lines:lines, total:total };
+}
+
+// Grocery lines for any combo. fullKgUnits / halfKgUnits are List 1 only — they drive the
+// Combo 4 minimum weight and its bulk discount. List 2 and List 3 never affect that weight.
+function computeGroceryLines(comboKey, mode) {
+  var lines = [], total = 0, fullKgUnits = 0, halfKgUnits = 0;
+  var groceries = state[comboKey].groceries;
+
+  LIST1.forEach(function (item) {
+    var entry = groceries.list1[item.id];
+    if (!entry || !entry.weightKg) return;
+    var line = list1LinePrice(item, mode, entry.weightKg);
+    total += line;
+    lines.push({ name:item.name, qtyLabel:formatWeightLabel(entry.weightKg), price:line });
+    var s = splitWeight(entry.weightKg);
+    fullKgUnits += s.fullUnits;
+    halfKgUnits += s.halfUnits;
+  });
+
+  LIST2.forEach(function (item) {
+    var entry = groceries.list2[item.id];
+    if (!entry || !entry.qty) return;
+    var price = sellingPrice(item.buyingPrice, item.margin);
+    if (price === null) return;
+    var line = roundPrice(price * entry.qty);
+    total += line;
+    lines.push({ name:item.name + (item.description ? ' (' + item.description + ')' : ''), qtyLabel:'x' + entry.qty, price:line });
+  });
+
+  LIST3.forEach(function (item) {
+    var entry = groceries.list3[item.id];
+    if (!entry || !entry.grams) return;
+    var price = list3Price(item, entry.grams);
+    if (price === null) return;
+    total += price;
+    lines.push({ name:item.name, qtyLabel:WEIGHT_LABELS[entry.grams], price:price });
+  });
+
+  return {
+    lines:lines, total:total,
+    fullKgUnits:fullKgUnits, halfKgUnits:halfKgUnits,
+    weightKg: fullKgUnits + halfKgUnits * 0.5
+  };
+}
+
+/* ---------- Combo 4 bulk discount (internal — the customer only sees "You saved") ----------
+   The first COMBO4_MIN_KG never earns a discount. The threshold is filled from 1 Kg units first,
+   then from 500 g units. Whatever is left over is the eligible weight:
+     · each leftover 1 Kg unit        -> COMBO4_FULL_KG_DISCOUNT
+     · each leftover PAIR of 500 g    -> COMBO4_HALF_KG_PAIR_DISCOUNT
+   Worked example (matches the business example of ₹42 on a 15 Kg order):
+     14 x 1 Kg + 2 x 500 g = 15 Kg  ->  threshold eats 8 full units  ->  6 full left + 1 pair left
+     6 x 6.5 = 39,  1 x 3 = 3,  total 42.
+------------------------------------------------------------------------------------------------ */
+function computeCombo4Discount(fullKgUnits, halfKgUnits) {
+  var totalWeight = fullKgUnits + halfKgUnits * 0.5;
+  var minKg = STORE_CONFIG.COMBO4_MIN_KG;
+  if (totalWeight + 0.0001 < minKg) {
+    return { eligible:false, discount:0, totalWeight:totalWeight, shortBy:Math.round((minKg - totalWeight) * 10) / 10 };
+  }
+  var fullUsedByThreshold = Math.min(fullKgUnits, minKg);
+  var eligibleFull = fullKgUnits - fullUsedByThreshold;
+  var halfUnitsNeeded = Math.round((minKg - fullUsedByThreshold) * 2);   // 500 g units still needed
+  var eligibleHalf = Math.max(0, halfKgUnits - halfUnitsNeeded);
+  var discount = eligibleFull * STORE_CONFIG.COMBO4_FULL_KG_DISCOUNT
+               + Math.floor(eligibleHalf / 2) * STORE_CONFIG.COMBO4_HALF_KG_PAIR_DISCOUNT;
+  return { eligible:true, discount:roundPrice(discount), totalWeight:totalWeight, shortBy:0 };
+}
+
+/* ---------- one order object per combo, used by the summary AND by WhatsApp ---------- */
+function buildOrder(comboKey) {
+  var rule = COMBO_RULES[comboKey];
+  var lines = [], subtotal = 0, discount = 0, blocked = null, weightKg = 0;
+
+  if (comboKey === 'combo1') {
+    var rice = computeRiceLines();
+    var groc = computeGroceryLines('combo1', rule.priceMode);
+    lines = rice.lines.concat(groc.lines);
+    subtotal = rice.total + groc.total;
+  } else if (comboKey === 'combo2' || comboKey === 'combo3') {
+    var catalog = comboKey === 'combo2' ? COMBO2_ITEMS : COMBO3_ITEMS;
+    var items = computeComboItemLines(comboKey, catalog);
+    var g = computeGroceryLines(comboKey, rule.priceMode);
+    lines = items.lines.concat(g.lines);
+    subtotal = items.total + g.total;
+  } else {
+    var g4 = computeGroceryLines('combo4', rule.priceMode);
+    lines = g4.lines;
+    subtotal = g4.total;
+    weightKg = g4.weightKg;
+    if (lines.length) {
+      var d = computeCombo4Discount(g4.fullKgUnits, g4.halfKgUnits);
+      if (d.eligible) discount = d.discount;
+      else blocked = 'Minimum order is ' + STORE_CONFIG.COMBO4_MIN_KG + ' Kg. You have ' +
+                     formatWeightLabel(d.totalWeight) + ' — add ' + d.shortBy + ' Kg more.';
+    }
+  }
+  return { title:rule.orderTitle, lines:lines, subtotal:subtotal, discount:discount,
+           final:subtotal - discount, blocked:blocked, weightKg:weightKg };
+}
+
+/* ================================================================================================
+   6. RENDERING
+   ================================================================================================ */
+
+function imageHTML(src, alt) {
+  if (!src) return '<div class="img-slot"><span class="img-ph" aria-hidden="true">&#129530;</span></div>';
+  return '<div class="img-slot"><img src="' + esc(src) + '" alt="' + esc(alt) + '" loading="lazy" decoding="async" ' +
+         'onerror="this.classList.add(\'img-failed\')"><span class="img-ph" aria-hidden="true">&#129530;</span></div>';
+}
+
+function qtyOptions(max) {
+  var html = '<option value="0">0</option>';
+  for (var i = 1; i <= max; i++) html += '<option value="' + i + '">' + i + '</option>';
+  return html;
+}
+
+/* ---------- home: the four combo cards double as the navigation ---------- */
+function renderComboCards() {
+  var html = ['combo1','combo2','combo3','combo4'].map(function (key) {
+    var c = COMBO_RULES[key];
+    return '<button type="button" class="combo-note-row" data-goto="' + key + '">' +
+      '<span class="combo-note-num" aria-hidden="true">' + c.number + '</span>' +
+      '<span class="combo-note-body">' +
+        '<span class="combo-note-title">Combo ' + c.number + ' — ' + esc(c.name) + '</span>' +
+        '<span class="combo-note-desc">' + esc(c.homeDesc) + '</span>' +
+      '</span>' +
+      '<span class="combo-note-arrow" aria-hidden="true">&#8594;</span>' +
+    '</button>';
+  }).join('');
+  document.getElementById('comboNoteList').innerHTML = html;
+}
+
+/* ---------- rice cards ---------- */
+function renderRiceItems() {
+  var html = RICE_BAGS.map(function (bag) {
+    var price = sellingPrice(bag.buyingPrice, bag.margin);
+    var priceHTML = price === null
+      ? '<div class="item-price tbd">Price on request</div>'
+      : '<div class="item-price"><span class="amount">' + money(price) + '</span><span class="per-unit">per bag</span></div>';
+    return '<div class="item" id="combo1_rice_' + bag.id + '">' +
+      '<span class="check-badge" aria-hidden="true">&#10003;</span>' +
+      imageHTML(bag.image, bag.name) +
       '<div class="details">' +
-        '<div class="item-name">' + name + '</div>' +
-        '<div class="item-sub">' + sub + '</div>' +
-        '<div class="item-price"><span class="rupee">&#8377;</span><span class="amount">' + price + '</span><span class="per-bag"> / bag</span></div>' +
+        '<div class="item-name">' + esc(bag.name) + '</div>' +
+        '<div class="item-sub">' + esc(bag.description) + '</div>' +
+        priceHTML +
+        '<div class="item-chosen" id="chosen_combo1_rice_' + bag.id + '"></div>' +
       '</div>' +
-      '<div class="qty-wrapper"><span class="qty-label">Quantity</span>' +
-      '<select class="qty-select" onchange="onQtyChange(this,\'' + id + '\')">' +
-        '<option value="0">-- bags</option>' +
-        [1,2,3,4,5].map(function(n){ return '<option value="' + n + '">' + n + ' bag' + (n>1?'s':'') + '</option>'; }).join('') +
-      '</select></div>' +
+      '<div class="qty-wrapper">' +
+        '<span class="qty-label">Bags</span>' +
+        '<select class="picker" data-role="rice" data-id="' + bag.id + '" aria-label="Number of bags of ' + esc(bag.name) + '"' +
+        (price === null ? ' disabled' : '') + '>' + qtyOptions(STORE_CONFIG.MAX_RICE_QTY) + '</select>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+  document.getElementById('riceItems').innerHTML = html;
+}
+
+/* ---------- combo 2 / combo 3 qualifying items ---------- */
+function renderComboItems(containerId, catalog, comboKey) {
+  var html = catalog.map(function (item) {
+    var price = sellingPrice(item.buyingPrice, item.margin);
+    var disabled = price === null;
+    var priceHTML = disabled
+      ? '<div class="item-price tbd">Price on request</div>'
+      : '<div class="item-price"><span class="amount">' + money(price) + '</span></div>';
+    return '<div class="item' + (disabled ? ' item-disabled' : '') + '" id="' + comboKey + '_item_' + item.id + '">' +
+      '<span class="check-badge" aria-hidden="true">&#10003;</span>' +
+      imageHTML(item.image, item.name) +
+      '<div class="details">' +
+        '<div class="item-name">' + esc(item.name) + '</div>' +
+        (item.description ? '<div class="item-sub">' + esc(item.description) + '</div>' : '') +
+        priceHTML +
+        '<div class="item-chosen" id="chosen_' + comboKey + '_item_' + item.id + '"></div>' +
+      '</div>' +
+      '<div class="qty-wrapper">' +
+        '<span class="qty-label">Qty</span>' +
+        '<select class="picker" data-role="comboitem" data-combo="' + comboKey + '" data-id="' + item.id + '" ' +
+        'aria-label="Quantity of ' + esc(item.name) + '"' + (disabled ? ' disabled' : '') + '>' +
+        qtyOptions(STORE_CONFIG.MAX_ITEM_QTY) + '</select>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+  document.getElementById(containerId).innerHTML = html;
+}
+
+/* ---------- grocery lists (rendered once per combo, from the SAME data) ---------- */
+function renderGroceryLists(containerId, comboKey, mode) {
+  var html = '<div class="grocery-tabs" id="' + comboKey + '-tabs" role="tablist" aria-label="Grocery lists">' +
+    ['list1','list2','list3'].map(function (list, i) {
+      var labels = { list1:'List 1 · Staples', list2:'List 2 · Branded', list3:'List 3 · Spices' };
+      return '<button type="button" class="grocery-tab" role="tab" data-tab="' + list + '" data-combo="' + comboKey + '" ' +
+        'aria-selected="' + (i === 0 ? 'true' : 'false') + '" aria-controls="' + comboKey + '-panel-' + list + '">' +
+        labels[list] + '</button>';
+    }).join('') + '</div>';
+
+  // ---- List 1: one weight+price dropdown per product ----
+  html += '<div class="grocery-panel active" id="' + comboKey + '-panel-list1" role="tabpanel">';
+  html += '<p class="panel-note">Choose the total weight you want. Prices shown are ' +
+          (mode === 'wholesale' ? 'wholesale prices.' : 'our regular prices.') + '</p>';
+  LIST1.forEach(function (item) {
+    var uid = comboKey + '_list1_' + item.id;
+    var opts = '<option value="0">Select weight</option>' + list1WeightOptions(item, mode).map(function (o) {
+      return '<option value="' + o.kg + '">' + o.label + ' \u2013 ' + money(o.price) + '</option>';
+    }).join('');
+    html += '<div class="item" id="' + uid + '">' +
+      '<span class="check-badge" aria-hidden="true">&#10003;</span>' +
+      imageHTML(item.image, item.name) +
+      '<div class="details">' +
+        '<div class="item-name">' + esc(item.name) + '</div>' +
+        (item.description ? '<div class="item-sub">' + esc(item.description) + '</div>' : '') +
+        '<div class="item-chosen" id="chosen_' + uid + '"></div>' +
+      '</div>' +
+      '<div class="qty-wrapper">' +
+        '<span class="qty-label">Weight</span>' +
+        '<select class="picker picker-wide" data-role="list1" data-combo="' + comboKey + '" data-id="' + item.id + '" ' +
+        'aria-label="Weight of ' + esc(item.name) + '">' + opts + '</select>' +
+      '</div>' +
     '</div>';
   });
-  wrap.innerHTML = html;
+  html += '</div>';
+
+  // ---- List 2: fixed pack, quantity dropdown ----
+  html += '<div class="grocery-panel" id="' + comboKey + '-panel-list2" role="tabpanel">';
+  LIST2.forEach(function (item) {
+    var uid = comboKey + '_list2_' + item.id;
+    var price = sellingPrice(item.buyingPrice, item.margin);
+    var disabled = price === null;
+    var priceHTML = disabled
+      ? '<div class="item-price tbd">Price on request</div>'
+      : '<div class="item-price"><span class="amount">' + money(price) + '</span></div>';
+    html += '<div class="item' + (disabled ? ' item-disabled' : '') + '" id="' + uid + '">' +
+      '<span class="check-badge" aria-hidden="true">&#10003;</span>' +
+      imageHTML(item.image, item.name) +
+      '<div class="details">' +
+        '<div class="item-name">' + esc(item.name) + '</div>' +
+        (item.description ? '<div class="item-sub">' + esc(item.description) + '</div>' : '') +
+        priceHTML +
+        '<div class="item-chosen" id="chosen_' + uid + '"></div>' +
+      '</div>' +
+      '<div class="qty-wrapper">' +
+        '<span class="qty-label">Qty</span>' +
+        '<select class="picker" data-role="list2" data-combo="' + comboKey + '" data-id="' + item.id + '" ' +
+        'aria-label="Quantity of ' + esc(item.name) + '"' + (disabled ? ' disabled' : '') + '>' +
+        qtyOptions(STORE_CONFIG.MAX_ITEM_QTY) + '</select>' +
+      '</div>' +
+    '</div>';
+  });
+  html += '</div>';
+
+  // ---- List 3: ONE dropdown per product (weight + price together) ----
+  html += '<div class="grocery-panel" id="' + comboKey + '-panel-list3" role="tabpanel">';
+  LIST3.forEach(function (item) {
+    var uid = comboKey + '_list3_' + item.id;
+    var options = list3Options(item);
+    var disabled = options.length === 0;
+    var opts = '<option value="0">Select weight</option>' + options.map(function (o) {
+      return '<option value="' + o.grams + '">' + o.label + ' \u2013 ' + money(o.price) + '</option>';
+    }).join('');
+    html += '<div class="item' + (disabled ? ' item-disabled' : '') + '" id="' + uid + '">' +
+      '<span class="check-badge" aria-hidden="true">&#10003;</span>' +
+      imageHTML(item.image, item.name) +
+      '<div class="details">' +
+        '<div class="item-name">' + esc(item.name) + '</div>' +
+        (disabled ? '<div class="item-price tbd">Price on request</div>' : '') +
+        '<div class="item-chosen" id="chosen_' + uid + '"></div>' +
+      '</div>' +
+      '<div class="qty-wrapper">' +
+        '<span class="qty-label">Weight</span>' +
+        '<select class="picker picker-wide" data-role="list3" data-combo="' + comboKey + '" data-id="' + item.id + '" ' +
+        'aria-label="Weight of ' + esc(item.name) + '"' + (disabled ? ' disabled' : '') + '>' + opts + '</select>' +
+      '</div>' +
+    '</div>';
+  });
+  html += '</div>';
+
+  document.getElementById(containerId).innerHTML = html;
 }
 
-function findBag(id) { for (var i=0;i<RICE_BAGS.length;i++) if (RICE_BAGS[i][0]===id) return RICE_BAGS[i]; return null; }
-
-/* ============================================================
-   INTERACTIONS
-   ============================================================ */
-function filterPhone(input) { input.value = input.value.replace(/[^0-9]/g,''); }
-
-function onQtyChange(selectEl, id) {
-  var item = document.getElementById(id);
-  var val = parseInt(selectEl.value) || 0;
-  if (val > 0) { item.classList.add('active'); } else { item.classList.remove('active'); }
-  updateSummary();
+function switchGroceryTab(comboKey, tab) {
+  var tabsWrap = document.getElementById(comboKey + '-tabs');
+  if (tabsWrap) {
+    Array.prototype.forEach.call(tabsWrap.querySelectorAll('.grocery-tab'), function (t) {
+      t.setAttribute('aria-selected', t.getAttribute('data-tab') === tab ? 'true' : 'false');
+    });
+  }
+  ['list1','list2','list3'].forEach(function (l) {
+    var panel = document.getElementById(comboKey + '-panel-' + l);
+    if (panel) panel.classList.toggle('active', l === tab);
+  });
 }
 
-function updateSummary() {
-  var name = document.getElementById('customerName').value.trim();
-  var custPhone = document.getElementById('customerPhone').value.trim();
-  var grandTotal = 0, hasAny = false, html = '';
+// Marks a card as selected — border, tick badge AND a text line, so selection is never
+// communicated by colour alone.
+function markSelected(uid, chosenText) {
+  var card = document.getElementById(uid);
+  if (!card) return;
+  var on = !!chosenText;
+  card.classList.toggle('active', on);
+  var label = document.getElementById('chosen_' + uid);
+  if (label) label.textContent = on ? '\u2713 ' + chosenText : '';
+}
 
-  RICE_BAGS.forEach(function(row){
-    var id = row[0], bagName = row[1], price = row[3];
-    var qty = parseInt(document.getElementById(id).querySelector('select').value) || 0;
-    if (qty > 0) {
-      var it = price * qty;
-      grandTotal += it; hasAny = true;
-      html += '<div class="summary-row"><span class="s-name">' + bagName + '</span><span class="s-qty">x' + qty + '</span><span class="s-price">&#8377; ' + it.toFixed(0) + '</span></div>';
-    }
+/* ================================================================================================
+   7. COMBO LOGIC — locks and unlocks
+   ================================================================================================ */
+function refreshLock(comboKey) {
+  var unlocked = false, count = 0;
+  if (comboKey === 'combo1') {
+    count = sumValues(state.combo1.rice);
+    unlocked = count >= 1;
+  } else if (comboKey === 'combo2') {
+    count = sumValues(state.combo2.items);
+    unlocked = count >= STORE_CONFIG.COMBO2_MIN_QTY;
+  } else if (comboKey === 'combo3') {
+    count = sumValues(state.combo3.items);
+    unlocked = count >= STORE_CONFIG.COMBO3_MIN_QTY;
+  } else return;
+
+  document.getElementById(comboKey + '-lock').hidden = unlocked;
+  document.getElementById(comboKey + '-lock').style.display = unlocked ? 'none' : 'block';
+  document.getElementById(comboKey + '-groceries').hidden = !unlocked;
+  var counter = document.getElementById(comboKey + '-count');
+  if (counter) counter.textContent = count + (count === 1 ? ' item' : ' items');
+}
+
+/* ================================================================================================
+   8. SUMMARY
+   ================================================================================================ */
+function updateSummary(comboKey) {
+  var card = document.getElementById(comboKey + '-summary-card');
+  var order = buildOrder(comboKey);
+
+  if (comboKey === 'combo4') updateCombo4Progress(order.weightKg);
+
+  if (!order.lines.length) {
+    card.innerHTML = '<div class="summary-empty">No items selected yet</div>';
+    return;
+  }
+
+  var html = '';
+  if (state.customer.name) {
+    html += '<div class="summary-customer"><span class="cust-icon" aria-hidden="true">&#128100;</span><span>' +
+      '<span class="cust-label">Order for</span>' +
+      '<span class="cust-name">' + esc(state.customer.name) + '</span>' +
+      (state.customer.phone ? '<span class="cust-phone">&#128222; ' + esc(state.customer.phone) + '</span>' : '') +
+    '</span></div>';
+  }
+
+  order.lines.forEach(function (l) {
+    html += '<div class="summary-row">' +
+      '<span class="s-name">' + esc(l.name) + '</span>' +
+      '<span class="s-qty">' + esc(l.qtyLabel) + '</span>' +
+      '<span class="s-price">' + money(l.price) + '</span>' +
+    '</div>';
   });
 
-  var emptyEl = document.getElementById('summaryEmpty');
-  var customerEl = document.getElementById('summaryCustomer');
-  var rowsEl = document.getElementById('summaryRows');
+  if (order.blocked) {
+    html += '<div class="summary-warn"><span aria-hidden="true">&#9888;</span><span>' + esc(order.blocked) + '</span></div>';
+  }
+  if (order.discount > 0) {
+    html += '<div class="summary-sub"><span>Subtotal</span><span>' + money(order.subtotal) + '</span></div>';
+    html += '<div class="summary-sub discount"><span>You saved</span><span>- ' + money(order.discount) + '</span></div>';
+  }
+  html += '<div class="summary-total"><span class="t-label">' + (order.discount > 0 ? 'Final amount' : 'Total') + '</span>' +
+          '<span class="t-amount">' + money(order.final) + '</span></div>';
 
-  if (!hasAny) { emptyEl.style.display = 'block'; customerEl.innerHTML = ''; rowsEl.innerHTML = ''; return; }
-  emptyEl.style.display = 'none';
-
-  if (name) {
-    var phoneHtml = custPhone ? '<span style="font-size:11px;color:#b0b0b0;margin-top:3px;display:block;font-family:Montserrat,sans-serif;font-weight:500;">&#128222; ' + custPhone + '</span>' : '';
-    customerEl.innerHTML = '<div class="summary-customer"><div class="cust-icon">&#128100;</div><div class="cust-info"><span class="cust-label">Order for</span><span class="cust-name">' + name + '</span>' + phoneHtml + '</div></div>';
-  } else { customerEl.innerHTML = ''; }
-
-  html += '<div class="summary-total"><span class="t-label">Grand Total</span><span class="t-amount">&#8377; ' + grandTotal.toFixed(0) + '</span></div>';
-  rowsEl.innerHTML = html;
+  card.innerHTML = html;
 }
 
-function showToast(msg, type) {
+function updateCombo4Progress(weightKg) {
+  var min = STORE_CONFIG.COMBO4_MIN_KG;
+  var pct = Math.min(100, (weightKg / min) * 100);
+  var fill = document.getElementById('combo4-progress-fill');
+  fill.style.width = pct + '%';
+  fill.classList.toggle('done', weightKg + 0.0001 >= min);
+  document.getElementById('combo4-weight-now').textContent = formatWeightLabel(weightKg || 0) + ' selected';
+  document.getElementById('combo4-progress-note').textContent = weightKg + 0.0001 >= min
+    ? 'Minimum reached. Extra savings on larger orders are applied automatically in your summary.'
+    : 'Weight counts List 1 staples. Extra savings are applied automatically on larger orders.';
+}
+
+function updateAllSummaries() { ['combo1','combo2','combo3','combo4'].forEach(updateSummary); }
+
+/* ================================================================================================
+   9. NAVIGATION + TOAST + INPUT HANDLERS
+   ================================================================================================ */
+function showView(viewId) {
+  Array.prototype.forEach.call(document.querySelectorAll('.view'), function (v) { v.classList.remove('active'); });
+  document.getElementById(viewId).classList.add('active');
+  window.scrollTo(0, 0);
+}
+function goToCombo(key) { showView('view-' + key); }
+function goHome() { showView('view-home'); }
+
+function showToast(message, type) {
   var t = document.getElementById('toast');
-  t.textContent = msg;
+  t.textContent = message;
   t.className = 'toast' + (type === 'info' ? ' info' : '');
+  void t.offsetWidth;
   t.classList.add('show');
   if (toastTimer) clearTimeout(toastTimer);
-  toastTimer = setTimeout(function() { t.classList.remove('show'); }, 3500);
+  toastTimer = setTimeout(function () { t.classList.remove('show'); }, 3500);
 }
 
-function buildWhatsAppURL(locationText) {
-  var name = document.getElementById('customerName').value.trim();
-  var custPhone = document.getElementById('customerPhone').value.trim();
-  var lines = [], grandTotal = 0, count = 1;
+function onCustomerChange() {
+  var nameEl = document.getElementById('customerName');
+  var phoneEl = document.getElementById('customerPhone');
+  phoneEl.value = phoneEl.value.replace(/[^0-9]/g, '').slice(0, 10);
+  state.customer.name = nameEl.value.trim();
+  state.customer.phone = phoneEl.value.trim();
+  nameEl.classList.remove('invalid');
+  phoneEl.classList.remove('invalid');
+  updateAllSummaries();
+}
 
-  RICE_BAGS.forEach(function(row){
-    var id = row[0], bagName = row[1], price = row[3];
-    var qty = parseInt(document.getElementById(id).querySelector('select').value) || 0;
-    if (qty > 0) {
-      var it = price * qty;
-      lines.push(count + '. ' + bagName + ' x' + qty + ' - Rs.' + it.toFixed(0));
-      grandTotal += it; count++;
-    }
+function onRiceQtyChange(id, value) {
+  var qty = parseInt(value, 10) || 0;
+  if (qty > 0) state.combo1.rice[id] = qty; else delete state.combo1.rice[id];
+  // A bulk discount can start or stop for EVERY rice line at once, so refresh all rice labels.
+  var bulk = sumValues(state.combo1.rice) >= STORE_CONFIG.RICE_BULK_MIN_QTY;
+  RICE_BAGS.forEach(function (b) {
+    var q = state.combo1.rice[b.id] || 0;
+    markSelected('combo1_rice_' + b.id, q > 0 ? q + ' bag' + (q > 1 ? 's' : '') + (bulk ? ' \u00B7 bulk rate' : '') : '');
   });
-
-  var parts = [
-    'Nellore Rice Club Order',
-    '----------------------------',
-    'Name: ' + name,
-    'Phone: ' + custPhone,
-    'Location: ' + locationText,
-    '----------------------------'
-  ].concat(lines).concat([
-    '',
-    '*Total: Rs.' + grandTotal.toFixed(0) + '*',
-    '',
-    '(Cash on Delivery, Next Day Delivery, No pending payment)'
-  ]);
-
-  // Single encodeURIComponent pass at the end: safely escapes EVERY
-  // special character so nothing can ever break or truncate the
-  // wa.me query string, no matter what bag names contain.
-  var msg = encodeURIComponent(parts.join('\n'));
-  var phone = '918008970033';
-
-  // Plain wa.me link - this is WhatsApp's own official chat-link API.
-  return 'https://wa.me/' + phone + '?text=' + msg;
+  refreshLock('combo1');
+  updateSummary('combo1');
 }
 
-function validateDetails(focusOnError) {
-  var name = document.getElementById('customerName').value.trim();
-  var custPhone = document.getElementById('customerPhone').value.trim();
-  if (!name) {
-    showToast('Please enter your Full Name');
-    if (focusOnError) document.getElementById('customerName').focus();
-    return false;
-  }
-  if (!custPhone) {
-    showToast('Please enter your Phone Number');
-    if (focusOnError) document.getElementById('customerPhone').focus();
-    return false;
-  }
-  if (custPhone.length !== 10 || !/^[6-9][0-9]{9}$/.test(custPhone)) {
-    showToast('Enter a valid 10-digit Indian mobile number');
-    if (focusOnError) document.getElementById('customerPhone').focus();
-    return false;
-  }
-  return true;
+function onComboItemQtyChange(comboKey, id, value) {
+  var qty = parseInt(value, 10) || 0;
+  if (qty > 0) state[comboKey].items[id] = qty; else delete state[comboKey].items[id];
+  markSelected(comboKey + '_item_' + id, qty > 0 ? qty + ' selected' : '');
+  refreshLock(comboKey);
+  updateSummary(comboKey);
 }
 
-/* ============================================================
-   STEP 1 — CONFIRM DETAILS: this is where ALL location tracking
-   happens now. Runs as soon as the customer taps the button
-   right under the phone field, well before the final WhatsApp
-   click, so by the time they place the order the fix is already
-   sitting ready and that final tap can navigate instantly and
-   synchronously (no Chrome "Continue to WhatsApp?" interstitial).
-   ============================================================ */
-var detailsConfirmed = false;
-var confirmedLocationText = null;
-
-function resetConfirmIfChanged() {
-  // If the customer edits name/phone after confirming, make them
-  // re-confirm so the WhatsApp message always matches the inputs.
-  if (!detailsConfirmed) return;
-  detailsConfirmed = false;
-  confirmedLocationText = null;
-  var btn = document.getElementById('confirmBtn');
-  btn.classList.remove('confirmed');
-  btn.innerHTML = '<span style="font-size:15px">&#128205;</span> Confirm Details &amp; Detect Location';
-  var hint = document.getElementById('confirmHint');
-  hint.classList.remove('ok');
-  hint.textContent = 'We\'ll ask if you\'re home now, so placing the order later is instant.';
+function onList1WeightChange(comboKey, id, value) {
+  var kg = parseFloat(value) || 0;
+  if (kg > 0) state[comboKey].groceries.list1[id] = { weightKg:kg };
+  else delete state[comboKey].groceries.list1[id];
+  markSelected(comboKey + '_list1_' + id, kg > 0 ? formatWeightLabel(kg) : '');
+  updateSummary(comboKey);
 }
 
-function confirmDetails() {
-  if (detailsConfirmed) return; // already confirmed, nothing to do
-  if (!validateDetails(true)) return;
-
-  // Ask "Are you home?" first. Fire off the GPS listener at the same
-  // time the popup opens, so if they pick "Yes" a fix may already be
-  // improving by the time they tap.
-  startLocationWarmup();
-  document.getElementById('locationPopup').classList.add('show');
+function onList2QtyChange(comboKey, id, value) {
+  var qty = parseInt(value, 10) || 0;
+  if (qty > 0) state[comboKey].groceries.list2[id] = { qty:qty };
+  else delete state[comboKey].groceries.list2[id];
+  markSelected(comboKey + '_list2_' + id, qty > 0 ? qty + ' selected' : '');
+  updateSummary(comboKey);
 }
 
-function finishConfirm(locationText, statusHint) {
-  var btn = document.getElementById('confirmBtn');
-  btn.disabled = false;
-  detailsConfirmed = true;
-  confirmedLocationText = locationText;
-  btn.classList.add('confirmed');
-  btn.innerHTML = '<span style="font-size:15px">&#9989;</span> Details Confirmed';
-  var hint = document.getElementById('confirmHint');
-  hint.classList.add('ok');
-  hint.textContent = statusHint;
+function onList3WeightChange(comboKey, id, value) {
+  var grams = parseInt(value, 10) || 0;
+  if (grams > 0) state[comboKey].groceries.list3[id] = { grams:grams };
+  else delete state[comboKey].groceries.list3[id];
+  markSelected(comboKey + '_list3_' + id, grams > 0 ? WEIGHT_LABELS[grams] : '');
+  updateSummary(comboKey);
 }
 
-function handleLocationChoice(isHome) {
-  document.getElementById('locationPopup').classList.remove('show');
-  var btn = document.getElementById('confirmBtn');
+/* ---------- one delegated listener for every dropdown on the site ---------- */
+document.addEventListener('change', function (e) {
+  var el = e.target;
+  if (el.id === 'customerName' || el.id === 'customerPhone') { onCustomerChange(); return; }
+  var role = el.getAttribute && el.getAttribute('data-role');
+  if (!role) return;
+  var combo = el.getAttribute('data-combo');
+  var id = el.getAttribute('data-id');
+  if (role === 'rice') onRiceQtyChange(id, el.value);
+  else if (role === 'comboitem') onComboItemQtyChange(combo, id, el.value);
+  else if (role === 'list1') onList1WeightChange(combo, id, el.value);
+  else if (role === 'list2') onList2QtyChange(combo, id, el.value);
+  else if (role === 'list3') onList3WeightChange(combo, id, el.value);
+});
 
-  if (!isHome) {
-    // Not at home right now: skip GPS entirely, don't make them wait.
-    // We still remember whatever address text applies so the order
-    // can go through — the rider will confirm on call/WhatsApp instead.
-    stopLocationWarmup();
-    finishConfirm('Customer not at home right now - please confirm delivery address on call', 'Saved as "Not at home". You\'re all set — select your bags below.');
-    return;
-  }
+document.addEventListener('input', function (e) {
+  if (e.target.id === 'customerName' || e.target.id === 'customerPhone') onCustomerChange();
+});
 
-  // At home: run (or keep running) the tiered GPS acquisition.
-  btn.disabled = true;
+/* ---------- one delegated listener for every click ---------- */
+document.addEventListener('click', function (e) {
+  var goto = e.target.closest('[data-goto]');
+  if (goto) { goToCombo(goto.getAttribute('data-goto')); return; }
 
-  // Best case: a CONFIRMED ideal-tier fix already arrived while the
-  // popup was open — finish immediately. Note geoState.best is only
-  // ever set once a reading has been corroborated by another reading
-  // nearby (see considerReading()), so this is safe to trust.
-  if (geoState.best && geoState.best.coords.accuracy <= TIERS[0].acc) {
-    var locText = formatLocationText(geoState.best);
-    stopLocationWarmup();
-    finishConfirm(locText, 'Location locked (\u00B1' + Math.round(geoState.best.coords.accuracy) + 'm, confirmed). You\'re all set — select your bags below.');
-    btn.disabled = false;
-    return;
-  }
+  var back = e.target.closest('[data-back]');
+  if (back) { goHome(); return; }
 
-  if (geoState.unsupported) {
-    finishConfirm('Location not supported on this device', 'Saved. You\'re all set — select your bags below.');
-    btn.disabled = false;
-    return;
-  }
+  var tab = e.target.closest('.grocery-tab');
+  if (tab) { switchGroceryTab(tab.getAttribute('data-combo'), tab.getAttribute('data-tab')); return; }
 
-  if (geoState.denied) {
-    finishConfirm('Location permission denied', 'Saved. You\'re all set — select your bags below.');
-    btn.disabled = false;
-    return;
-  }
+  var order = e.target.closest('[data-order]');
+  if (order) { sendToWhatsApp(order.getAttribute('data-order')); return; }
 
-  showLoadingOverlay();
+  var loc = e.target.closest('[data-loc]');
+  if (loc) { handleLocationChoice(loc.getAttribute('data-loc') === 'yes'); return; }
+});
 
-  var finished = false;
-  var pollTimer = null;
-  var maxTimer = setTimeout(function() { checkAndFinish(true); }, MAX_WAIT);
-
-  function checkAndFinish(forceFinish) {
-    if (finished) return;
-    var elapsed = Date.now() - geoState.startTime;
-    var acceptAcc = currentTierAccuracy(elapsed);
-    var haveGoodEnough = geoState.best && geoState.best.coords.accuracy <= acceptAcc;
-
-    if (!forceFinish && !haveGoodEnough && !geoState.denied) return;
-
-    finished = true;
-    clearTimeout(maxTimer);
-    clearInterval(pollTimer);
-    stopLocationWarmup();
-    hideLoadingOverlay();
-    btn.disabled = false;
-
-    // Prefer a CONFIRMED reading (geoState.best). If time ran out and we
-    // never got two readings to agree, fall back to the single least-bad
-    // reading we saw, but say so honestly instead of overstating accuracy.
-    var locText, hintText;
-    var chosen = geoState.best || geoState.fallback;
-    if (chosen) {
-      var confirmedTag = geoState.best ? 'confirmed' : 'unconfirmed - use with care';
-      locText = formatLocationText(chosen);
-      hintText = 'Location locked (\u00B1' + Math.round(chosen.coords.accuracy) + 'm, ' + confirmedTag + '). You\'re all set — select your bags below.';
-    } else if (geoState.denied) {
-      locText = 'Location permission denied';
-      hintText = 'Saved. You\'re all set — select your bags below.';
-    } else {
-      locText = 'Could not get precise location';
-      hintText = 'Saved. You\'re all set — select your bags below.';
-    }
-    finishConfirm(locText, hintText);
-  }
-
-  pollTimer = setInterval(function() { checkAndFinish(false); }, 300);
-}
-
-/* ============================================================
-   STEP 2 — PLACE ORDER: fires the moment the button is tapped.
-   Since location was already resolved in Step 1, this is a
-   simple synchronous redirect — no async work happens inside
-   this click, so the browser never shows an intermediate
-   confirmation screen before opening WhatsApp.
-   ============================================================ */
-function sendToWhatsApp() {
-  if (!validateDetails(true)) return;
-
-  var hasAny = false;
-  RICE_BAGS.forEach(function(row){
-    if (parseInt(document.getElementById(row[0]).querySelector('select').value) > 0) hasAny = true;
-  });
-  if (!hasAny) { showToast('Please select at least one rice bag'); return; }
-
-  if (!detailsConfirmed) {
-    showToast('Please tap "Confirm Details & Detect Location" first');
-    document.getElementById('confirmBtn').scrollIntoView({ behavior: 'smooth', block: 'center' });
-    return;
-  }
-
-  // Synchronous navigation inside the click handler - direct to WhatsApp.
-  window.location.href = buildWhatsAppURL(confirmedLocationText);
-}
-
-/* ============================================================
-   PRECISE GEOLOCATION — TIERED, CONFIRMED-FIX ACQUISITION
-   ------------------------------------------------------------
-   Goal: get as close to ~6-8m accuracy as the device/sky can
-   deliver, while never leaving the customer stuck forever if
-   they're deep between close-set houses (multipath signal
-   bounce off walls/roofs commonly limits phone GPS to roughly
-   10-20m in that situation, even with more time). So instead of
-   one fixed cutoff, we relax the acceptable radius in stages the
-   longer we wait — always keeping the single BEST *confirmed*
-   reading seen.
-
-   WHY "CONFIRMED"?
-   The accuracy value reported by the phone's location API is
-   self-reported by the OS/location provider — it is NOT
-   something we compute, and it is often wrong. In particular,
-   the very first fix(es) after watchPosition starts are usually
-   derived from WiFi/cell-tower positioning (fast, but coarse),
-   yet can carry a deceptively tight accuracy figure. Trusting
-   that number directly is exactly what causes "the app said
-   +/-5m but the pin was 50m off."
-
-   The fix: never trust a single reading's accuracy on its own.
-   A reading is only promoted to geoState.best once a SECOND,
-   independent reading lands within CONFIRM_RADIUS metres of it —
-   i.e. the fix has stabilised, which is how real GPS behaves and
-   how noisy network-based fixes usually don't. We also ignore
-   suspiciously-tight readings that arrive before MIN_GPS_WARMUP
-   has elapsed, since the GPS chipset hasn't had time to engage
-   yet at that point.
-
-   Tiers (elapsed time -> accuracy we'll accept and stop early):
-     0s  - 25s : accept <= 6m   (ideal, open-sky quality)
-     25s - 30s : accept <= 8m
-     30s - 35s : accept <= 13m
-     35s - 40s : accept <= 17m
-     40s (MAX) : stop regardless, use best CONFIRMED reading found
-                 (or, failing that, the single least-bad reading,
-                 clearly labelled as unconfirmed)
-   ============================================================ */
-var geoState = { best: null, fallback: null, history: [], watchId: null, denied: false, unsupported: false, startTime: null };
-
-var TIERS = [
-  { until: 25000, acc: 6 },
-  { until: 30000, acc: 8 },
-  { until: 35000, acc: 13 },
-  { until: 40000, acc: 17 }
-];
-var MAX_WAIT = 40000;
-
-// Two readings must agree within this many metres before either is
-// trusted as a real fix rather than a noisy one-off.
-var CONFIRM_RADIUS = 20;
-// Ignore implausibly-tight readings that arrive before the GPS chipset
-// has plausibly had time to engage (these are almost always coarse
-// network/WiFi fixes mislabeled with a tight accuracy figure).
-var MIN_GPS_WARMUP = 3000;
-
-var TIPS = [
-  '&#128246; Standing near a window or open door helps lock the signal faster.',
-  '&#127968; If you\'re indoors, a spot closer to a wall facing the sky helps GPS see more satellites.',
-  '&#128640; We\'re holding out for the tightest fix possible — worth the extra few seconds!',
-  '&#128737;&#65039; Our delivery rider uses this exact pin, so precision now means no wrong turns later.',
-  '&#127794; Nearly there — refining between the last couple of metres.',
-  '&#128269; Cross-checking multiple satellite readings to rule out any stray signal bounce.'
-];
-
-function haversineMeters(lat1, lon1, lat2, lon2) {
-  var R = 6371000;
-  var toRad = function(d) { return d * Math.PI / 180; };
-  var dLat = toRad(lat2 - lat1);
-  var dLon = toRad(lon2 - lon1);
-  var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-          Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-          Math.sin(dLon / 2) * Math.sin(dLon / 2);
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
-}
-
-function considerReading(pos) {
-  var elapsed = Date.now() - geoState.startTime;
-
-  geoState.history.push(pos);
-  if (geoState.history.length > 6) geoState.history.shift();
-
-  // Keep a fallback (single least-bad reading) in case we never get a
-  // confirmation before time runs out - but only once the chipset has
-  // had a moment to warm up, so we don't fall back to an early junk fix.
-  if (elapsed >= MIN_GPS_WARMUP) {
-    if (!geoState.fallback || pos.coords.accuracy < geoState.fallback.coords.accuracy) {
-      geoState.fallback = pos;
-    }
-  }
-
-  // Look for any pair of readings in history that agree within
-  // CONFIRM_RADIUS metres of each other; the more accurate of the
-  // pair becomes the confirmed candidate.
-  var confirmedCandidate = null;
-  for (var i = 0; i < geoState.history.length; i++) {
-    var p = geoState.history[i];
-    for (var j = 0; j < geoState.history.length; j++) {
-      if (i === j) continue;
-      var q = geoState.history[j];
-      var d = haversineMeters(p.coords.latitude, p.coords.longitude, q.coords.latitude, q.coords.longitude);
-      if (d <= CONFIRM_RADIUS) {
-        if (!confirmedCandidate || p.coords.accuracy < confirmedCandidate.coords.accuracy) {
-          confirmedCandidate = p;
-        }
-        break;
-      }
-    }
-  }
-
-  if (confirmedCandidate) {
-    if (!geoState.best || confirmedCandidate.coords.accuracy < geoState.best.coords.accuracy) {
-      geoState.best = confirmedCandidate;
-    }
-  }
-}
+/* ================================================================================================
+   10. LOCATION (GPS)
+   ------------------------------------------------------------------------------------------------
+   Same warm-up technique as the current site: GPS starts listening the moment the "Are you at
+   home?" popup opens, so a fix is usually ready by the time the customer taps a button and the
+   WhatsApp handoff can happen immediately inside that tap.
+   ================================================================================================ */
+var geoState = { best:null, watchId:null, denied:false, unsupported:false };
 
 function startLocationWarmup() {
-  geoState.best = null;
-  geoState.fallback = null;
-  geoState.history = [];
-  geoState.denied = false;
-  geoState.unsupported = false;
-  geoState.startTime = Date.now();
-
+  geoState.best = null; geoState.denied = false; geoState.unsupported = false;
   if (!navigator.geolocation) { geoState.unsupported = true; return; }
-
-  geoState.watchId = navigator.geolocation.watchPosition(
-    function(pos) {
-      considerReading(pos);
-      updateLiveUI();
-    },
-    function(err) {
-      if (err.code === err.PERMISSION_DENIED) geoState.denied = true;
-    },
-    { enableHighAccuracy: true, timeout: MAX_WAIT, maximumAge: 0 }
-  );
+  try {
+    geoState.watchId = navigator.geolocation.watchPosition(
+      function (pos) {
+        if (!geoState.best || pos.coords.accuracy < geoState.best.coords.accuracy) {
+          geoState.best = pos;
+          var el = document.getElementById('loadingAccuracy');
+          if (el) el.textContent = 'Accuracy so far: \u00B1' + Math.round(pos.coords.accuracy) + ' m';
+        }
+      },
+      function (err) { if (err && err.code === err.PERMISSION_DENIED) geoState.denied = true; },
+      { enableHighAccuracy:true, timeout:20000, maximumAge:0 }
+    );
+  } catch (err) { geoState.unsupported = true; }
 }
-
 function stopLocationWarmup() {
-  if (geoState.watchId !== null) {
+  if (geoState.watchId !== null && navigator.geolocation) {
     navigator.geolocation.clearWatch(geoState.watchId);
     geoState.watchId = null;
   }
 }
-
-function formatLocationText(pos) {
+function locationFromPosition(pos) {
   var lat = pos.coords.latitude.toFixed(7);
   var lng = pos.coords.longitude.toFixed(7);
-  var acc = Math.round(pos.coords.accuracy);
-  return lat + ', ' + lng + ' (accuracy \u00B1' + acc + 'm) https://maps.google.com/?q=' + lat + ',' + lng;
+  return {
+    lat:lat, lng:lng,
+    accuracy:Math.round(pos.coords.accuracy),
+    maps:'https://maps.google.com/?q=' + lat + ',' + lng
+  };
 }
-
-/* ---------- Live "locking in" UI ---------- */
-var uiTimer = null, tipTimer = null, tipIndex = 0;
-
-function accuracyColor(acc) {
-  if (acc <= 10) return 'var(--green-good)';
-  if (acc <= 25) return 'var(--gold-light)';
-  return 'var(--red-warn)';
-}
-
-function statusForAccuracy(acc, elapsed) {
-  if (acc === null) return elapsed < 4000 ? 'Searching for satellites' : 'Locking onto your signal';
-  if (acc <= 8) return 'Pinpoint lock achieved!';
-  if (acc <= 12) return 'Excellent precision — refining';
-  if (acc <= 20) return 'Good precision — tightening further';
-  return 'Refining your location';
-}
-
-function updateLiveUI() {
-  var titleEl = document.getElementById('loadingTitle');
-  var accValueEl = document.getElementById('accuracyValue');
-  var accFillEl = document.getElementById('accuracyFill');
-  var confirmStateEl = document.getElementById('confirmState');
-  if (!titleEl) return;
-
-  var elapsed = geoState.startTime ? (Date.now() - geoState.startTime) : 0;
-  // Only ever display a CONFIRMED accuracy figure, never a raw
-  // single-reading number - that's the number that used to lie.
-  var acc = geoState.best ? geoState.best.coords.accuracy : null;
-
-  titleEl.textContent = statusForAccuracy(acc, elapsed) + (acc === null ? '…' : '');
-
-  if (acc !== null) {
-    accValueEl.textContent = '\u00B1' + Math.round(acc) + 'm';
-    accValueEl.style.color = accuracyColor(acc);
-    var pct = Math.max(4, Math.min(100, 100 - ((acc - 5) / 95) * 96));
-    accFillEl.style.width = pct + '%';
-    if (confirmStateEl) confirmStateEl.innerHTML = '<b>Confirmed</b> by a second matching reading';
-  } else {
-    accValueEl.textContent = 'searching…';
-    accValueEl.style.color = '#777';
-    accFillEl.style.width = '4%';
-    if (confirmStateEl) {
-      confirmStateEl.innerHTML = geoState.fallback
-        ? 'Have a rough reading — waiting for a second one to confirm it'
-        : 'Waiting for a second reading to confirm the fix…';
-    }
-  }
-
-  var timeFillEl = document.getElementById('timeFill');
-  if (timeFillEl) {
-    var timePct = Math.min(100, (elapsed / MAX_WAIT) * 100);
-    timeFillEl.style.width = timePct + '%';
-  }
-}
-
-function startTipRotation() {
-  tipIndex = 0;
-  var tipEl = document.getElementById('tipText');
-  tipEl.innerHTML = TIPS[0];
-  tipTimer = setInterval(function() {
-    tipEl.classList.add('fade');
-    setTimeout(function() {
-      tipIndex = (tipIndex + 1) % TIPS.length;
-      tipEl.innerHTML = TIPS[tipIndex];
-      tipEl.classList.remove('fade');
-    }, 350);
-  }, 4200);
-}
-function stopTipRotation() {
-  if (tipTimer) { clearInterval(tipTimer); tipTimer = null; }
-}
-
 function showLoadingOverlay() {
-  updateLiveUI();
+  document.getElementById('loadingAccuracy').textContent = '';
   document.getElementById('locationLoading').classList.add('show');
-  startTipRotation();
-  uiTimer = setInterval(updateLiveUI, 400);
 }
-function hideLoadingOverlay() {
-  document.getElementById('locationLoading').classList.remove('show');
-  stopTipRotation();
-  if (uiTimer) { clearInterval(uiTimer); uiTimer = null; }
-}
+function hideLoadingOverlay() { document.getElementById('locationLoading').classList.remove('show'); }
 
-function currentTierAccuracy(elapsed) {
-  for (var i = 0; i < TIERS.length; i++) {
-    if (elapsed <= TIERS[i].until) return TIERS[i].acc;
+function handleLocationChoice(isHome) {
+  document.getElementById('locationPopup').classList.remove('show');
+
+  if (!isHome) { stopLocationWarmup(); openWhatsApp({ note:'Not shared (customer is not at home)' }); return; }
+  if (geoState.best) { var loc = locationFromPosition(geoState.best); stopLocationWarmup(); openWhatsApp(loc); return; }
+  if (geoState.unsupported) { openWhatsApp({ note:'Location not supported on this device' }); return; }
+  if (geoState.denied) { openWhatsApp({ note:'Location permission denied' }); return; }
+
+  // No fix yet — wait a little, showing the spinner.
+  showLoadingOverlay();
+  var MAX_WAIT = 12000, finished = false, pollTimer = null;
+  var maxTimer = setTimeout(function () { finish(true); }, MAX_WAIT);
+
+  function finish(force) {
+    if (finished) return;
+    var goodEnough = geoState.best && geoState.best.coords.accuracy <= 20;
+    if (!force && !goodEnough && !geoState.denied) return;
+    finished = true;
+    clearTimeout(maxTimer); clearInterval(pollTimer);
+    stopLocationWarmup(); hideLoadingOverlay();
+    if (geoState.best) { openWhatsApp(locationFromPosition(geoState.best)); return; }
+    if (geoState.denied) { openWhatsApp({ note:'Location permission denied' }); return; }
+    openWhatsApp({ note:'Could not get a precise location' });
   }
-  return TIERS[TIERS.length - 1].acc;
+  pollTimer = setInterval(function () { finish(false); }, 250);
 }
 
-/* ============================================================
-   INIT
-   ============================================================ */
-renderItems();
-updateSummary();
+/* ================================================================================================
+   11. WHATSAPP ORDER
+   ================================================================================================ */
+function buildWhatsAppMessage(comboKey, loc) {
+  var order = buildOrder(comboKey);
+  var parts = [];
+  parts.push('*Nellore Basket Order*');
+  parts.push(order.title);
+  parts.push('');
+  parts.push('Name: ' + state.customer.name);
+  parts.push('Phone: ' + state.customer.phone);
+  parts.push('');
+  parts.push('Location:');
+  if (loc && loc.lat) {
+    parts.push('Latitude: ' + loc.lat);
+    parts.push('Longitude: ' + loc.lng);
+    parts.push('Accuracy: ' + loc.accuracy + ' m');
+    parts.push('Google Maps: ' + loc.maps);
+  } else {
+    parts.push((loc && loc.note) || 'Not shared');
+  }
+  parts.push('');
+  parts.push('----------------------------');
+  order.lines.forEach(function (l, i) {
+    parts.push((i + 1) + '. ' + l.name + ' - ' + l.qtyLabel + ' - Rs.' + Math.round(l.price));
+  });
+  parts.push('----------------------------');
+  parts.push('');
+  if (order.discount > 0) {
+    parts.push('Subtotal: Rs.' + Math.round(order.subtotal));
+    parts.push('Discount: -Rs.' + Math.round(order.discount));
+  }
+  parts.push('*Total: Rs.' + Math.round(order.final) + '*');
+  parts.push('');
+  parts.push('Payment: Cash on Delivery');
+  parts.push('Delivery: Next Day Delivery');
+  return parts.join('\n');
+}
+
+function openWhatsApp(loc) {
+  if (!pendingComboKey) return;
+  var url = 'https://wa.me/' + STORE_CONFIG.WHATSAPP_NUMBER + '?text=' +
+            encodeURIComponent(buildWhatsAppMessage(pendingComboKey, loc));
+  window.location.href = url;
+}
+
+function validateOrder(comboKey) {
+  var nameEl = document.getElementById('customerName');
+  var phoneEl = document.getElementById('customerPhone');
+  var name = nameEl.value.trim();
+  var phone = phoneEl.value.trim();
+
+  function fail(el, message) {
+    showToast(message);
+    if (el) { goHome(); el.classList.add('invalid'); setTimeout(function () { el.focus(); }, 120); }
+    return false;
+  }
+
+  if (!name) return fail(nameEl, 'Enter your full name to continue');
+  if (!phone) return fail(phoneEl, 'Enter your phone number to continue');
+  if (!/^[6-9][0-9]{9}$/.test(phone)) return fail(phoneEl, 'Enter a valid 10-digit Indian mobile number');
+
+  var order = buildOrder(comboKey);
+  if (!order.lines.length) { showToast('Select at least one item to order'); return false; }
+
+  if (comboKey === 'combo1' && sumValues(state.combo1.rice) < 1) {
+    showToast('Select at least 1 rice bag'); return false;
+  }
+  if (comboKey === 'combo2' && sumValues(state.combo2.items) < STORE_CONFIG.COMBO2_MIN_QTY) {
+    showToast('Select ' + STORE_CONFIG.COMBO2_MIN_QTY + ' or more Combo 2 items'); return false;
+  }
+  if (comboKey === 'combo3' && sumValues(state.combo3.items) < STORE_CONFIG.COMBO3_MIN_QTY) {
+    showToast('Select ' + STORE_CONFIG.COMBO3_MIN_QTY + ' or more Combo 3 items in total'); return false;
+  }
+  if (comboKey === 'combo4' && order.blocked) { showToast(order.blocked); return false; }
+  return true;
+}
+
+function sendToWhatsApp(comboKey) {
+  if (!validateOrder(comboKey)) return;
+  pendingComboKey = comboKey;
+  startLocationWarmup();
+  document.getElementById('locationPopup').classList.add('show');
+}
+
+/* ================================================================================================
+   12. INIT
+   ================================================================================================ */
+function syncHeaderHeight() {
+  var h = document.querySelector('header').offsetHeight;
+  document.documentElement.style.setProperty('--header-h', h + 'px');
+}
+
+(function init() {
+  renderComboCards();
+  renderRiceItems();
+  renderComboItems('combo2Items', COMBO2_ITEMS, 'combo2');
+  renderComboItems('combo3Items', COMBO3_ITEMS, 'combo3');
+
+  // ONE copy of each grocery list in the DATA block, rendered into four combos.
+  renderGroceryLists('combo1-grocery-lists', 'combo1', COMBO_RULES.combo1.priceMode);
+  renderGroceryLists('combo2-grocery-lists', 'combo2', COMBO_RULES.combo2.priceMode);
+  renderGroceryLists('combo3-grocery-lists', 'combo3', COMBO_RULES.combo3.priceMode);
+  renderGroceryLists('combo4-grocery-lists', 'combo4', COMBO_RULES.combo4.priceMode);
+
+  refreshLock('combo1');
+  refreshLock('combo2');
+  refreshLock('combo3');
+  updateAllSummaries();
+
+  syncHeaderHeight();
+  window.addEventListener('resize', syncHeaderHeight);
+  window.addEventListener('orientationchange', syncHeaderHeight);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(syncHeaderHeight);
+})();
 </script>
 </body>
 </html>
