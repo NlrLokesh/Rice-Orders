@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Nellore Rice Club - Wholesale Rice Bags</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700;900&family=Montserrat:wght@300;400;500;600&family=Noto+Sans+Telugu:wght@500;700&display=swap" rel="stylesheet">
+<noscript><style>#site { display: block !important; opacity: 1 !important; } #splash { display: none !important; }</style></noscript>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --gold: #d4af37; --gold-light: #f7d774; --gold-dark: #a67c00;
+    --gold-shine: #fff2b3; --black: #050505; --black-mid: #0f0f0f;
+    --black-card: #161616; --black-border: #2f2f2f;
+    --white: #ffffff; --white-dim: #d6d6d6; --red-warn: #ff4d4d;
+  }
+  body { font-family: 'Montserrat', sans-serif; background: var(--black); color: var(--white); min-height: 100vh; overflow-x: hidden; -webkit-overflow-scrolling: touch; -webkit-tap-highlight-color: transparent; }
+  body.splash-open { overflow: hidden; height: 100%; }
+
+  /* ============================================================
+     WELCOME SPLASH SCREEN
+     ============================================================ */
+  #splash { position: fixed; inset: 0; z-index: 20000; background: #050505; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 24px; padding-top: calc(24px + env(safe-area-inset-top, 0px)); padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)); transition: opacity 0.8s ease, transform 0.8s ease; touch-action: none; }
+  #splash::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent); z-index: 3; }
+  #splash::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-dark), transparent); z-index: 3; }
+  #splash.leaving { opacity: 0; transform: scale(1.06); pointer-events: none; }
+
+  .splash-glow { position: absolute; inset: 0; background: radial-gradient(circle at 50% 42%, rgba(212,175,55,0.20) 0%, rgba(212,175,55,0.06) 32%, transparent 62%); pointer-events: none; z-index: 1; }
+
+  .grains { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+  .grain { position: absolute; bottom: -30px; border-radius: 50%; background: linear-gradient(135deg, var(--gold-shine), var(--gold)); opacity: 0; will-change: transform, opacity; animation: grain-rise linear infinite; }
+  @keyframes grain-rise {
+    0%   { transform: translate3d(0, 0, 0) rotate(var(--r)); opacity: 0; }
+    10%  { opacity: var(--o); }
+    90%  { opacity: var(--o); }
+    100% { transform: translate3d(var(--dx), -115vh, 0) rotate(calc(var(--r) + 240deg)); opacity: 0; }
+  }
+
+  .splash-inner { position: relative; z-index: 2; text-align: center; max-width: 420px; width: 100%; display: flex; flex-direction: column; align-items: center; }
+  .splash-inner > * { opacity: 0; animation: splash-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+  .splash-inner > *:nth-child(1) { animation-delay: 0.10s; }
+  .splash-inner > *:nth-child(2) { animation-delay: 0.30s; }
+  .splash-inner > *:nth-child(3) { animation-delay: 0.55s; }
+  .splash-inner > *:nth-child(4) { animation-delay: 0.70s; }
+  .splash-inner > *:nth-child(5) { animation-delay: 0.95s; }
+  .splash-inner > *:nth-child(6) { animation-delay: 1.30s; }
+  @keyframes splash-in { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+
+  .splash-tag { font-size: 10px; font-weight: 600; letter-spacing: 4px; color: var(--gold); text-transform: uppercase; margin-bottom: 18px; }
+  .splash-title { font-family: 'Playfair Display', serif; font-size: clamp(46px, 14vw, 72px); font-weight: 900; line-height: 1.05; letter-spacing: 1px; background: linear-gradient(110deg, var(--gold-dark) 0%, var(--gold-light) 25%, var(--gold-shine) 50%, var(--gold-light) 75%, var(--gold-dark) 100%); background-size: 200% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: splash-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.30s forwards, title-shimmer 6s linear 1.2s infinite; }
+  .splash-title span { display: block; }
+  @keyframes title-shimmer { from { background-position: 0% 0; } to { background-position: 200% 0; } }
+  .splash-telugu { font-family: 'Noto Sans Telugu', 'Montserrat', sans-serif; font-size: 24px; font-weight: 700; color: var(--gold-light); margin-top: 16px; letter-spacing: 1px; line-height: 1.4; }
+  .splash-sub { font-size: 11px; color: var(--white-dim); letter-spacing: 3px; margin-top: 10px; font-weight: 300; text-transform: uppercase; }
+
+  .start-btn { position: relative; isolation: isolate; margin-top: 46px; padding: 18px 44px; border: none; border-radius: 60px; font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: #1a1300; background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 40%, var(--gold-light) 70%, var(--gold) 100%); cursor: pointer; -webkit-appearance: none; appearance: none; box-shadow: 0 6px 30px rgba(212,175,55,0.35), inset 0 1px 0 rgba(255,255,255,0.35); transition: transform 0.2s ease, box-shadow 0.2s ease; }
+  .start-btn:active { transform: scale(0.95) !important; box-shadow: 0 3px 16px rgba(212,175,55,0.3), inset 0 1px 0 rgba(255,255,255,0.35); }
+  .start-btn:focus-visible { outline: 2px solid var(--gold-shine); outline-offset: 5px; }
+  .start-btn .label { position: relative; z-index: 2; display: inline-flex; align-items: center; gap: 10px; }
+  .start-btn .bag { font-size: 18px; display: inline-block; animation: bag-wiggle 2.6s ease-in-out infinite; }
+  .start-btn .shine { position: absolute; inset: 0; border-radius: inherit; overflow: hidden; z-index: 1; pointer-events: none; }
+  .start-btn .shine::before { content: ''; position: absolute; top: 0; left: -60%; width: 40%; height: 100%; background: linear-gradient(100deg, transparent, rgba(255,255,255,0.6), transparent); transform: skewX(-20deg); animation: btn-shine 3s ease-in-out infinite; }
+  .start-btn::before, .start-btn::after { content: ''; position: absolute; inset: 0; border-radius: inherit; border: 2px solid var(--gold); z-index: -1; opacity: 0; animation: ring-pulse 2.4s ease-out infinite; }
+  .start-btn::after { animation-delay: 1.2s; }
+  @keyframes ring-pulse { 0% { transform: scale(1); opacity: 0.75; } 100% { transform: scale(1.35, 1.7); opacity: 0; } }
+  @keyframes btn-shine { 0%, 55% { left: -60%; } 100% { left: 130%; } }
+  @keyframes bag-wiggle { 0%, 70%, 100% { transform: rotate(0deg); } 76% { transform: rotate(-14deg); } 84% { transform: rotate(12deg); } 92% { transform: rotate(-6deg); } }
+
+  .splash-hint { margin-top: 22px; font-size: 11px; color: #a89a6a; letter-spacing: 0.5px; line-height: 1.5; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .grain, .start-btn::before, .start-btn::after, .start-btn .shine::before, .start-btn .bag { animation: none; }
+    .grain { display: none; }
+    .splash-inner > *, .splash-title { animation: none; opacity: 1; }
+  }
+
+  /* --- Main site wrapper (hidden until Start Shopping is pressed) --- */
+  #site { display: none; opacity: 0; transition: opacity 0.9s ease; }
+  #site.show { display: block; }
+  #site.fade-in { opacity: 1; }
+
+  /* ============================================================
+     MAIN SITE
+     ============================================================ */
+  header { background: var(--black-mid); border-bottom: 1px solid var(--gold-dark); padding: 22px 20px 18px; text-align: center; position: sticky; top: 0; z-index: 1000; overflow: hidden; -webkit-transform: translateZ(0); transform: translateZ(0); }
+  header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent); }
+  header::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-dark), transparent); }
+  .header-tag { font-size: 9px; font-weight: 600; letter-spacing: 4px; color: var(--gold); text-transform: uppercase; margin-bottom: 6px; }
+  .header-title { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 900; letter-spacing: 2px; background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold-light) 40%, var(--gold) 60%, var(--gold-shine) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .header-sub { font-size: 10px; color: var(--white-dim); letter-spacing: 3px; margin-top: 5px; font-weight: 300; text-transform: uppercase; }
+
+  .container { max-width: 500px; margin: 0 auto; padding: 20px 15px 30px; }
+
+  .section-title { display: flex; align-items: center; gap: 10px; font-size: 9px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin: 24px 0 12px; }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--gold-dark), transparent); }
+
+  .customer-card { background: var(--black-card); border: 1px solid var(--black-border); border-radius: 14px; padding: 18px; position: relative; overflow: hidden; }
+  .customer-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-dark), transparent); }
+  .input-group { position: relative; }
+  .input-group input { width: 100%; padding: 12px 14px 12px 42px; background: var(--black-mid); border: 1px solid var(--black-border); border-radius: 8px; color: var(--white); font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 500; outline: none; transition: border 0.25s, box-shadow 0.25s; -webkit-appearance: none; appearance: none; }
+  .input-group input::placeholder { color: #cccccc; font-weight: 400; }
+  .input-group input:focus { border-color: var(--gold-dark); box-shadow: 0 0 0 3px rgba(212,175,55,0.08); }
+  .input-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 14px; pointer-events: none; }
+
+  /* --- Wholesale notice strip --- */
+  .notice-strip { background: #1a1400; border: 1px solid var(--gold-dark); border-radius: 12px; padding: 14px 16px; margin-bottom: 16px; }
+  .notice-row { display: flex; align-items: flex-start; gap: 10px; font-size: 11.5px; color: var(--white-dim); line-height: 1.5; padding: 5px 0; }
+  .notice-row:not(:last-child) { border-bottom: 1px dashed #2a2200; }
+  .notice-row .n-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+  .notice-row b { color: var(--gold-light); }
+  .notice-footer { text-align: center; font-size: 10.5px; color: var(--gold-dark); font-style: italic; margin-top: 10px; padding-top: 10px; border-top: 1px solid #2a2200; letter-spacing: 0.3px; line-height: 1.6; }
+
+  .item { display: flex; align-items: center; background: var(--black-card); border: 1px solid var(--black-border); border-radius: 14px; padding: 14px; margin-bottom: 10px; transition: border-color 0.3s ease, background-color 0.3s ease; position: relative; overflow: hidden; cursor: default; user-select: none; -webkit-user-select: none; -webkit-transform: translateZ(0); transform: translateZ(0); }
+  .item::before { content: ''; position: absolute; inset: 0; border-radius: 14px; background: linear-gradient(135deg, rgba(212,175,55,0.05), transparent 60%); opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+  .item.active { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold-dark), 0 8px 30px rgba(212,175,55,0.18); background: #1c1800; }
+  .item.active::before { opacity: 1; }
+
+  .check-badge { position: absolute; top: 10px; right: 10px; width: 22px; height: 22px; background: linear-gradient(135deg, var(--gold-dark), var(--gold-light)); border-radius: 50%; font-size: 11px; color: var(--black); display: flex; align-items: center; justify-content: center; font-weight: 900; opacity: 0; transform: scale(0.5) translateZ(0); transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1); pointer-events: none; z-index: 6; }
+  .item.active .check-badge { opacity: 1; transform: scale(1) translateZ(0); }
+
+  .item img { width: 66px; height: 92px; object-fit: cover; object-position: center; border-radius: 8px; flex-shrink: 0; border: 1px solid #222; transition: border-color 0.3s; pointer-events: none; aspect-ratio: 3 / 4; background: #1a1a1a; display: block; }
+  .item.active img { border-color: var(--gold-dark); }
+  .img-slot { position: relative; flex-shrink: 0; }
+  .img-slot .img-tag { position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%); font-size: 7px; letter-spacing: 0.5px; color: #555; text-transform: uppercase; white-space: nowrap; }
+
+  .details { flex: 1; margin-left: 13px; min-width: 0; }
+  .item-name { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; color: #ffffff; transition: color 0.3s; line-height: 1.25; }
+  .item.active .item-name { color: var(--gold-light); }
+  .item-sub { font-size: 9px; letter-spacing: 1.2px; color: #b0b0b0; text-transform: uppercase; margin-top: 3px; font-weight: 600; transition: color 0.3s; line-height: 1.5; }
+  .item.active .item-sub { color: var(--gold-dark); }
+  .item-price { font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 600; color: var(--gold); margin-top: 7px; letter-spacing: 0.3px; }
+  .item-price .rupee { font-size: 13px; font-weight: 700; }
+  .item-price .amount { font-size: 16px; font-weight: 700; }
+  .item-price .per-bag { font-size: 11px; color: #666; font-weight: 400; margin-left: 2px; }
+
+  .qty-wrapper { display: flex; flex-direction: column; align-items: center; gap: 5px; margin-right: 30px; position: relative; z-index: 6; flex-shrink: 0; }
+  .qty-label { font-size: 8px; letter-spacing: 1.5px; color: var(--gold-dark); text-transform: uppercase; font-weight: 600; transition: color 0.3s; }
+  .item.active .qty-label { color: var(--gold); }
+  select.qty-select { padding: 9px 26px 9px 12px; border-radius: 8px; border: 1px solid var(--gold-dark); background: var(--black-mid); color: #888; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; outline: none; transition: all 0.3s; min-width: 76px; -webkit-appearance: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23a67c00' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; pointer-events: auto; }
+  .item.active select.qty-select { border-color: var(--gold); color: var(--gold-light); background-color: #1a1500; box-shadow: 0 0 0 1px var(--gold-dark), 0 3px 12px rgba(212,175,55,0.18); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23d4af37' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); }
+
+  .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-80px) translateZ(0); background: #1e0000; border: 1px solid var(--red-warn); color: var(--red-warn); font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.5px; padding: 12px 22px; border-radius: 10px; box-shadow: 0 6px 24px rgba(255,77,77,0.25); z-index: 9999; transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s; white-space: nowrap; opacity: 0; pointer-events: none; -webkit-transform: translateX(-50%) translateY(-80px) translateZ(0); }
+  .toast.show { transform: translateX(-50%) translateY(0) translateZ(0); -webkit-transform: translateX(-50%) translateY(0) translateZ(0); opacity: 1; }
+  .toast.info { background: #001a0a; border-color: var(--gold-dark); color: var(--gold-light); box-shadow: 0 6px 24px rgba(212,175,55,0.2); }
+
+  .summary-card { background: var(--black-card); border: 1px solid var(--black-border); border-radius: 14px; padding: 18px; position: relative; overflow: hidden; }
+  .summary-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-dark), transparent); }
+  .summary-customer { display: flex; align-items: center; gap: 10px; padding-bottom: 12px; margin-bottom: 4px; border-bottom: 1px solid #222; }
+  .cust-icon { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, var(--gold-dark), var(--gold)); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+  .cust-info { display: flex; flex-direction: column; }
+  .cust-label { font-size: 8px; letter-spacing: 2px; color: var(--gold-dark); text-transform: uppercase; font-weight: 700; }
+  .cust-name { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: var(--gold-light); margin-top: 1px; line-height: 1.2; }
+  .summary-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #1e1e1e; font-size: 13px; }
+  .summary-row:last-of-type { border-bottom: none; }
+  .s-name { color: var(--white); font-weight: 500; }
+  .s-qty { color: #bbbbbb; font-size: 11px; font-weight: 600; }
+  .s-price { color: var(--gold); font-weight: 700; font-size: 13px; }
+  .summary-total { display: flex; justify-content: space-between; align-items: center; padding-top: 14px; margin-top: 10px; border-top: 1px solid var(--gold-dark); }
+  .t-label { font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 700; color: var(--white-dim); letter-spacing: 1.5px; text-transform: uppercase; }
+  .t-amount { font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 700; background: linear-gradient(135deg, var(--gold-dark), var(--gold-light), var(--gold-shine)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .summary-empty { text-align: center; padding: 8px 0; color: #999; font-size: 12px; letter-spacing: 1px; font-style: italic; }
+
+  .btn-whatsapp { width: 100%; padding: 16px; margin-top: 16px; background: linear-gradient(135deg, #0d6e2f, #25D366); color: white; border: none; border-radius: 12px; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 20px rgba(37,211,102,0.2), inset 0 1px 0 rgba(255,255,255,0.1); transition: transform 0.25s, box-shadow 0.25s; position: relative; overflow: hidden; -webkit-appearance: none; appearance: none; }
+  .btn-whatsapp:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(37,211,102,0.3); }
+  .btn-whatsapp:active { transform: scale(0.98); }
+  .btn-whatsapp:disabled { opacity: 0.7; cursor: not-allowed; }
+
+  .footer-note { text-align: center; font-size: 9px; color: #2e2e2e; letter-spacing: 2px; margin-top: 14px; text-transform: uppercase; padding-bottom: 10px; }
+
+  .popup-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.82); z-index: 9998; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+  .popup-overlay.show { opacity: 1; pointer-events: all; }
+  .popup-box { background: var(--black-card); border: 1px solid var(--gold-dark); border-radius: 20px; padding: 28px 24px 24px; max-width: 340px; width: 100%; position: relative; overflow: hidden; transform: scale(0.9) translateY(20px); transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1); text-align: center; }
+  .popup-overlay.show .popup-box { transform: scale(1) translateY(0); }
+  .popup-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent); }
+  .popup-icon { font-size: 42px; margin-bottom: 12px; display: block; line-height: 1; }
+  .popup-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--gold-light); margin-bottom: 8px; line-height: 1.3; }
+  .popup-subtitle { font-size: 12px; color: #888; letter-spacing: 0.5px; line-height: 1.6; margin-bottom: 24px; }
+  .popup-subtitle span { color: var(--gold-dark); font-weight: 600; }
+  .popup-buttons { display: flex; gap: 12px; }
+  .popup-btn { flex: 1; padding: 14px 10px; border: none; border-radius: 12px; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 1px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; -webkit-appearance: none; appearance: none; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+  .popup-btn:active { transform: scale(0.96); }
+  .popup-btn .btn-emoji { font-size: 22px; }
+  .popup-btn-yes { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: var(--black); box-shadow: 0 4px 16px rgba(212,175,55,0.25); }
+  .popup-btn-no { background: var(--black-mid); color: var(--white-dim); border: 1px solid var(--black-border); }
+
+  /* --- Location loading overlay --- */
+  .loading-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.86); z-index: 9998; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+  .loading-overlay.show { opacity: 1; pointer-events: all; }
+  .loading-box { background: var(--black-card); border: 1px solid var(--gold-dark); border-radius: 20px; padding: 34px 26px 28px; max-width: 300px; width: 100%; position: relative; overflow: hidden; transform: scale(0.9) translateY(20px); transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1); text-align: center; }
+  .loading-overlay.show .loading-box { transform: scale(1) translateY(0); }
+  .loading-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent); }
+
+  .gps-spinner-wrap { position: relative; width: 64px; height: 64px; margin: 0 auto 18px; display: flex; align-items: center; justify-content: center; }
+  .gps-spinner-ring { position: absolute; inset: 0; border: 3px solid rgba(212,175,55,0.15); border-top-color: var(--gold); border-radius: 50%; animation: gps-spin 0.9s linear infinite; }
+  .gps-spinner-ring.slow { border-top-color: var(--gold-light); animation-duration: 1.6s; inset: 9px; opacity: 0.75; }
+  .gps-spinner-pin { font-size: 20px; position: relative; z-index: 2; animation: gps-pulse 1.4s ease-in-out infinite; }
+  @keyframes gps-spin { to { transform: rotate(360deg); } }
+  @keyframes gps-pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.15); opacity: 0.7; } }
+
+  .loading-title { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; color: var(--gold-light); margin-bottom: 8px; line-height: 1.3; }
+  .loading-sub { font-size: 11.5px; color: #999; letter-spacing: 0.3px; line-height: 1.6; }
+  .loading-accuracy { margin-top: 14px; font-size: 11px; color: var(--gold-dark); font-weight: 600; letter-spacing: 0.5px; min-height: 15px; }
+  .loading-dots span { display: inline-block; animation: gps-dots 1.4s infinite; opacity: 0; }
+  .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes gps-dots { 0%, 20% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
+</style>
+</head>
+<body class="splash-open">
+
+<!-- ============================================================
+     WELCOME SPLASH SCREEN
+     ============================================================ -->
+<div id="splash" role="dialog" aria-label="Welcome to Nellore Rice Club">
+  <div class="grains" id="grains" aria-hidden="true"></div>
+  <div class="splash-glow" aria-hidden="true"></div>
+  <div class="splash-inner">
+    <div class="splash-tag">&#10022; Wholesale Rice Bags &#10022;</div>
+    <h1 class="splash-title"><span>Nellore</span><span>Rice Club</span></h1>
+    <div class="splash-telugu">స్వాగతం</div>
+    <div class="splash-sub">Best Quality &middot; Best Service</div>
+    <button class="start-btn" id="startBtn" type="button" onclick="startShopping()">
+      <span class="shine"></span>
+      <span class="label"><span class="bag">&#128717;</span>Start Shopping</span>
+    </button>
+    <div class="splash-hint">&#128266; Turn your sound on for a warm welcome</div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="popup-overlay" id="locationPopup">
+  <div class="popup-box">
+    <span class="popup-icon">&#127968;</span>
+    <div class="popup-title">Are you at Home?</div>
+    <div class="popup-subtitle">We will <span>share your location</span> with the order so we can deliver right to your door.</div>
+    <div class="popup-buttons">
+      <button class="popup-btn popup-btn-yes" onclick="handleLocationChoice(true)"><span class="btn-emoji">&#9989;</span>Yes, I'm Home</button>
+      <button class="popup-btn popup-btn-no" onclick="handleLocationChoice(false)"><span class="btn-emoji">&#128694;</span>No, I'm Not</button>
+    </div>
+  </div>
+</div>
+
+<div class="loading-overlay" id="locationLoading">
+  <div class="loading-box">
+    <div class="gps-spinner-wrap">
+      <div class="gps-spinner-ring"></div>
+      <div class="gps-spinner-ring slow"></div>
+      <span class="gps-spinner-pin">&#128205;</span>
+    </div>
+    <div class="loading-title">Finding Your Precise Location</div>
+    <div class="loading-sub">Please wait, this may take a few seconds<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></div>
+    <div class="loading-accuracy" id="loadingAccuracy"></div>
+  </div>
+</div>
+
+<!-- ============================================================
+     MAIN SITE (opens after "Start Shopping" is pressed)
+     ============================================================ -->
+<div id="site">
+
+<header>
+  <div class="header-tag">&#10022; Wholesale Rice Bags &#10022;</div>
+  <div class="header-title">Nellore Rice Club</div>
+  <div class="header-sub">Best Quality &middot; Best Service</div>
+</header>
+
+<div class="container">
+
+  <div class="section-title">&#10022; Your Details</div>
+  <div class="customer-card">
+    <div class="input-group" style="margin-bottom:10px;">
+      <span class="input-icon">&#128100;</span>
+      <input type="text" id="customerName" placeholder="Full Name" autocomplete="name" autocorrect="off" autocapitalize="words" spellcheck="false" oninput="updateSummary()"/>
+    </div>
+    <div class="input-group">
+      <span class="input-icon">&#128222;</span>
+      <input type="tel" id="customerPhone" placeholder="Phone Number (10 digits)" maxlength="10" autocomplete="tel" inputmode="numeric" pattern="[0-9]*" oninput="filterPhone(this); updateSummary();"/>
+    </div>
+  </div>
+
+  <div class="section-title">&#10022; Delivery &amp; Payment</div>
+  <div class="notice-strip">
+    <div class="notice-row"><span class="n-icon">&#128666;</span><span><b>Free Home Delivery</b> on every order, anywhere in Nellore City.</span></div>
+    <div class="notice-row"><span class="n-icon">&#9200;</span><span><b>Next Day Delivery</b> — order today, get your bags tomorrow.</span></div>
+    <div class="notice-row"><span class="n-icon">&#128176;</span><span><b>Cash on Delivery only</b> — pay the delivery person directly.</span></div>
+    <div class="notice-row"><span class="n-icon">&#128683;</span><span><b>No credits, no pending payments.</b> Full payment compulsory at the time of delivery.</span></div>
+    <div class="notice-footer">We are wholesalers — every rupee counts towards our profit, so our margins are kept very low. Thank you for understanding.</div>
+  </div>
+
+  <div class="section-title">&#10022; Select Rice Bags</div>
+
+  <div id="rice-items"></div>
+
+  <div class="section-title">&#10022; Order Summary</div>
+  <div class="summary-card">
+    <div class="summary-empty" id="summaryEmpty">No items selected yet</div>
+    <div id="summaryCustomer"></div>
+    <div id="summaryRows"></div>
+  </div>
+
+  <button class="btn-whatsapp" id="waBtn" onclick="sendToWhatsApp()">
+    <span style="font-size:18px">&#128172;</span> Place Order on WhatsApp
+  </button>
+  <div class="footer-note">&#10022; Orders confirmed via WhatsApp only &#10022;</div>
+</div>
+
+</div><!-- /#site -->
+
+<script>
+/* ============================================================
+   DATA — edit bag details/prices here only. Everything else
+   is generated. Replace the empty img src with your own image
+   URL later — the slot is already left open on the left side
+   of each bag.
+   ============================================================ */
+// [ id, name, subtitle, price, imgUrl ]
+var RICE_BAGS = [
+  ['r1', 'Kurnool Rice Bag', '25 Kgs &middot; Old Rice &middot; Jilakara Masura', 1450, 'Kurnool.webp'],
+  ['r2', '24 Carat Gold', '24 Kgs &middot; Old Rice &middot; Jilakara Masura &middot; From Nandhyala', 1430, 'Carat.webp'],
+  ['r3', 'Steam Rice', '25 Kgs &middot; MVR Khageshwar Brand', 1430, 'mvr.webp'],
+  ['r4', 'Molagolukulu Sannalu', '24 Kgs &middot; Old Rice &middot; Pine Apple Bag &middot; From Chirala', 1530, 'sannalu.webp']
+];
+
+var toastTimer = null;
+
+/* ============================================================
+   WELCOME VOICE-OVER SETTINGS  (edit these freely)
+   ------------------------------------------------------------
+   WELCOME_AUDIO : OPTIONAL. If you record / generate a sweet
+     Telugu voice as an .mp3 and upload it next to index.html,
+     put its file name here, e.g. 'welcome.mp3'. That gives the
+     SAME premium voice on every phone. Leave '' to use the
+     phone's built-in Telugu voice instead.
+   WELCOME_TEXT_TE : what is spoken in Telugu.
+   WELCOME_TEXT_EN : used only if the phone has no Telugu voice.
+   ============================================================ */
+var WELCOME_AUDIO   = '';
+var WELCOME_TEXT_TE = 'హాయ్ అండీ! నెల్లూరు రైస్ క్లబ్ కి స్వాగతం. మీరు రావడం మాకెంతో సంతోషం. మీకు నచ్చిన బియ్యం ఎంచుకోండి, మేము మీ ఇంటి వద్దకే తీసుకొస్తాము. ధన్యవాదాలు!';
+var WELCOME_TEXT_EN = 'Hai Andi! Welcome to Nellore Rice Club. We are so happy to have you here.';
+
+/* ============================================================
+   SPLASH SCREEN + VOICE
+   ============================================================ */
+var siteStarted = false;
+var cachedVoices = [];
+
+function loadVoices() {
+  if (!('speechSynthesis' in window)) return;
+  try { cachedVoices = window.speechSynthesis.getVoices() || []; } catch (e) { cachedVoices = []; }
+}
+if ('speechSynthesis' in window) {
+  loadVoices();
+  if (window.speechSynthesis.addEventListener) window.speechSynthesis.addEventListener('voiceschanged', loadVoices);
+  else window.speechSynthesis.onvoiceschanged = loadVoices;
+}
+
+// Picks the best-sounding FEMALE voice for the given language prefixes.
+function pickVoice(prefixes) {
+  var best = null, bestScore = -100;
+  cachedVoices.forEach(function(v) {
+    var lang = (v.lang || '').replace('_', '-').toLowerCase();
+    var ok = prefixes.some(function(p) { return lang.indexOf(p) === 0; });
+    if (!ok) return;
+    var n = v.name || '';
+    var score = 1;
+    if (/female|shruti|geeta|heera|veena|kalpana|swara|neerja|lekha|google/i.test(n)) score += 3;
+    if (/natural|online|neural/i.test(n)) score += 2;
+    if (!/female/i.test(n) && /\bmale\b|mohan|hemant|ravi|prabhat|madhur|rishi|kabir/i.test(n)) score -= 5;
+    if (score > bestScore) { bestScore = score; best = v; }
+  });
+  return best;
+}
+
+function speakWelcome() {
+  if (!('speechSynthesis' in window) || typeof SpeechSynthesisUtterance === 'undefined') return;
+  var synth = window.speechSynthesis;
+  try { synth.cancel(); } catch (e) {}
+  loadVoices();
+
+  var u = new SpeechSynthesisUtterance();
+  var teVoice = pickVoice(['te']);
+
+  if (teVoice) {
+    u.text = WELCOME_TEXT_TE;
+    u.voice = teVoice;
+    u.lang = teVoice.lang;
+  } else if (cachedVoices.length === 0) {
+    // Voice list not loaded yet on this browser - still ask for Telugu.
+    u.text = WELCOME_TEXT_TE;
+    u.lang = 'te-IN';
+  } else {
+    // No Telugu voice installed - fall back to a sweet Indian English voice.
+    var enVoice = pickVoice(['en-in']);
+    u.text = WELCOME_TEXT_EN;
+    u.lang = 'en-IN';
+    if (enVoice) u.voice = enVoice;
+  }
+
+  u.rate = 0.88;    // slower = warmer, more welcoming
+  u.pitch = 1.15;   // slightly higher = sweeter, softer
+  u.volume = 1;
+  try { synth.speak(u); } catch (e) {}
+}
+
+function playWelcomeVoice() {
+  if (WELCOME_AUDIO) {
+    try {
+      var a = new Audio(WELCOME_AUDIO);
+      a.volume = 1;
+      a.onerror = function() { speakWelcome(); };
+      var p = a.play();
+      if (p && p.catch) p.catch(function() { speakWelcome(); });
+      return;
+    } catch (e) {}
+  }
+  speakWelcome();
+}
+
+function startShopping() {
+  if (siteStarted) return;
+  siteStarted = true;
+
+  // Voice starts synchronously inside the tap so phones allow the sound.
+  playWelcomeVoice();
+
+  var splash = document.getElementById('splash');
+  var site = document.getElementById('site');
+
+  site.classList.add('show');
+  void site.offsetWidth;            // force reflow so the fade-in animates
+  site.classList.add('fade-in');
+  document.body.classList.remove('splash-open');
+  window.scrollTo(0, 0);
+
+  splash.classList.add('leaving');
+  setTimeout(function() { splash.style.display = 'none'; }, 850);
+}
+
+function buildGrains() {
+  var wrap = document.getElementById('grains');
+  if (!wrap) return;
+  var html = '';
+  for (var i = 0; i < 26; i++) {
+    var w = 3 + Math.random() * 4;
+    var h = w * 2.6;
+    var left = Math.random() * 100;
+    var dur = 10 + Math.random() * 12;
+    var delay = -Math.random() * dur;
+    var dx = Math.random() * 80 - 40;
+    var r = Math.random() * 180;
+    var o = 0.18 + Math.random() * 0.35;
+    html += '<span class="grain" style="left:' + left.toFixed(1) + '%;width:' + w.toFixed(1) + 'px;height:' + h.toFixed(1) + 'px;animation-duration:' + dur.toFixed(1) + 's;animation-delay:' + delay.toFixed(1) + 's;--dx:' + dx.toFixed(0) + 'px;--r:' + r.toFixed(0) + 'deg;--o:' + o.toFixed(2) + '"></span>';
+  }
+  wrap.innerHTML = html;
+}
+
+/* ============================================================
+   RENDERING
+   ============================================================ */
+function renderItems() {
+  var wrap = document.getElementById('rice-items');
+  var html = '';
+  RICE_BAGS.forEach(function(row){
+    var id = row[0], name = row[1], sub = row[2], price = row[3], img = row[4];
+    html += '<div class="item" id="' + id + '">' +
+      '<div class="check-badge">&#10003;</div>' +
+      '<div class="img-slot"><img src="' + img + '" loading="lazy" decoding="async" width="66" height="92" alt="' + name + '" onerror="this.style.opacity=0.15;"></div>' +
+      '<div class="details">' +
+        '<div class="item-name">' + name + '</div>' +
+        '<div class="item-sub">' + sub + '</div>' +
+        '<div class="item-price"><span class="rupee">&#8377;</span><span class="amount">' + price + '</span><span class="per-bag"> / bag</span></div>' +
+      '</div>' +
+      '<div class="qty-wrapper"><span class="qty-label">Quantity</span>' +
+      '<select class="qty-select" onchange="onQtyChange(this,\'' + id + '\')">' +
+        '<option value="0">-- bags</option>' +
+        [1,2,3,4,5].map(function(n){ return '<option value="' + n + '">' + n + ' bag' + (n>1?'s':'') + '</option>'; }).join('') +
+      '</select></div>' +
+    '</div>';
+  });
+  wrap.innerHTML = html;
+}
+
+function findBag(id) { for (var i=0;i<RICE_BAGS.length;i++) if (RICE_BAGS[i][0]===id) return RICE_BAGS[i]; return null; }
+
+/* ============================================================
+   INTERACTIONS
+   ============================================================ */
+function filterPhone(input) { input.value = input.value.replace(/[^0-9]/g,''); }
+
+function onQtyChange(selectEl, id) {
+  var item = document.getElementById(id);
+  var val = parseInt(selectEl.value) || 0;
+  if (val > 0) { item.classList.add('active'); } else { item.classList.remove('active'); }
+  updateSummary();
+}
+
+function updateSummary() {
+  var name = document.getElementById('customerName').value.trim();
+  var custPhone = document.getElementById('customerPhone').value.trim();
+  var grandTotal = 0, hasAny = false, html = '';
+
+  RICE_BAGS.forEach(function(row){
+    var id = row[0], bagName = row[1], price = row[3];
+    var qty = parseInt(document.getElementById(id).querySelector('select').value) || 0;
+    if (qty > 0) {
+      var it = price * qty;
+      grandTotal += it; hasAny = true;
+      html += '<div class="summary-row"><span class="s-name">' + bagName + '</span><span class="s-qty">x' + qty + '</span><span class="s-price">&#8377; ' + it.toFixed(0) + '</span></div>';
+    }
+  });
+
+  var emptyEl = document.getElementById('summaryEmpty');
+  var customerEl = document.getElementById('summaryCustomer');
+  var rowsEl = document.getElementById('summaryRows');
+
+  if (!hasAny) { emptyEl.style.display = 'block'; customerEl.innerHTML = ''; rowsEl.innerHTML = ''; return; }
+  emptyEl.style.display = 'none';
+
+  if (name) {
+    var phoneHtml = custPhone ? '<span style="font-size:11px;color:#b0b0b0;margin-top:3px;display:block;font-family:Montserrat,sans-serif;font-weight:500;">&#128222; ' + custPhone + '</span>' : '';
+    customerEl.innerHTML = '<div class="summary-customer"><div class="cust-icon">&#128100;</div><div class="cust-info"><span class="cust-label">Order for</span><span class="cust-name">' + name + '</span>' + phoneHtml + '</div></div>';
+  } else { customerEl.innerHTML = ''; }
+
+  html += '<div class="summary-total"><span class="t-label">Grand Total</span><span class="t-amount">&#8377; ' + grandTotal.toFixed(0) + '</span></div>';
+  rowsEl.innerHTML = html;
+}
+
+function showToast(msg, type) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (type === 'info' ? ' info' : '');
+  t.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(function() { t.classList.remove('show'); }, 3500);
+}
+
+function buildWhatsAppURL(locationText) {
+  var name = document.getElementById('customerName').value.trim();
+  var custPhone = document.getElementById('customerPhone').value.trim();
+  var lines = [], grandTotal = 0, count = 1;
+
+  RICE_BAGS.forEach(function(row){
+    var id = row[0], bagName = row[1], price = row[3];
+    var qty = parseInt(document.getElementById(id).querySelector('select').value) || 0;
+    if (qty > 0) {
+      var it = price * qty;
+      lines.push(count + '. ' + bagName + ' x' + qty + ' - Rs.' + it.toFixed(0));
+      grandTotal += it; count++;
+    }
+  });
+
+  var parts = [
+    'Nellore Rice Club Order',
+    '----------------------------',
+    'Name: ' + name,
+    'Phone: ' + custPhone,
+    'Location: ' + locationText,
+    '----------------------------'
+  ].concat(lines).concat([
+    '',
+    '*Total: Rs.' + grandTotal.toFixed(0) + '*',
+    '',
+    '(Cash on Delivery, Next Day Delivery, No pending payment)'
+  ]);
+
+  // Single encodeURIComponent pass at the end: safely escapes EVERY
+  // special character so nothing can ever break or truncate the
+  // wa.me query string, no matter what bag names contain.
+  var msg = encodeURIComponent(parts.join('\n'));
+  var phone = '918008970033';
+
+  // Plain wa.me link - this is WhatsApp's own official chat-link API.
+  // (An earlier version tried an intent:// / "smsto" trick to force a
+  // faster Android handoff, but that makes WhatsApp treat the number
+  // as a phone contact to SMS instead of using its chat API - which is
+  // why it showed "not registered with WhatsApp". Reverted.)
+  return 'https://wa.me/' + phone + '?text=' + msg;
+}
+
+function sendToWhatsApp() {
+  var name = document.getElementById('customerName').value.trim();
+  var custPhone = document.getElementById('customerPhone').value.trim();
+  if (!name) { showToast('Please enter your Full Name'); document.getElementById('customerName').focus(); return; }
+  if (!custPhone) { showToast('Please enter your Phone Number'); document.getElementById('customerPhone').focus(); return; }
+  if (custPhone.length !== 10 || !/^[6-9][0-9]{9}$/.test(custPhone)) { showToast('Enter a valid 10-digit Indian mobile number'); document.getElementById('customerPhone').focus(); return; }
+
+  var hasAny = false;
+  RICE_BAGS.forEach(function(row){
+    if (parseInt(document.getElementById(row[0]).querySelector('select').value) > 0) hasAny = true;
+  });
+  if (!hasAny) { showToast('Please select at least one rice bag'); return; }
+
+  // Start warming up the GPS fix RIGHT NOW, while the "Are you home?"
+  // popup is showing. By the time the customer reads it and taps a
+  // button, a fix has often already arrived - which lets us navigate
+  // instantly and synchronously on that tap (no async gap = no browser
+  // confirmation banner, direct handoff into WhatsApp).
+  startLocationWarmup();
+  document.getElementById('locationPopup').classList.add('show');
+}
+
+/* ============================================================
+   PRECISE GEOLOCATION - WARM-UP + INSTANT HANDOFF
+   Chrome only allows a silent, bannerless app-switch when the
+   navigation happens SYNCHRONOUSLY inside a click, with no
+   async gap. Waiting for GPS after the tap always creates that
+   gap. So instead, we start listening for GPS the moment the
+   "Are you home?" popup opens - while the customer is reading
+   it - so a fix is very often already sitting ready by the time
+   they tap "Yes". Tapping then navigates immediately and
+   synchronously, which is what skips the confirmation banner.
+   ============================================================ */
+var geoState = { best: null, watchId: null, denied: false, unsupported: false };
+
+function startLocationWarmup() {
+  geoState.best = null;
+  geoState.denied = false;
+  geoState.unsupported = false;
+
+  if (!navigator.geolocation) { geoState.unsupported = true; return; }
+
+  geoState.watchId = navigator.geolocation.watchPosition(
+    function(pos) {
+      if (!geoState.best || pos.coords.accuracy < geoState.best.coords.accuracy) {
+        geoState.best = pos;
+        var accuracyEl = document.getElementById('loadingAccuracy');
+        if (accuracyEl) accuracyEl.textContent = 'Current accuracy: \u00B1' + Math.round(pos.coords.accuracy) + 'm';
+      }
+    },
+    function(err) {
+      if (err.code === err.PERMISSION_DENIED) geoState.denied = true;
+    },
+    { enableHighAccuracy: true, timeout: 20000, maximumAge: 0 }
+  );
+}
+
+function stopLocationWarmup() {
+  if (geoState.watchId !== null) {
+    navigator.geolocation.clearWatch(geoState.watchId);
+    geoState.watchId = null;
+  }
+}
+
+function formatLocationText(pos) {
+  var lat = pos.coords.latitude.toFixed(7);
+  var lng = pos.coords.longitude.toFixed(7);
+  var acc = Math.round(pos.coords.accuracy);
+  return lat + ', ' + lng + ' (accuracy \u00B1' + acc + 'm) https://maps.google.com/?q=' + lat + ',' + lng;
+}
+
+function showLoadingOverlay() {
+  document.getElementById('loadingAccuracy').textContent = '';
+  document.getElementById('locationLoading').classList.add('show');
+}
+function hideLoadingOverlay() {
+  document.getElementById('locationLoading').classList.remove('show');
+}
+
+function navigateToWhatsApp(locationText) {
+  window.location.href = buildWhatsAppURL(locationText);
+}
+
+function handleLocationChoice(isHome) {
+  document.getElementById('locationPopup').classList.remove('show');
+  var btn = document.getElementById('waBtn');
+
+  if (!isHome) {
+    stopLocationWarmup();
+    // Synchronous, still inside this click - direct handoff, no banner.
+    navigateToWhatsApp('Customer not at home - location not shared');
+    return;
+  }
+
+  // Best case: GPS already warmed up while the popup was on screen.
+  // Navigating here is still synchronous with this click, so it goes
+  // straight into WhatsApp with no confirmation banner at all.
+  if (geoState.best) {
+    var locText = formatLocationText(geoState.best);
+    stopLocationWarmup();
+    navigateToWhatsApp(locText);
+    return;
+  }
+
+  if (geoState.unsupported) {
+    navigateToWhatsApp('Location not supported on this device');
+    return;
+  }
+
+  if (geoState.denied) {
+    navigateToWhatsApp('Location permission denied');
+    return;
+  }
+
+  // Fallback: GPS hasn't produced a fix yet (slow lock, or the
+  // permission prompt only just appeared). We have to wait a little
+  // longer here - this is the one case with an unavoidable async gap,
+  // so the browser may show its "Continue to WhatsApp?" confirmation
+  // once. It still gets there, just with one extra tap in this slower,
+  // less common case.
+  btn.disabled = true;
+  showLoadingOverlay();
+
+  var MAX_WAIT = 12000;
+  var finished = false;
+  var pollTimer = null;
+  var maxTimer = setTimeout(function() { checkAndFinish(true); }, MAX_WAIT);
+
+  function checkAndFinish(forceFinish) {
+    if (finished) return;
+    if (!forceFinish && !(geoState.best && geoState.best.coords.accuracy <= 20) && !geoState.denied) return;
+    finished = true;
+    clearTimeout(maxTimer);
+    clearInterval(pollTimer);
+    stopLocationWarmup();
+    hideLoadingOverlay();
+    btn.disabled = false;
+
+    if (geoState.denied) { navigateToWhatsApp('Location permission denied'); return; }
+    if (geoState.best) { navigateToWhatsApp(formatLocationText(geoState.best)); return; }
+    navigateToWhatsApp('Could not get precise location');
+  }
+
+  // Poll frequently so we grab a fix (or a denial) the instant it
+  // arrives, rather than always waiting out the full MAX_WAIT.
+  pollTimer = setInterval(function() { checkAndFinish(false); }, 250);
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+buildGrains();
+renderItems();
+updateSummary();
+
+// Warm up the bag photos while the customer is on the splash screen,
+// so they appear instantly when the shop opens.
+RICE_BAGS.forEach(function(row) { var im = new Image(); im.src = row[4]; });
+</script>
+</body>
+</html>
