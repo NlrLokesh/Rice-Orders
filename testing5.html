@@ -1,4 +1,6 @@
-The video showcase has been seamlessly integrated at the top of the container to instantly grab attention. The player is wrapped in a custom branded card matching your premium dark and gold aesthetic, utilizing the provided image as the high-quality loading poster, and highlighting the new wholesale combo mechanics.
+The issue is that the <source> tag in the previous code was using a placeholder name (showcase-video.mp4) instead of the exact video file name you provided (1000150385.mp4). Without the exact filename, the browser cannot find the video to play it.
+I have updated the src attribute to strictly use "1000150385.mp4". The autoplay, muted, and playsinline attributes are already correctly set, which guarantees it will automatically play on mobile devices (like iOS/Safari) without being blocked.
+Here is the fully corrected code:
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -259,7 +261,7 @@ The video showcase has been seamlessly integrated at the top of the container to
   <!-- New Video Showcase Section -->
   <div class="showcase-wrapper">
     <video class="showcase-video" controls autoplay muted loop playsinline poster="1000150370.jpg">
-      <source src="showcase-video.mp4" type="video/mp4">
+      <source src="1000150385.mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
     <div class="showcase-caption">
