@@ -1,6 +1,9 @@
-The issue is that the <source> tag in the previous code was using a placeholder name (showcase-video.mp4) instead of the exact video file name you provided (1000150385.mp4). Without the exact filename, the browser cannot find the video to play it.
-I have updated the src attribute to strictly use "1000150385.mp4". The autoplay, muted, and playsinline attributes are already correctly set, which guarantees it will automatically play on mobile devices (like iOS/Safari) without being blocked.
-Here is the fully corrected code:
+This is a perfect solution. By replacing the video with a pure HTML/CSS animation, you don't need to worry about hosting video files, folder structures, or getting black screens on GitHub. You can just copy and paste this entire code, and it will work instantly anywhere.
+I have designed a premium, eye-catching animated banner that fits your dark-gold theme. It features:
+ * Thunder/Lightning effect: A realistic intermittent screen flash and glowing electric text.
+ * Flowers & Sparkles: Golden lotuses, cherry blossoms, and magic sparkles gently floating upwards in the background.
+ * Offer Presentation: A pulsing "Mega Savings" title that highlights your wholesale pricing.
+Here is the complete, ready-to-use code:
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,12 +40,72 @@ Here is the fully corrected code:
   .section-title { display: flex; align-items: center; gap: 10px; font-size: 9px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin: 24px 0 12px; }
   .section-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--gold-dark), transparent); }
 
-  /* --- Video Showcase --- */
-  .showcase-wrapper { background: var(--black-card); border: 1px solid var(--gold-dark); border-radius: 14px; padding: 12px; margin-bottom: 24px; box-shadow: 0 8px 30px rgba(212,175,55,0.12); position: relative; overflow: hidden; }
-  .showcase-wrapper::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-light), transparent); opacity: 0.5; }
-  .showcase-video { width: 100%; border-radius: 8px; display: block; border: 1px solid var(--black-border); background: #0a0a0a; object-fit: cover; }
-  .showcase-caption { font-size: 11px; color: var(--gold-light); text-align: center; margin-top: 12px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 600; }
-  .showcase-caption span { color: var(--white); font-weight: 400; letter-spacing: 0.5px; display: block; font-size: 9px; margin-top: 4px; text-transform: none; }
+  /* =========================================================
+     CSS ANIMATED OFFER BANNER (THUNDER, FLOWERS, SAVINGS)
+     ========================================================= */
+  .offer-banner {
+    background: linear-gradient(135deg, #1f1800 0%, #0a0800 100%);
+    border: 1px solid var(--gold-dark);
+    border-radius: 14px;
+    padding: 24px 20px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(212,175,55,0.15);
+    z-index: 1;
+  }
+  
+  /* Thunder Flashes */
+  .offer-banner::after {
+    content: ''; position: absolute; inset: 0; background: #ffffff;
+    opacity: 0; pointer-events: none; z-index: 2;
+    animation: thunderFlash 6s infinite;
+  }
+  @keyframes thunderFlash {
+    0%, 91%, 95%, 98%, 100% { opacity: 0; }
+    92% { opacity: 0.15; }
+    96% { opacity: 0.25; }
+  }
+
+  /* Floating Flowers & Sparks */
+  .float-item { position: absolute; font-size: 18px; opacity: 0; z-index: 1; animation: floatUp 4s infinite ease-in; }
+  .f1 { left: 10%; bottom: -20px; animation-duration: 5s; font-size: 24px; } /* Lotus */
+  .f2 { left: 85%; bottom: -20px; animation-delay: 1.5s; font-size: 20px; } /* Sparkle */
+  .f3 { left: 50%; bottom: -20px; animation-delay: 2.5s; font-size: 16px; } /* Blossom */
+  .f4 { left: 25%; bottom: -20px; animation-delay: 0.5s; font-size: 22px; } /* Thunder */
+  .f5 { left: 70%; bottom: -20px; animation-delay: 3s; font-size: 14px; } /* Sparkle */
+  
+  @keyframes floatUp {
+    0% { transform: translateY(0) rotate(0deg) scale(0.8); opacity: 0; }
+    20% { opacity: 0.6; }
+    80% { opacity: 0.6; }
+    100% { transform: translateY(-120px) rotate(180deg) scale(1.2); opacity: 0; }
+  }
+
+  /* Banner Content */
+  .offer-content { position: relative; z-index: 3; }
+  .offer-badge {
+    display: inline-block; background: var(--gold-dark); color: var(--black);
+    font-size: 9px; font-weight: 800; letter-spacing: 2px; padding: 4px 10px;
+    border-radius: 20px; text-transform: uppercase; margin-bottom: 10px;
+    box-shadow: 0 0 10px var(--gold-dark);
+  }
+  .offer-title {
+    font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 900;
+    color: var(--gold-light); margin-bottom: 6px;
+    text-shadow: 0 0 15px rgba(212,175,55,0.6);
+    animation: pulseTitle 2s infinite alternate;
+  }
+  @keyframes pulseTitle {
+    0% { transform: scale(1); text-shadow: 0 0 10px rgba(212,175,55,0.4); }
+    100% { transform: scale(1.05); text-shadow: 0 0 25px rgba(212,175,55,0.8), 0 0 5px #fff; }
+  }
+  .offer-desc { font-size: 11.5px; color: var(--white-dim); line-height: 1.5; margin-bottom: 12px; }
+  .offer-desc b { color: var(--white); font-weight: 700; background: rgba(212,175,55,0.2); padding: 2px 6px; border-radius: 4px; }
+  .offer-hint { font-size: 10px; color: var(--gold); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; animation: bounceHint 2s infinite; }
+  @keyframes bounceHint { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(3px); } }
+  /* ========================================================= */
 
   .customer-card { background: var(--black-card); border: 1px solid var(--black-border); border-radius: 14px; padding: 18px; position: relative; overflow: hidden; }
   .customer-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-dark), transparent); }
@@ -258,15 +321,20 @@ Here is the fully corrected code:
 
 <div class="container">
 
-  <!-- New Video Showcase Section -->
-  <div class="showcase-wrapper">
-    <video class="showcase-video" controls autoplay muted loop playsinline poster="1000150370.jpg">
-      <source src="1000150385.mp4" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
-    <div class="showcase-caption">
-      &#10022; Unlock Wholesale Prices &#10022;
-      <span>Watch how to activate Combo deals (ఏ 3 లేదా అంతకంటే ఎక్కువ Items)</span>
+  <!-- New CSS Animated Offer Banner -->
+  <div class="offer-banner">
+    <div class="thunder-flash"></div>
+    <div class="float-item f1">&#129699;</div> <!-- Lotus -->
+    <div class="float-item f2">&#10024;</div> <!-- Sparkles -->
+    <div class="float-item f3">&#127800;</div> <!-- Cherry Blossom -->
+    <div class="float-item f4">&#9889;</div> <!-- Thunder -->
+    <div class="float-item f5">&#10024;</div> <!-- Sparkles -->
+    
+    <div class="offer-content">
+      <div class="offer-badge">Limited Time Offer</div>
+      <h2 class="offer-title">&#9889; MEGA SAVINGS &#9889;</h2>
+      <p class="offer-desc">Buy <b>3 or more items</b> to unlock exclusive wholesale grocery prices instantly.</p>
+      <div class="offer-hint">Select your bags below &darr;</div>
     </div>
   </div>
 
