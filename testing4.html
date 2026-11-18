@@ -1,1124 +1,251 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Nellore Rice Club - Wholesale Rice Bags</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700;900&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Rummy 13 · 3D</title>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --gold: #d4af37; --gold-light: #f7d774; --gold-dark: #a67c00;
-    --gold-shine: #fff2b3; --black: #050505; --black-mid: #0f0f0f;
-    --black-card: #161616; --black-border: #2f2f2f;
-    --white: #ffffff; --white-dim: #d6d6d6; --red-warn: #ff4d4d;
-    --green-good: #3ddc84;
-  }
-  body { font-family: 'Montserrat', sans-serif; background: var(--black); color: var(--white); min-height: 100vh; overflow-x: hidden; -webkit-overflow-scrolling: touch; -webkit-tap-highlight-color: transparent; }
-
-  header { background: var(--black-mid); border-bottom: 1px solid var(--gold-dark); padding: 22px 20px 18px; text-align: center; position: sticky; top: 0; z-index: 1000; overflow: hidden; -webkit-transform: translateZ(0); transform: translateZ(0); }
-  header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent); }
-  header::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-dark), transparent); }
-  .header-tag { font-size: 9px; font-weight: 600; letter-spacing: 4px; color: var(--gold); text-transform: uppercase; margin-bottom: 6px; }
-  .header-title { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 900; letter-spacing: 2px; background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold-light) 40%, var(--gold) 60%, var(--gold-shine) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-  .header-sub { font-size: 10px; color: var(--white-dim); letter-spacing: 3px; margin-top: 5px; font-weight: 300; text-transform: uppercase; }
-
-  .container { max-width: 500px; margin: 0 auto; padding: 20px 15px 30px; }
-
-  .section-title { display: flex; align-items: center; gap: 10px; font-size: 9px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin: 24px 0 12px; }
-  .section-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--gold-dark), transparent); }
-
-  .customer-card { background: var(--black-card); border: 1px solid var(--black-border); border-radius: 14px; padding: 18px; position: relative; overflow: hidden; }
-  .customer-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-dark), transparent); }
-  .input-group { position: relative; }
-  .input-group input { width: 100%; padding: 12px 14px 12px 42px; background: var(--black-mid); border: 1px solid var(--black-border); border-radius: 8px; color: var(--white); font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 500; outline: none; transition: border 0.25s, box-shadow 0.25s; -webkit-appearance: none; appearance: none; }
-  .input-group input::placeholder { color: #cccccc; font-weight: 400; }
-  .input-group input:focus { border-color: var(--gold-dark); box-shadow: 0 0 0 3px rgba(212,175,55,0.08); }
-  .input-group input:disabled { opacity: 0.6; }
-  .input-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 14px; pointer-events: none; }
-
-  /* --- Confirm details / location button --- */
-  .confirm-row { display: flex; gap: 10px; margin-top: 14px; align-items: stretch; }
-  .btn-confirm { flex: 1; width: auto; padding: 14px; margin-top: 0; background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: var(--black); border: none; border-radius: 10px; font-family: 'Montserrat', sans-serif; font-size: 12.5px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform 0.2s, box-shadow 0.2s, background 0.3s, color 0.3s; -webkit-appearance: none; appearance: none; }
-  .btn-confirm:active { transform: scale(0.98); }
-  .btn-confirm.confirmed { background: linear-gradient(135deg, #0d6e2f, #25D366); color: #fff; cursor: default; }
-  .btn-confirm.confirmed:active { transform: none; }
-  .btn-refresh { flex-shrink: 0; width: 50px; background: var(--black-mid); border: 1px solid var(--gold-dark); border-radius: 10px; color: var(--gold-light); font-size: 19px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.25s, background 0.3s, border-color 0.3s; -webkit-appearance: none; appearance: none; }
-  .btn-refresh:hover { border-color: var(--gold); background: #1a1500; }
-  .btn-refresh:active { transform: scale(0.9) rotate(-40deg); }
-  .confirm-hint { font-size: 10px; color: #888; text-align: center; margin-top: 8px; letter-spacing: 0.3px; line-height: 1.5; }
-  .confirm-hint.ok { color: var(--green-good); font-weight: 600; }
-
-  /* --- Wholesale notice strip --- */
-  .notice-strip { background: #1a1400; border: 1px solid var(--gold-dark); border-radius: 12px; padding: 14px 16px; margin-bottom: 16px; }
-  .notice-row { display: flex; align-items: flex-start; gap: 10px; font-size: 11.5px; color: var(--white-dim); line-height: 1.5; padding: 5px 0; }
-  .notice-row:not(:last-child) { border-bottom: 1px dashed #2a2200; }
-  .notice-row .n-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
-  .notice-row b { color: var(--gold-light); }
-  .notice-footer { text-align: center; font-size: 10.5px; color: var(--gold-dark); font-style: italic; margin-top: 10px; padding-top: 10px; border-top: 1px solid #2a2200; letter-spacing: 0.3px; line-height: 1.6; }
-
-  .item { display: flex; align-items: center; background: var(--black-card); border: 1px solid var(--black-border); border-radius: 14px; padding: 14px; margin-bottom: 10px; transition: border-color 0.3s ease, background-color 0.3s ease; position: relative; overflow: hidden; cursor: default; user-select: none; -webkit-user-select: none; -webkit-transform: translateZ(0); transform: translateZ(0); }
-  .item::before { content: ''; position: absolute; inset: 0; border-radius: 14px; background: linear-gradient(135deg, rgba(212,175,55,0.05), transparent 60%); opacity: 0; transition: opacity 0.3s; pointer-events: none; }
-  .item.active { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold-dark), 0 8px 30px rgba(212,175,55,0.18); background: #1c1800; }
-  .item.active::before { opacity: 1; }
-
-  .check-badge { position: absolute; top: 10px; right: 10px; width: 22px; height: 22px; background: linear-gradient(135deg, var(--gold-dark), var(--gold-light)); border-radius: 50%; font-size: 11px; color: var(--black); display: flex; align-items: center; justify-content: center; font-weight: 900; opacity: 0; transform: scale(0.5) translateZ(0); transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1); pointer-events: none; z-index: 6; }
-  .item.active .check-badge { opacity: 1; transform: scale(1) translateZ(0); }
-
-  .item img { width: 66px; height: 92px; object-fit: cover; object-position: center; border-radius: 8px; flex-shrink: 0; border: 1px solid #222; transition: border-color 0.3s; pointer-events: none; aspect-ratio: 3 / 4; background: #1a1a1a; display: block; }
-  .item.active img { border-color: var(--gold-dark); }
-  .img-slot { position: relative; flex-shrink: 0; }
-  .img-slot .img-tag { position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%); font-size: 7px; letter-spacing: 0.5px; color: #555; text-transform: uppercase; white-space: nowrap; }
-
-  .details { flex: 1; margin-left: 13px; min-width: 0; }
-  .item-name { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; color: #ffffff; transition: color 0.3s; line-height: 1.25; }
-  .item.active .item-name { color: var(--gold-light); }
-  .item-sub { font-size: 9px; letter-spacing: 1.2px; color: #b0b0b0; text-transform: uppercase; margin-top: 3px; font-weight: 600; transition: color 0.3s; line-height: 1.5; }
-  .item.active .item-sub { color: var(--gold-dark); }
-  .item-price { font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 600; color: var(--gold); margin-top: 7px; letter-spacing: 0.3px; }
-  .item-price .rupee { font-size: 13px; font-weight: 700; }
-  .item-price .amount { font-size: 16px; font-weight: 700; }
-  .item-price .per-bag { font-size: 11px; color: #666; font-weight: 400; margin-left: 2px; }
-
-  .qty-wrapper { display: flex; flex-direction: column; align-items: center; gap: 5px; margin-right: 30px; position: relative; z-index: 6; flex-shrink: 0; }
-  .qty-label { font-size: 8px; letter-spacing: 1.5px; color: var(--gold-dark); text-transform: uppercase; font-weight: 600; transition: color 0.3s; }
-  .item.active .qty-label { color: var(--gold); }
-  select.qty-select { padding: 9px 26px 9px 12px; border-radius: 8px; border: 1px solid var(--gold-dark); background: var(--black-mid); color: #888; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; outline: none; transition: all 0.3s; min-width: 76px; -webkit-appearance: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23a67c00' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; pointer-events: auto; }
-  .item.active select.qty-select { border-color: var(--gold); color: var(--gold-light); background-color: #1a1500; box-shadow: 0 0 0 1px var(--gold-dark), 0 3px 12px rgba(212,175,55,0.18); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23d4af37' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); }
-
-  .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-80px) translateZ(0); background: #1e0000; border: 1px solid var(--red-warn); color: var(--red-warn); font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.5px; padding: 12px 22px; border-radius: 10px; box-shadow: 0 6px 24px rgba(255,77,77,0.25); z-index: 9999; transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s; white-space: nowrap; opacity: 0; pointer-events: none; -webkit-transform: translateX(-50%) translateY(-80px) translateZ(0); }
-  .toast.show { transform: translateX(-50%) translateY(0) translateZ(0); -webkit-transform: translateX(-50%) translateY(0) translateZ(0); opacity: 1; }
-  .toast.info { background: #001a0a; border-color: var(--gold-dark); color: var(--gold-light); box-shadow: 0 6px 24px rgba(212,175,55,0.2); }
-
-  .summary-card { background: var(--black-card); border: 1px solid var(--black-border); border-radius: 14px; padding: 18px; position: relative; overflow: hidden; }
-  .summary-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-dark), transparent); }
-  .summary-customer { display: flex; align-items: center; gap: 10px; padding-bottom: 12px; margin-bottom: 4px; border-bottom: 1px solid #222; }
-  .cust-icon { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, var(--gold-dark), var(--gold)); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
-  .cust-info { display: flex; flex-direction: column; }
-  .cust-label { font-size: 8px; letter-spacing: 2px; color: var(--gold-dark); text-transform: uppercase; font-weight: 700; }
-  .cust-name { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: var(--gold-light); margin-top: 1px; line-height: 1.2; }
-  .summary-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #1e1e1e; font-size: 13px; }
-  .summary-row:last-of-type { border-bottom: none; }
-  .s-name { color: var(--white); font-weight: 500; }
-  .s-qty { color: #bbbbbb; font-size: 11px; font-weight: 600; }
-  .s-price { color: var(--gold); font-weight: 700; font-size: 13px; }
-  .summary-total { display: flex; justify-content: space-between; align-items: center; padding-top: 14px; margin-top: 10px; border-top: 1px solid var(--gold-dark); }
-  .t-label { font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 700; color: var(--white-dim); letter-spacing: 1.5px; text-transform: uppercase; }
-  .t-amount { font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 700; background: linear-gradient(135deg, var(--gold-dark), var(--gold-light), var(--gold-shine)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-  .summary-empty { text-align: center; padding: 8px 0; color: #999; font-size: 12px; letter-spacing: 1px; font-style: italic; }
-
-  .btn-whatsapp { width: 100%; padding: 16px; margin-top: 16px; background: linear-gradient(135deg, #0d6e2f, #25D366); color: white; border: none; border-radius: 12px; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 20px rgba(37,211,102,0.2), inset 0 1px 0 rgba(255,255,255,0.1); transition: transform 0.25s, box-shadow 0.25s; position: relative; overflow: hidden; -webkit-appearance: none; appearance: none; }
-  .btn-whatsapp:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(37,211,102,0.3); }
-  .btn-whatsapp:active { transform: scale(0.98); }
-  .btn-whatsapp:disabled { opacity: 0.7; cursor: not-allowed; }
-
-  .footer-note { text-align: center; font-size: 9px; color: #2e2e2e; letter-spacing: 2px; margin-top: 14px; text-transform: uppercase; padding-bottom: 10px; }
-
-  .popup-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.82); z-index: 9998; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
-  .popup-overlay.show { opacity: 1; pointer-events: all; }
-  .popup-box { background: var(--black-card); border: 1px solid var(--gold-dark); border-radius: 20px; padding: 28px 24px 24px; max-width: 340px; width: 100%; position: relative; overflow: hidden; transform: scale(0.9) translateY(20px); transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1); text-align: center; }
-  .popup-overlay.show .popup-box { transform: scale(1) translateY(0); }
-  .popup-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent); }
-  .popup-icon { font-size: 42px; margin-bottom: 12px; display: block; line-height: 1; }
-  .popup-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--gold-light); margin-bottom: 8px; line-height: 1.3; }
-  .popup-subtitle { font-size: 12px; color: #888; letter-spacing: 0.5px; line-height: 1.6; margin-bottom: 24px; }
-  .popup-subtitle span { color: var(--gold-dark); font-weight: 600; }
-  .popup-buttons { display: flex; gap: 12px; }
-  .popup-btn { flex: 1; padding: 14px 10px; border: none; border-radius: 12px; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 1px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; -webkit-appearance: none; appearance: none; display: flex; flex-direction: column; align-items: center; gap: 5px; }
-  .popup-btn:active { transform: scale(0.96); }
-  .popup-btn .btn-emoji { font-size: 22px; }
-  .popup-btn-yes { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: var(--black); box-shadow: 0 4px 16px rgba(212,175,55,0.25); }
-  .popup-btn-no { background: var(--black-mid); color: var(--white-dim); border: 1px solid var(--black-border); }
-
-  /* --- Location loading overlay --- */
-  .loading-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.86); z-index: 9998; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
-  .loading-overlay.show { opacity: 1; pointer-events: all; }
-  .loading-box { background: var(--black-card); border: 1px solid var(--gold-dark); border-radius: 20px; padding: 34px 26px 28px; max-width: 320px; width: 100%; position: relative; overflow: hidden; transform: scale(0.9) translateY(20px); transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1); text-align: center; }
-  .loading-overlay.show .loading-box { transform: scale(1) translateY(0); }
-  .loading-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent); }
-
-  .gps-spinner-wrap { position: relative; width: 64px; height: 64px; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; }
-  .gps-spinner-ring { position: absolute; inset: 0; border: 3px solid rgba(212,175,55,0.15); border-top-color: var(--gold); border-radius: 50%; animation: gps-spin 0.9s linear infinite; }
-  .gps-spinner-ring.slow { border-top-color: var(--gold-light); animation-duration: 1.6s; inset: 9px; opacity: 0.75; }
-  .gps-spinner-pin { font-size: 20px; position: relative; z-index: 2; animation: gps-pulse 1.4s ease-in-out infinite; }
-  @keyframes gps-spin { to { transform: rotate(360deg); } }
-  @keyframes gps-pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.15); opacity: 0.7; } }
-
-  .loading-title { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; color: var(--gold-light); margin-bottom: 6px; line-height: 1.3; min-height: 22px; transition: opacity 0.25s; }
-  .loading-sub { font-size: 11px; color: #999; letter-spacing: 0.3px; line-height: 1.6; margin-bottom: 16px; }
-  .loading-dots span { display: inline-block; animation: gps-dots 1.4s infinite; opacity: 0; }
-  .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
-  .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
-  @keyframes gps-dots { 0%, 20% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
-
-  /* Live accuracy meter */
-  .accuracy-wrap { margin-top: 4px; }
-  .accuracy-label-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
-  .accuracy-tag { font-size: 9px; letter-spacing: 1.5px; color: #777; text-transform: uppercase; font-weight: 700; }
-  .accuracy-value { font-size: 13px; font-weight: 700; color: var(--gold); font-family: 'Montserrat', sans-serif; transition: color 0.3s; }
-  .accuracy-track { width: 100%; height: 7px; background: #221c00; border-radius: 6px; overflow: hidden; position: relative; }
-  .accuracy-fill { height: 100%; width: 4%; border-radius: 6px; background: linear-gradient(90deg, var(--red-warn), var(--gold), var(--green-good)); transition: width 0.6s cubic-bezier(0.34,1.2,0.64,1); }
-
-  /* Elapsed-time progress bar */
-  .time-track { width: 100%; height: 3px; background: #1a1a1a; border-radius: 3px; overflow: hidden; margin-top: 14px; }
-  .time-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--gold-dark), var(--gold-light)); transition: width 0.3s linear; }
-
-  /* Confirmation-state badge in the loading box */
-  .confirm-state { margin-top: 10px; font-size: 10px; letter-spacing: 0.8px; color: #777; text-align: center; }
-  .confirm-state b { color: var(--green-good); }
-
-  /* Rotating tip */
-  .loading-tip { margin-top: 16px; padding-top: 14px; border-top: 1px dashed #2a2200; font-size: 10.5px; color: #999; line-height: 1.6; min-height: 32px; display: flex; align-items: center; justify-content: center; }
-  .loading-tip .tip-emoji { margin-right: 5px; }
-  .tip-text { transition: opacity 0.35s ease; opacity: 1; }
-  .tip-text.fade { opacity: 0; }
-
-  /* --- Map pin adjustment overlay --- */
-  #pinMap { width: 100%; height: 220px; border-radius: 12px; overflow: hidden; border: 1px solid var(--gold-dark); }
-  .map-note { font-size: 10.5px; color: #999; text-align: center; margin-top: 10px; line-height: 1.6; }
-  .map-note b { color: var(--gold-light); }
-  .leaflet-container { background: #1a1a1a; font-family: 'Montserrat', sans-serif; }
-</style>
-</head>
-<body>
-
-<div class="toast" id="toast"></div>
-
-<div class="popup-overlay" id="locationPopup">
-  <div class="popup-box">
-    <span class="popup-icon">&#127968;</span>
-    <div class="popup-title">Are you at Home?</div>
-    <div class="popup-subtitle">If you're home, we'll <span>capture your precise location</span> for the delivery rider. Not home right now? No problem — you can still place the order.</div>
-    <div class="popup-buttons">
-      <button class="popup-btn popup-btn-yes" onclick="handleLocationChoice(true)"><span class="btn-emoji">&#9989;</span>Yes, I'm Home</button>
-      <button class="popup-btn popup-btn-no" onclick="handleLocationChoice(false)"><span class="btn-emoji">&#128694;</span>No, I'm Not</button>
-    </div>
-  </div>
-</div>
-
-<div class="loading-overlay" id="locationLoading">
-  <div class="loading-box">
-    <div class="gps-spinner-wrap">
-      <div class="gps-spinner-ring"></div>
-      <div class="gps-spinner-ring slow"></div>
-      <span class="gps-spinner-pin">&#128205;</span>
-    </div>
-    <div class="loading-title" id="loadingTitle">Finding Your Precise Location</div>
-    <div class="loading-sub">Locking onto satellites for pinpoint accuracy<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></div>
-
-    <div class="accuracy-wrap">
-      <div class="accuracy-label-row">
-        <span class="accuracy-tag">Signal Precision</span>
-        <span class="accuracy-value" id="accuracyValue">searching&hellip;</span>
-      </div>
-      <div class="accuracy-track"><div class="accuracy-fill" id="accuracyFill"></div></div>
-    </div>
-
-    <div class="confirm-state" id="confirmState">Waiting for a cluster of matching readings to confirm the fix&hellip;</div>
-
-    <div class="time-track"><div class="time-fill" id="timeFill"></div></div>
-
-    <div class="loading-tip"><span class="tip-emoji">&#128161;</span><span class="tip-text" id="tipText">Standing near a window or open door helps lock the signal faster.</span></div>
-  </div>
-</div>
-
-<div class="loading-overlay" id="mapAdjustOverlay">
-  <div class="loading-box" style="max-width:380px;">
-    <div class="loading-title" style="margin-bottom:6px;">Confirm Your Exact Spot</div>
-    <div class="loading-sub" style="margin-bottom:14px;">GPS narrowed it down, but signal bounce near buildings can shift it a bit. <b>Drag the pin</b> onto your house if it's not exactly right.</div>
-    <div id="pinMap"></div>
-    <div class="map-note" id="mapAccuracyNote"></div>
-    <button class="btn-confirm" style="width:100%;margin-top:16px;" onclick="confirmMapPin()">
-      <span style="font-size:15px">&#128205;</span> This Is My Location
-    </button>
-  </div>
-</div>
-
-<header>
-  <div class="header-tag">&#10022; Wholesale Rice Bags &#10022;</div>
-  <div class="header-title">Nellore Rice Club</div>
-  <div class="header-sub">Best Quality &middot; Best Service</div>
-</header>
-
-<div class="container">
-
-  <div class="section-title">&#10022; Your Details</div>
-  <div class="customer-card">
-    <div class="input-group" style="margin-bottom:10px;">
-      <span class="input-icon">&#128100;</span>
-      <input type="text" id="customerName" placeholder="Full Name" autocomplete="name" autocorrect="off" autocapitalize="words" spellcheck="false" oninput="updateSummary(); resetConfirmIfChanged();"/>
-    </div>
-    <div class="input-group">
-      <span class="input-icon">&#128222;</span>
-      <input type="tel" id="customerPhone" placeholder="Phone Number (10 digits)" maxlength="10" autocomplete="tel" inputmode="numeric" pattern="[0-9]*" oninput="filterPhone(this); updateSummary(); resetConfirmIfChanged();"/>
-    </div>
-    <div class="confirm-row">
-      <button class="btn-confirm" id="confirmBtn" onclick="confirmDetails()">
-        <span style="font-size:15px">&#128205;</span> Confirm Details &amp; Detect Location
-      </button>
-      <button class="btn-refresh" id="refreshBtn" onclick="reconfirmLocation()" title="Redo location detection" aria-label="Redo location detection">&#128260;</button>
-    </div>
-    <div class="confirm-hint" id="confirmHint">We'll ask if you're home now, so placing the order later is instant.</div>
-  </div>
-
-  <div class="section-title">&#10022; Delivery &amp; Payment</div>
-  <div class="notice-strip">
-    <div class="notice-row"><span class="n-icon">&#128666;</span><span><b>Free Home Delivery</b> on every order, anywhere in Nellore City.</span></div>
-    <div class="notice-row"><span class="n-icon">&#9200;</span><span><b>Next Day Delivery</b> — order today, get your bags tomorrow.</span></div>
-    <div class="notice-row"><span class="n-icon">&#128176;</span><span><b>Cash on Delivery only</b> — pay the delivery person directly.</span></div>
-    <div class="notice-row"><span class="n-icon">&#128683;</span><span><b>No credits, no pending payments.</b> Full payment compulsory at the time of delivery.</span></div>
-    <div class="notice-footer">We are wholesalers — every rupee counts towards our profit, so our margins are kept very low. Thank you for understanding.</div>
-  </div>
-
-  <div class="section-title">&#10022; Select Rice Bags</div>
-
-  <div id="rice-items"></div>
-
-  <div class="section-title">&#10022; Order Summary</div>
-  <div class="summary-card">
-    <div class="summary-empty" id="summaryEmpty">No items selected yet</div>
-    <div id="summaryCustomer"></div>
-    <div id="summaryRows"></div>
-  </div>
-
-  <button class="btn-whatsapp" id="waBtn" onclick="sendToWhatsApp()">
-    <span style="font-size:18px">&#128172;</span> Place Order on WhatsApp
-  </button>
-  <div class="footer-note">&#10022; Orders confirmed via WhatsApp only &#10022;</div>
-</div>
-
+:root{--bg:#07100c;--ink:#f3ead2;--gold:#d9b265;--panel:#08110ddd;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:Georgia,serif;color:var(--ink)}
+canvas{display:block;touch-action:none}
+.box{position:fixed;background:var(--panel);border:1px solid var(--gold);border-radius:12px;padding:10px 14px;font-size:14px;line-height:1.6;backdrop-filter:blur(6px);box-shadow:0 6px 24px #000a,inset 0 0 18px #d9b26522}
+#st{top:calc(10px + env(safe-area-inset-top,0px));left:10px}
+#msg{top:calc(10px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);text-align:center;max-width:40vw;font-size:15px}
+#btn{right:10px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:7px}
+.r{display:flex;gap:6px}.r button{flex:1}
+button{font:inherit;background:linear-gradient(#e6c47c,#c39a4c);color:#1b1206;border:0;border-radius:8px;padding:8px 13px;cursor:pointer;box-shadow:0 2px 0 #7a5a22;transition:transform .12s}
+button:hover{transform:translateY(-1px);filter:brightness(1.08)}button:active{transform:translateY(1px)}
+.lab{position:fixed;transform:translate(-50%,0);font-size:13px;white-space:nowrap;padding:2px 10px;border-radius:9px;background:#0b1410dd;border:1px solid var(--gold);pointer-events:none}
+.lab.pure{border-color:#4fd18b;color:#9af0c2;box-shadow:0 0 10px #4fd18b66}.lab.imp{border-color:#7fb6ff;color:#b9d7ff}.lab.set{border-color:#ffa86a;color:#ffd2ad}
+.tag{position:fixed;transform:translate(-50%,-100%);padding:3px 12px;border-radius:14px;background:#0b1410dd;border:1px solid #6f6446;font-size:13px;pointer-events:none;transition:.3s}
+.tag.on{border-color:var(--gold);box-shadow:0 0 16px #d9b265cc;color:#ffe9b0}
+.mid{inset:0;margin:auto;width:300px;height:fit-content;text-align:center;font-size:16px}
+#modal{display:none}
+h1{margin:0 0 4px;font-size:38px;letter-spacing:2px;color:var(--gold)}
+p{margin:6px 0 14px;font-size:14px;opacity:.9}
+@media(max-width:600px){#msg{max-width:48vw;font-size:12px;padding:6px 8px}#st{font-size:11px;padding:6px 8px}button{padding:6px 9px;font-size:13px}.box{padding:8px}}
+</style></head><body>
+<div id="st" class="box"></div><div id="msg" class="box"></div>
+<div id="t1" class="tag"></div><div id="t2" class="tag"></div><div id="p1" class="lab" style="display:none">Wild joker</div><div id="p2" class="lab" style="display:none">Deck</div><div id="p3" class="lab" style="display:none">Open discard</div>
+<div id="btn" class="box"><button id="bh">Hint</button><button id="bo">Sort</button><button id="bg">Auto-group</button><button id="bf">Shuffle</button><div class="r"><button id="bl">◀</button><button id="br">▶</button></div><button id="bd">Discard</button><button id="bs">Declare</button></div>
+<div id="intro" class="box mid"><h1>Rummy 13</h1><p>Indian Rummy with 2 decks and 3 players. Make a pure sequence, a second sequence, group every card, then Declare.</p><button id="go">Start game</button></div>
+<div id="modal" class="box mid"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-/* ============================================================
-   DATA — edit bag details/prices here only. Everything else
-   is generated. Replace the empty img src with your own image
-   URL later — the slot is already left open on the left side
-   of each bag.
-   ============================================================ */
-// [ id, name, subtitle, price, imgUrl ]
-var RICE_BAGS = [
-  ['r1', 'Kurnool Rice Bag', '25 Kgs &middot; Old Rice &middot; Jilakara Masura', 1450, 'Kurnool.webp'],
-  ['r2', '24 Carat Gold', '24 Kgs &middot; Old Rice &middot; Jilakara Masura &middot; From Nandhyala', 1430, 'Carat.webp'],
-  ['r3', 'Steam Rice', '25 Kgs &middot; MVR Khageshwar Brand', 1430, 'mvr.webp'],
-  ['r4', 'Molagolukulu Sannalu', '24 Kgs &middot; Old Rice &middot; Pine Apple Bag &middot; From Chirala', 1530, 'sannalu.webp']
-];
-
-var toastTimer = null;
-
-/* ============================================================
-   RENDERING
-   ============================================================ */
-function renderItems() {
-  var wrap = document.getElementById('rice-items');
-  var html = '';
-  RICE_BAGS.forEach(function(row){
-    var id = row[0], name = row[1], sub = row[2], price = row[3], img = row[4];
-    html += '<div class="item" id="' + id + '">' +
-      '<div class="check-badge">&#10003;</div>' +
-      '<div class="img-slot"><img src="' + img + '" loading="lazy" decoding="async" width="66" height="92" alt="' + name + '" onerror="this.style.opacity=0.15;"></div>' +
-      '<div class="details">' +
-        '<div class="item-name">' + name + '</div>' +
-        '<div class="item-sub">' + sub + '</div>' +
-        '<div class="item-price"><span class="rupee">&#8377;</span><span class="amount">' + price + '</span><span class="per-bag"> / bag</span></div>' +
-      '</div>' +
-      '<div class="qty-wrapper"><span class="qty-label">Quantity</span>' +
-      '<select class="qty-select" onchange="onQtyChange(this,\'' + id + '\')">' +
-        '<option value="0">-- bags</option>' +
-        [1,2,3,4,5].map(function(n){ return '<option value="' + n + '">' + n + ' bag' + (n>1?'s':'') + '</option>'; }).join('') +
-      '</select></div>' +
-    '</div>';
-  });
-  wrap.innerHTML = html;
-}
-
-function findBag(id) { for (var i=0;i<RICE_BAGS.length;i++) if (RICE_BAGS[i][0]===id) return RICE_BAGS[i]; return null; }
-
-/* ============================================================
-   INTERACTIONS
-   ============================================================ */
-function filterPhone(input) { input.value = input.value.replace(/[^0-9]/g,''); }
-
-function onQtyChange(selectEl, id) {
-  var item = document.getElementById(id);
-  var val = parseInt(selectEl.value) || 0;
-  if (val > 0) { item.classList.add('active'); } else { item.classList.remove('active'); }
-  updateSummary();
-}
-
-function updateSummary() {
-  var name = document.getElementById('customerName').value.trim();
-  var custPhone = document.getElementById('customerPhone').value.trim();
-  var grandTotal = 0, hasAny = false, html = '';
-
-  RICE_BAGS.forEach(function(row){
-    var id = row[0], bagName = row[1], price = row[3];
-    var qty = parseInt(document.getElementById(id).querySelector('select').value) || 0;
-    if (qty > 0) {
-      var it = price * qty;
-      grandTotal += it; hasAny = true;
-      html += '<div class="summary-row"><span class="s-name">' + bagName + '</span><span class="s-qty">x' + qty + '</span><span class="s-price">&#8377; ' + it.toFixed(0) + '</span></div>';
-    }
-  });
-
-  var emptyEl = document.getElementById('summaryEmpty');
-  var customerEl = document.getElementById('summaryCustomer');
-  var rowsEl = document.getElementById('summaryRows');
-
-  if (!hasAny) { emptyEl.style.display = 'block'; customerEl.innerHTML = ''; rowsEl.innerHTML = ''; return; }
-  emptyEl.style.display = 'none';
-
-  if (name) {
-    var phoneHtml = custPhone ? '<span style="font-size:11px;color:#b0b0b0;margin-top:3px;display:block;font-family:Montserrat,sans-serif;font-weight:500;">&#128222; ' + custPhone + '</span>' : '';
-    customerEl.innerHTML = '<div class="summary-customer"><div class="cust-icon">&#128100;</div><div class="cust-info"><span class="cust-label">Order for</span><span class="cust-name">' + name + '</span>' + phoneHtml + '</div></div>';
-  } else { customerEl.innerHTML = ''; }
-
-  html += '<div class="summary-total"><span class="t-label">Grand Total</span><span class="t-amount">&#8377; ' + grandTotal.toFixed(0) + '</span></div>';
-  rowsEl.innerHTML = html;
-}
-
-function showToast(msg, type) {
-  var t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast' + (type === 'info' ? ' info' : '');
-  t.classList.add('show');
-  if (toastTimer) clearTimeout(toastTimer);
-  toastTimer = setTimeout(function() { t.classList.remove('show'); }, 3500);
-}
-
-function buildWhatsAppURL(locationText) {
-  var name = document.getElementById('customerName').value.trim();
-  var custPhone = document.getElementById('customerPhone').value.trim();
-  var lines = [], grandTotal = 0, count = 1;
-
-  RICE_BAGS.forEach(function(row){
-    var id = row[0], bagName = row[1], price = row[3];
-    var qty = parseInt(document.getElementById(id).querySelector('select').value) || 0;
-    if (qty > 0) {
-      var it = price * qty;
-      lines.push(count + '. ' + bagName + ' x' + qty + ' - Rs.' + it.toFixed(0));
-      grandTotal += it; count++;
-    }
-  });
-
-  var parts = [
-    'Nellore Rice Club Order',
-    '----------------------------',
-    'Name: ' + name,
-    'Phone: ' + custPhone,
-    'Location: ' + locationText,
-    '----------------------------'
-  ].concat(lines).concat([
-    '',
-    '*Total: Rs.' + grandTotal.toFixed(0) + '*',
-    '',
-    '(Cash on Delivery, Next Day Delivery, No pending payment)'
-  ]);
-
-  // Single encodeURIComponent pass at the end: safely escapes EVERY
-  // special character so nothing can ever break or truncate the
-  // wa.me query string, no matter what bag names contain.
-  var msg = encodeURIComponent(parts.join('\n'));
-  var phone = '918008970033';
-
-  // Plain wa.me link - this is WhatsApp's own official chat-link API.
-  return 'https://wa.me/' + phone + '?text=' + msg;
-}
-
-function validateDetails(focusOnError) {
-  var name = document.getElementById('customerName').value.trim();
-  var custPhone = document.getElementById('customerPhone').value.trim();
-  if (!name) {
-    showToast('Please enter your Full Name');
-    if (focusOnError) document.getElementById('customerName').focus();
-    return false;
-  }
-  if (!custPhone) {
-    showToast('Please enter your Phone Number');
-    if (focusOnError) document.getElementById('customerPhone').focus();
-    return false;
-  }
-  if (custPhone.length !== 10 || !/^[6-9][0-9]{9}$/.test(custPhone)) {
-    showToast('Enter a valid 10-digit Indian mobile number');
-    if (focusOnError) document.getElementById('customerPhone').focus();
-    return false;
-  }
-  return true;
-}
-
-/* ============================================================
-   STEP 1 — CONFIRM DETAILS: this is where ALL location tracking
-   happens now. Runs as soon as the customer taps the button
-   right under the phone field, well before the final WhatsApp
-   click, so by the time they place the order the fix is already
-   sitting ready and that final tap can navigate instantly and
-   synchronously (no Chrome "Continue to WhatsApp?" interstitial).
-   ============================================================ */
-var detailsConfirmed = false;
-var confirmedLocationText = null;
-
-function resetConfirmIfChanged() {
-  // If the customer edits name/phone after confirming, make them
-  // re-confirm so the WhatsApp message always matches the inputs.
-  if (!detailsConfirmed) return;
-  detailsConfirmed = false;
-  confirmedLocationText = null;
-  var btn = document.getElementById('confirmBtn');
-  btn.classList.remove('confirmed');
-  btn.innerHTML = '<span style="font-size:15px">&#128205;</span> Confirm Details &amp; Detect Location';
-  var hint = document.getElementById('confirmHint');
-  hint.classList.remove('ok');
-  hint.textContent = 'We\'ll ask if you\'re home now, so placing the order later is instant.';
-}
-
-function confirmDetails() {
-  if (detailsConfirmed) return; // already confirmed, nothing to do
-  if (!validateDetails(true)) return;
-
-  // Ask "Are you home?" first. Fire off the GPS listener at the same
-  // time the popup opens, so if they pick "Yes" a fix may already be
-  // improving by the time they tap.
-  startLocationWarmup();
-  document.getElementById('locationPopup').classList.add('show');
-}
-
-/* ============================================================
-   REFRESH / RECONFIRM — lets a customer redo the whole "are you
-   home" -> GPS flow from scratch if the pin ever looks wrong, or if
-   they moved, or if they just want a second attempt for a tighter
-   fix. Fully resets any previously stored reading history so old
-   (possibly biased) samples can never leak into the new attempt.
-   ============================================================ */
-function reconfirmLocation() {
-  if (!validateDetails(true)) return;
-
-  stopLocationWarmup();
-  detailsConfirmed = false;
-  confirmedLocationText = null;
-
-  var btn = document.getElementById('confirmBtn');
-  btn.disabled = false;
-  btn.classList.remove('confirmed');
-  btn.innerHTML = '<span style="font-size:15px">&#128205;</span> Confirm Details &amp; Detect Location';
-
-  var hint = document.getElementById('confirmHint');
-  hint.classList.remove('ok');
-  hint.textContent = 'Redetecting your location — please confirm again.';
-
-  showToast('Refreshing your location…', 'info');
-  confirmDetails();
-}
-
-function finishConfirm(locationText, statusHint) {
-  var btn = document.getElementById('confirmBtn');
-  btn.disabled = false;
-  detailsConfirmed = true;
-  confirmedLocationText = locationText;
-  btn.classList.add('confirmed');
-  btn.innerHTML = '<span style="font-size:15px">&#9989;</span> Details Confirmed';
-  var hint = document.getElementById('confirmHint');
-  hint.classList.add('ok');
-  hint.textContent = statusHint;
-}
-
-function handleLocationChoice(isHome) {
-  document.getElementById('locationPopup').classList.remove('show');
-  var btn = document.getElementById('confirmBtn');
-
-  if (!isHome) {
-    // Not at home right now: skip GPS entirely, don't make them wait.
-    // We still remember whatever address text applies so the order
-    // can go through — the rider will confirm on call/WhatsApp instead.
-    stopLocationWarmup();
-    finishConfirm('Customer not at home right now - please confirm delivery address on call', 'Saved as "Not at home". You\'re all set — select your bags below.');
-    return;
-  }
-
-  // At home: run (or keep running) the tiered GPS acquisition.
-  btn.disabled = true;
-
-  // Best case: a CONFIRMED ideal-tier fix already arrived while the
-  // popup was open — finish immediately. Note geoState.best is only
-  // ever set once a reading has been corroborated by other readings
-  // nearby (see considerReading()), and _highConfidence additionally
-  // requires real jitter or altitude data - ruling out a stable-but-
-  // wrong WiFi fix - so this is safe to trust.
-  if (geoState.best && geoState.best.coords.accuracy <= TIERS[0].acc && geoState.best._highConfidence) {
-    stopLocationWarmup();
-    var accLabel = '\u00B1' + Math.round(geoState.best.coords.accuracy) + 'm, confirmed';
-    openMapAdjust(
-      geoState.best.coords.latitude, geoState.best.coords.longitude,
-      'GPS accuracy <b>' + accLabel + '</b>. Drag the pin onto your house if it looks off.',
-      function(finalLat, finalLng, adjusted) {
-        var label = adjusted ? accLabel + ', adjusted by customer on map' : accLabel;
-        finishConfirm(formatLocationText(finalLat, finalLng, label), 'Location locked (' + label + '). You\'re all set — select your bags below.');
-        btn.disabled = false;
-      }
-    );
-    return;
-  }
-
-  if (geoState.unsupported) {
-    finishConfirm('Location not supported on this device', 'Saved. You\'re all set — select your bags below.');
-    btn.disabled = false;
-    return;
-  }
-
-  if (geoState.denied) {
-    finishConfirm('Location permission denied', 'Saved. You\'re all set — select your bags below.');
-    btn.disabled = false;
-    return;
-  }
-
-  showLoadingOverlay();
-
-  var finished = false;
-  var pollTimer = null;
-  var maxTimer = setTimeout(function() { checkAndFinish(true); }, MAX_WAIT);
-
-  function checkAndFinish(forceFinish) {
-    if (finished) return;
-    var elapsed = Date.now() - geoState.startTime;
-    var acceptAcc = currentTierAccuracy(elapsed);
-    var haveGoodEnough = geoState.best && geoState.best.coords.accuracy <= acceptAcc;
-
-    // For most of the window, don't accept a cluster unless it also
-    // shows genuine jitter or altitude data - i.e. it looks like a real
-    // live GPS fix, not a stable-but-wrong WiFi/cell position repeating
-    // itself. Only in the final stretch do we relax this, so a device
-    // that truly never exposes those signals isn't stuck forever.
-    if (haveGoodEnough && elapsed < REQUIRE_HIGH_CONFIDENCE_UNTIL) {
-      haveGoodEnough = haveGoodEnough && geoState.best._highConfidence;
-    }
-
-    if (!forceFinish && !haveGoodEnough && !geoState.denied) return;
-
-    finished = true;
-    clearTimeout(maxTimer);
-    clearInterval(pollTimer);
-    stopLocationWarmup();
-    hideLoadingOverlay();
-    btn.disabled = false;
-
-    // Prefer a CONFIRMED reading (geoState.best). If time ran out and we
-    // never got readings to agree, fall back to the single least-bad
-    // reading we saw, but say so honestly instead of overstating accuracy.
-    var chosen = geoState.best || geoState.fallback;
-    if (chosen) {
-      var confirmedTag;
-      if (!geoState.best) {
-        confirmedTag = 'unconfirmed - use with care';
-      } else if (!geoState.best._highConfidence) {
-        confirmedTag = 'confirmed, limited signal - use with care';
-      } else {
-        confirmedTag = 'confirmed';
-      }
-      var accLabel = '\u00B1' + Math.round(chosen.coords.accuracy) + 'm, ' + confirmedTag;
-      openMapAdjust(
-        chosen.coords.latitude, chosen.coords.longitude,
-        'GPS accuracy <b>' + accLabel + '</b>. Drag the pin onto your house if it looks off.',
-        function(finalLat, finalLng, adjusted) {
-          var label = adjusted ? accLabel + ', adjusted by customer on map' : accLabel;
-          finishConfirm(formatLocationText(finalLat, finalLng, label), 'Location locked (' + label + '). You\'re all set — select your bags below.');
-        }
-      );
-    } else if (geoState.denied) {
-      finishConfirm('Location permission denied', 'Saved. You\'re all set — select your bags below.');
-    } else {
-      finishConfirm('Could not get precise location', 'Saved. You\'re all set — select your bags below.');
-    }
-  }
-
-  pollTimer = setInterval(function() { checkAndFinish(false); }, 300);
-}
-
-/* ============================================================
-   STEP 2 — PLACE ORDER: fires the moment the button is tapped.
-   Since location was already resolved in Step 1, this is a
-   simple synchronous redirect — no async work happens inside
-   this click, so the browser never shows an intermediate
-   confirmation screen before opening WhatsApp.
-   ============================================================ */
-function sendToWhatsApp() {
-  if (!validateDetails(true)) return;
-
-  var hasAny = false;
-  RICE_BAGS.forEach(function(row){
-    if (parseInt(document.getElementById(row[0]).querySelector('select').value) > 0) hasAny = true;
-  });
-  if (!hasAny) { showToast('Please select at least one rice bag'); return; }
-
-  if (!detailsConfirmed) {
-    showToast('Please tap "Confirm Details & Detect Location" first');
-    document.getElementById('confirmBtn').scrollIntoView({ behavior: 'smooth', block: 'center' });
-    return;
-  }
-
-  // Synchronous navigation inside the click handler - direct to WhatsApp.
-  window.location.href = buildWhatsAppURL(confirmedLocationText);
-}
-
-/* ============================================================
-   PRECISE GEOLOCATION — TIERED, CONFIRMED-FIX ACQUISITION
-   ------------------------------------------------------------
-   Goal: get as close to ~6-8m accuracy as the device/sky can
-   deliver, while never leaving the customer stuck forever if
-   they're deep between close-set houses (multipath signal
-   bounce off walls/roofs commonly limits phone GPS to roughly
-   10-20m in that situation, even with more time). So instead of
-   one fixed cutoff, we relax the acceptable radius in stages the
-   longer we wait — always keeping the single BEST *confirmed*
-   reading seen.
-
-   WHY "CONFIRMED"?
-   The accuracy value reported by the phone's location API is
-   self-reported by the OS/location provider — it is NOT
-   something we compute, and it is often wrong. In particular,
-   the very first fix(es) after watchPosition starts are usually
-   derived from WiFi/cell-tower positioning (fast, but coarse),
-   yet can carry a deceptively tight accuracy figure. Trusting
-   that number directly is exactly what causes "the app said
-   +/-5m but the pin was 50m off."
-
-   The fix: never trust a single reading's accuracy on its own, and
-   never trust just a PAIR of readings either. A reading is only
-   promoted to geoState.best once at least CONFIRM_MIN_CLUSTER
-   independent readings all land within CONFIRM_RADIUS metres of each
-   other AND that agreement spans at least CONFIRM_MIN_TIMESPAN of
-   real time — i.e. the fix has genuinely stabilised, which is how
-   real GPS behaves and how noisy WiFi/cell-based fixes usually don't
-   (two biased network fixes can coincidentally agree; three or more,
-   spread over several seconds, essentially never do by chance). We
-   also reject implausibly coarse readings outright (ACCURACY_REJECT)
-   and ignore everything before MIN_GPS_WARMUP has elapsed, since the
-   GPS chipset hasn't had time to engage yet at that point and early
-   readings are almost always coarse network/WiFi positioning.
-
-   Once a cluster is confirmed, we use the WEIGHTED CENTROID (average)
-   of every reading in it, not just the single "best-looking" one —
-   averaging several independent samples cancels out random GPS jitter
-   in a way that cherry-picking one reading cannot.
-
-   Tiers (elapsed time -> accuracy we'll accept and stop early). These
-   are deliberately generous now that extra wait time is acceptable —
-   real satellite locks after WiFi/cell fallback often take 30-60s+,
-   especially between buildings:
-     0s  - 45s  : accept <= 6m   (ideal, open-sky quality)
-     45s - 65s  : accept <= 8m
-     65s - 85s  : accept <= 12m
-     85s - 100s : accept <= 18m
-     100s (MAX) : stop regardless, use best CONFIRMED reading found
-                 (or, failing that, the single least-bad reading,
-                 clearly labelled as unconfirmed)
-   ============================================================ */
-var geoState = { best: null, fallback: null, history: [], watchId: null, denied: false, unsupported: false, startTime: null };
-
-// Much longer runway now that extra wait time is acceptable - real GPS
-// chips often need 30-60s to move from a coarse WiFi/cell fix to a true
-// satellite fix, especially near buildings. Rushing this is exactly what
-// causes a distant, "somebody else's" location to get accepted.
-var TIERS = [
-  { until: 45000, acc: 6 },
-  { until: 65000, acc: 8 },
-  { until: 85000, acc: 12 },
-  { until: 100000, acc: 18 }
-];
-var MAX_WAIT = 100000;
-
-// Two readings must agree within this many metres before either is
-// trusted as a real fix rather than a noisy one-off. Tightened from 20m:
-// a 20m radius was wide enough that two biased WiFi-positioning fixes
-// (which tend to cluster near a fixed router location) could "confirm"
-// each other despite both being wrong.
-var CONFIRM_RADIUS = 12;
-
-// Ignore implausibly-tight readings that arrive before the GPS chipset
-// has plausibly had time to engage (these are almost always coarse
-// network/WiFi fixes mislabeled with a tight accuracy figure). Raised
-// from 3s to 8s - phones commonly report a "confident" WiFi/cell fix
-// within the first few seconds, well before GPS satellites are locked.
-var MIN_GPS_WARMUP = 8000;
-
-// Any single reading coarser than this is almost certainly a network
-// fix, not GPS - it's kept only as an absolute last-resort fallback and
-// is never allowed into the confirmation clustering below.
-var ACCURACY_REJECT = 35;
-
-// Require at least this many mutually-agreeing readings (not just 2)
-// before trusting a cluster. Two readings that happen to agree can still
-// both be biased toward the same WiFi access point; three or more
-// independent samples agreeing is much stronger evidence of a real fix.
-var CONFIRM_MIN_CLUSTER = 3;
-
-// The agreeing readings must also span at least this much time, so we
-// don't "confirm" off two readings fired moments apart from the same
-// underlying (possibly biased) source.
-var CONFIRM_MIN_TIMESPAN = 5000;
-
-// Keep enough history to find clusters across the longer window above.
-var HISTORY_MAX = 14;
-
-// --- Extra defense against a STABLE but WRONG fix (e.g. WiFi/cell
-// positioning repeatedly returning the same nearby router's location).
-// The clustering above only rules out RANDOM noise - a biased fix that
-// returns nearly the exact same coordinates every time would pass it
-// easily since it never disagrees with itself. These two signals catch
-// that case instead:
-//
-// 1) JITTER: real GPS readings, even when stationary, naturally wobble
-//    a metre or two between samples (receiver noise). A cluster whose
-//    points are all bit-for-bit identical (near-zero spread) is a sign
-//    of a cached/repeated network lookup, not a live signal.
-// 2) ALTITUDE: most platforms only populate coords.altitude when the
-//    fix has real GPS chipset involvement - pure WiFi/cell positioning
-//    typically reports it as null.
-//
-// A cluster is "high confidence" if it shows EITHER real jitter OR
-// altitude data. We require high confidence for most of the waiting
-// window, only relaxing it near the very end so a device that
-// genuinely can't produce either signal (some browsers never expose
-// altitude) doesn't get stuck forever.
-var MIN_JITTER = 0.5;
-var REQUIRE_HIGH_CONFIDENCE_UNTIL = 70000;
-
-var TIPS = [
-  '&#128246; Standing near a window or open door helps lock the signal faster.',
-  '&#127968; If you\'re indoors, a spot closer to a wall facing the sky helps GPS see more satellites.',
-  '&#128640; We\'re holding out for the tightest fix possible — worth the extra few seconds!',
-  '&#128737;&#65039; Our delivery rider uses this exact pin, so precision now means no wrong turns later.',
-  '&#127794; Nearly there — refining between the last couple of metres.',
-  '&#128269; Cross-checking multiple satellite readings to rule out any stray signal bounce.'
-];
-
-function haversineMeters(lat1, lon1, lat2, lon2) {
-  var R = 6371000;
-  var toRad = function(d) { return d * Math.PI / 180; };
-  var dLat = toRad(lat2 - lat1);
-  var dLon = toRad(lon2 - lon1);
-  var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-          Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-          Math.sin(dLon / 2) * Math.sin(dLon / 2);
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
-}
-
-function clusterMaxPairwiseDistance(cluster) {
-  var maxD = 0;
-  for (var a = 0; a < cluster.length; a++) {
-    for (var b = a + 1; b < cluster.length; b++) {
-      var d = haversineMeters(cluster[a].coords.latitude, cluster[a].coords.longitude, cluster[b].coords.latitude, cluster[b].coords.longitude);
-      if (d > maxD) maxD = d;
-    }
-  }
-  return maxD;
-}
-
-function clusterHasAltitude(cluster) {
-  for (var i = 0; i < cluster.length; i++) {
-    var c = cluster[i].coords;
-    if (typeof c.altitude === 'number' && c.altitude !== null) return true;
-  }
-  return false;
-}
-
-function considerReading(pos) {
-  var elapsed = Date.now() - geoState.startTime;
-
-  // Reject implausibly coarse readings outright - these are almost
-  // always stale/coarse network fixes and only pollute clustering with
-  // noise. They never get a chance to "confirm" anything.
-  if (pos.coords.accuracy > ACCURACY_REJECT) return;
-
-  pos._t = Date.now();
-  geoState.history.push(pos);
-  if (geoState.history.length > HISTORY_MAX) geoState.history.shift();
-
-  // Keep a fallback (single least-bad reading) in case we never get a
-  // confirmation before time runs out - but only once the chipset has
-  // had a moment to warm up, so we don't fall back to an early junk fix.
-  if (elapsed >= MIN_GPS_WARMUP) {
-    if (!geoState.fallback || pos.coords.accuracy < geoState.fallback.coords.accuracy) {
-      geoState.fallback = pos;
-    }
-  }
-
-  // Don't even attempt confirmation until the chipset has plausibly had
-  // time to move past coarse network positioning.
-  if (elapsed < MIN_GPS_WARMUP) return;
-
-  // Build every candidate cluster of mutually-agreeing readings that
-  // clears the minimum size and timespan bars, then pick the one with
-  // the best overall SCORE - not just the biggest one. Score rewards
-  // more agreeing samples, tighter accuracy, and (critically) genuine
-  // jitter or altitude data, so a large-but-suspiciously-static cluster
-  // doesn't automatically beat a smaller, more trustworthy one.
-  var winner = null, winnerScore = -Infinity;
-  for (var i = 0; i < geoState.history.length; i++) {
-    var center = geoState.history[i];
-    var cluster = [center];
-    for (var j = 0; j < geoState.history.length; j++) {
-      if (i === j) continue;
-      var other = geoState.history[j];
-      var d = haversineMeters(center.coords.latitude, center.coords.longitude, other.coords.latitude, other.coords.longitude);
-      if (d <= CONFIRM_RADIUS) cluster.push(other);
-    }
-    if (cluster.length < CONFIRM_MIN_CLUSTER) continue;
-
-    var times = cluster.map(function(p) { return p._t; });
-    var timespan = Math.max.apply(null, times) - Math.min.apply(null, times);
-    if (timespan < CONFIRM_MIN_TIMESPAN) continue;
-
-    var jitter = clusterMaxPairwiseDistance(cluster);
-    var hasAlt = clusterHasAltitude(cluster);
-    var highConfidence = hasAlt || jitter >= MIN_JITTER;
-    var bestAcc = Math.min.apply(null, cluster.map(function(p) { return p.coords.accuracy; }));
-
-    var score = cluster.length * 100 + (highConfidence ? 50 : 0) + Math.max(0, 40 - bestAcc);
-    if (score > winnerScore) {
-      winnerScore = score;
-      winner = { cluster: cluster, jitter: jitter, hasAlt: hasAlt, highConfidence: highConfidence, bestAcc: bestAcc, score: score };
-    }
-  }
-
-  if (winner) {
-    // Weighted centroid of the whole cluster (inverse-square weighting
-    // by each reading's self-reported accuracy) - averaging several
-    // independent samples cancels out random GPS noise far better than
-    // just picking the single "best-looking" reading ever could.
-    var sumLat = 0, sumLng = 0, sumW = 0;
-    winner.cluster.forEach(function(p) {
-      var w = 1 / (p.coords.accuracy * p.coords.accuracy);
-      sumLat += p.coords.latitude * w;
-      sumLng += p.coords.longitude * w;
-      sumW += w;
-    });
-    var synthetic = {
-      coords: { latitude: sumLat / sumW, longitude: sumLng / sumW, accuracy: winner.bestAcc },
-      _t: Date.now(),
-      _clusterSize: winner.cluster.length,
-      _highConfidence: winner.highConfidence,
-      _jitter: winner.jitter,
-      _hasAltitude: winner.hasAlt,
-      _score: winner.score
-    };
-
-    if (!geoState.best || synthetic._score > geoState.best._score) {
-      geoState.best = synthetic;
-    }
-  }
-}
-
-function startLocationWarmup() {
-  geoState.best = null;
-  geoState.fallback = null;
-  geoState.history = [];
-  geoState.denied = false;
-  geoState.unsupported = false;
-  geoState.startTime = Date.now();
-
-  if (!navigator.geolocation) { geoState.unsupported = true; return; }
-
-  geoState.watchId = navigator.geolocation.watchPosition(
-    function(pos) {
-      considerReading(pos);
-      updateLiveUI();
-    },
-    function(err) {
-      if (err.code === err.PERMISSION_DENIED) geoState.denied = true;
-    },
-    { enableHighAccuracy: true, timeout: MAX_WAIT, maximumAge: 0 }
-  );
-}
-
-function stopLocationWarmup() {
-  if (geoState.watchId !== null) {
-    navigator.geolocation.clearWatch(geoState.watchId);
-    geoState.watchId = null;
-  }
-}
-
-function formatLocationText(lat, lng, accLabel) {
-  var latF = lat.toFixed(7);
-  var lngF = lng.toFixed(7);
-  return latF + ', ' + lngF + ' (accuracy ' + accLabel + ') https://maps.google.com/?q=' + latF + ',' + lngF;
-}
-
-/* ============================================================
-   MAP PIN ADJUSTMENT — the real fix for stable-but-wrong fixes.
-   GPS multipath (signal bouncing off nearby buildings/roofs) can
-   produce a reading that is internally consistent - stable, with
-   normal jitter, with altitude data, everything our confidence
-   checks look for - and STILL be tens of metres off, because the
-   bias comes from the physical signal path, not from noise. No
-   amount of clustering or averaging from a single spot can correct
-   for that. The one thing that reliably can: the customer, who
-   knows exactly where their own house is. So before locking in any
-   GPS-derived location, we show it on a map and let them drag the
-   pin onto the right spot if it's off.
-   ============================================================ */
-var pinMapInstance = null, pinMarker = null, mapPinCallback = null, mapOriginalCoords = null;
-
-function ensureLeafletIconFix() {
-  if (window.__leafletIconFixed || typeof L === 'undefined') return;
-  delete L.Icon.Default.prototype._getIconUrl;
-  L.Icon.Default.mergeOptions({
-    iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
-    iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
-    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png'
-  });
-  window.__leafletIconFixed = true;
-}
-
-// Shows the map overlay with a draggable pin at (lat, lng). Calls
-// onConfirm(finalLat, finalLng, wasAdjusted) once the customer taps
-// "This Is My Location" - wasAdjusted is true only if they actually
-// moved the pin more than ~1m from where GPS placed it.
-function openMapAdjust(lat, lng, accuracyNote, onConfirm) {
-  mapPinCallback = onConfirm;
-  mapOriginalCoords = { lat: lat, lng: lng };
-  document.getElementById('mapAccuracyNote').innerHTML = accuracyNote;
-  document.getElementById('mapAdjustOverlay').classList.add('show');
-
-  // Small delay so the overlay is actually laid out/visible before
-  // Leaflet measures its container - otherwise it can size to 0x0.
-  setTimeout(function() {
-    ensureLeafletIconFix();
-    if (typeof L === 'undefined') {
-      // Leaflet couldn't load (e.g. no connection to the CDN right
-      // now) - don't block the order, just use the GPS reading as-is.
-      document.getElementById('mapAdjustOverlay').classList.remove('show');
-      if (mapPinCallback) mapPinCallback(lat, lng, false);
-      return;
-    }
-    if (!pinMapInstance) {
-      pinMapInstance = L.map('pinMap', { attributionControl: false }).setView([lat, lng], 19);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 20 }).addTo(pinMapInstance);
-      pinMarker = L.marker([lat, lng], { draggable: true }).addTo(pinMapInstance);
-    } else {
-      pinMapInstance.setView([lat, lng], 19);
-      pinMarker.setLatLng([lat, lng]);
-    }
-    pinMapInstance.invalidateSize();
-  }, 250);
-}
-
-function confirmMapPin() {
-  document.getElementById('mapAdjustOverlay').classList.remove('show');
-  var finalLat = mapOriginalCoords.lat, finalLng = mapOriginalCoords.lng, adjusted = false;
-  if (pinMarker) {
-    var ll = pinMarker.getLatLng();
-    finalLat = ll.lat;
-    finalLng = ll.lng;
-    adjusted = haversineMeters(mapOriginalCoords.lat, mapOriginalCoords.lng, finalLat, finalLng) > 1;
-  }
-  if (mapPinCallback) mapPinCallback(finalLat, finalLng, adjusted);
-}
-
-/* ---------- Live "locking in" UI ---------- */
-var uiTimer = null, tipTimer = null, tipIndex = 0;
-
-function accuracyColor(acc) {
-  if (acc <= 10) return 'var(--green-good)';
-  if (acc <= 25) return 'var(--gold-light)';
-  return 'var(--red-warn)';
-}
-
-function statusForAccuracy(acc, elapsed) {
-  if (acc === null) return elapsed < 4000 ? 'Searching for satellites' : 'Locking onto your signal';
-  if (acc <= 8) return 'Pinpoint lock achieved!';
-  if (acc <= 12) return 'Excellent precision — refining';
-  if (acc <= 20) return 'Good precision — tightening further';
-  return 'Refining your location';
-}
-
-function updateLiveUI() {
-  var titleEl = document.getElementById('loadingTitle');
-  var accValueEl = document.getElementById('accuracyValue');
-  var accFillEl = document.getElementById('accuracyFill');
-  var confirmStateEl = document.getElementById('confirmState');
-  if (!titleEl) return;
-
-  var elapsed = geoState.startTime ? (Date.now() - geoState.startTime) : 0;
-  // Only ever display a CONFIRMED accuracy figure, never a raw
-  // single-reading number - that's the number that used to lie.
-  var acc = geoState.best ? geoState.best.coords.accuracy : null;
-
-  titleEl.textContent = statusForAccuracy(acc, elapsed) + (acc === null ? '…' : '');
-
-  if (acc !== null) {
-    accValueEl.textContent = '\u00B1' + Math.round(acc) + 'm';
-    accValueEl.style.color = accuracyColor(acc);
-    var pct = Math.max(4, Math.min(100, 100 - ((acc - 5) / 95) * 96));
-    accFillEl.style.width = pct + '%';
-    var csize = geoState.best._clusterSize || 2;
-    if (confirmStateEl) {
-      confirmStateEl.innerHTML = geoState.best._highConfidence
-        ? '<b>Confirmed</b> by ' + csize + ' matching readings'
-        : 'Have ' + csize + ' matching readings — waiting for a stronger signal to fully confirm';
-    }
-  } else {
-    accValueEl.textContent = 'searching…';
-    accValueEl.style.color = '#777';
-    accFillEl.style.width = '4%';
-    if (confirmStateEl) {
-      confirmStateEl.innerHTML = geoState.fallback
-        ? 'Have a rough reading — waiting for more matching readings to confirm it'
-        : 'Waiting for a cluster of matching readings to confirm the fix…';
-    }
-  }
-
-  var timeFillEl = document.getElementById('timeFill');
-  if (timeFillEl) {
-    var timePct = Math.min(100, (elapsed / MAX_WAIT) * 100);
-    timeFillEl.style.width = timePct + '%';
-  }
-}
-
-function startTipRotation() {
-  tipIndex = 0;
-  var tipEl = document.getElementById('tipText');
-  tipEl.innerHTML = TIPS[0];
-  tipTimer = setInterval(function() {
-    tipEl.classList.add('fade');
-    setTimeout(function() {
-      tipIndex = (tipIndex + 1) % TIPS.length;
-      tipEl.innerHTML = TIPS[tipIndex];
-      tipEl.classList.remove('fade');
-    }, 350);
-  }, 4200);
-}
-function stopTipRotation() {
-  if (tipTimer) { clearInterval(tipTimer); tipTimer = null; }
-}
-
-function showLoadingOverlay() {
-  updateLiveUI();
-  document.getElementById('locationLoading').classList.add('show');
-  startTipRotation();
-  uiTimer = setInterval(updateLiveUI, 400);
-}
-function hideLoadingOverlay() {
-  document.getElementById('locationLoading').classList.remove('show');
-  stopTipRotation();
-  if (uiTimer) { clearInterval(uiTimer); uiTimer = null; }
-}
-
-function currentTierAccuracy(elapsed) {
-  for (var i = 0; i < TIERS.length; i++) {
-    if (elapsed <= TIERS[i].until) return TIERS[i].acc;
-  }
-  return TIERS[TIERS.length - 1].acc;
-}
-
-/* ============================================================
-   INIT
-   ============================================================ */
-renderItems();
-updateSummary();
-</script>
-</body>
-</html>
+/* ===== Rules engine: 13-card Indian Rummy (2 decks + 2 printed jokers) ===== */
+const L=['','A','2','3','4','5','6','7','8','9','10','J','Q','K'],S=['♠','♥','♦','♣'];
+let W=1;
+const pts=c=>!c.r?0:(c.r==1||c.r>10)?10:c.r;
+const isJ=c=>!c.r||c.r==W;
+function kinds(cs){
+ const js=cs.filter(isJ).length,R=cs.filter(c=>!isJ(c)),o=[];if(!R.length)return o;
+ if(cs.length<5&&R.every(c=>c.r==R[0].r)&&new Set(R.map(c=>c.s)).size==R.length)o.push('set');
+ if(cs.length<14&&R.every(c=>c.s==R[0].s)){const rs=R.map(c=>c.r);
+  if(new Set(rs).size==rs.length)for(const hi of[0,1]){const q=rs.map(r=>hi&&r==1?14:r);
+   if(Math.max(...q)-Math.min(...q)+1-R.length<=js){o.push(js?'imp':'pure');break}}}
+ return o}
+function solve(h){
+ const n=h.length,N=1<<n,by=[...Array(n)].map(()=>[]);
+ for(let m=7;m<N;m++){const cs=[];for(let i=0;i<n;i++)if(m>>i&1)cs.push(h[i]);
+  if(cs.length>2)for(const k of kinds(cs))by[31-Math.clz32(m&-m)].push([m,k])}
+ const memo=new Map(),f=(mk,p,s)=>{
+  if(!mk)return{c:(p?0:200)+(s>1?0:100)};
+  const key=mk*8+p*4+s;if(memo.has(key))return memo.get(key);
+  const lb=31-Math.clz32(mk&-mk);let b={c:1e9};
+  for(const[m,k]of by[lb])if((m&mk)==m){const r=f(mk^m,(p||k=='pure')?1:0,Math.min(2,s+(k=='set'?0:1)));if(r.c<b.c)b={c:r.c,m,k,nx:r}}
+  const r=f(mk^(1<<lb),p,s),d=pts(h[lb])+r.c;if(d<b.c)b={c:d,d:lb,nx:r};
+  memo.set(key,b);return b};
+ let r=f(N-1,0,0);const o={c:r.c,groups:[],loose:[]};
+ while(r.nx){if(r.m)o.groups.push({k:r.k,cards:h.filter((_,i)=>r.m>>i&1)});else o.loose.push(h[r.d]);r=r.nx}
+ const ord={pure:0,imp:1,set:2};let q=0;
+ o.groups.sort((a,b)=>ord[a.k]-ord[b.k]).forEach(g=>{
+  g.cards.sort((a,b)=>isJ(a)-isJ(b)||a.r-b.r);
+  if(g.k=='set')g.t='Set';else{q++;g.t=q==1?(g.k=='pure'?'1st Life · pure':'Series · impure'):q==2?'2nd Life · '+(g.k=='pure'?'pure':'impure'):'Series'}});
+ o.loose.sort((a,b)=>a.s-b.s||a.r-b.r);
+ o.pure=o.groups.some(g=>g.k=='pure');o.seq=o.groups.filter(g=>g.k!='set').length;
+ o.dead=o.loose.reduce((a,c)=>a+pts(c),0);o.ok=o.pure&&o.seq>1&&!o.loose.length;return o}
+function best(h){let b=null;h.forEach((c,i)=>{const r=solve(h.filter((_,j)=>j!=i)),k=r.c-pts(c)/100;if(!b||k<b.k)b={i,r,k}});return b}
+
+/* ===== Sound ===== */
+let ac;const snd=(f=400,v=.05)=>{try{ac=ac||new AudioContext();const o=ac.createOscillator(),g=ac.createGain(),t=ac.currentTime;o.type='triangle';o.frequency.value=f;g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.001,t+.08);o.connect(g);g.connect(ac.destination);o.start();o.stop(t+.09)}catch(e){}};
+
+/* ===== 3D scene ===== */
+const cvEl=document.createElement('canvas'),ren=new THREE.WebGLRenderer({antialias:true,canvas:cvEl});
+ren.setPixelRatio(Math.min(devicePixelRatio,2));ren.shadowMap.enabled=true;ren.shadowMap.type=THREE.PCFSoftShadowMap;
+ren.outputEncoding=THREE.sRGBEncoding;document.body.prepend(cvEl);
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x07100c);
+const camera=new THREE.PerspectiveCamera(45,1,.1,100);
+scene.add(new THREE.HemisphereLight(0xfff4e0,0x1a3326,.9));
+const sun=new THREE.DirectionalLight(0xfff1d6,.9);sun.position.set(4,14,8);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);
+Object.assign(sun.shadow.camera,{left:-13,right:13,top:13,bottom:-13});scene.add(sun);
+const lamp=new THREE.PointLight(0xffd9a0,.7,45);lamp.position.set(0,10,2);scene.add(lamp);
+const mkc=(w,h)=>{const k=document.createElement('canvas');k.width=w;k.height=h;return k};
+// felt with vignette, gold inlay and suit emblems
+const fk=mkc(1024,1024),fx=fk.getContext('2d'),fg=fx.createRadialGradient(512,512,40,512,512,512);
+fg.addColorStop(0,'#2f8558');fg.addColorStop(.7,'#1d5a3c');fg.addColorStop(1,'#0f3624');fx.fillStyle=fg;fx.fillRect(0,0,1024,1024);
+for(let i=0;i<14000;i++){fx.fillStyle=`rgba(${Math.random()<.5?'0,0,0':'255,255,255'},.04)`;fx.fillRect(Math.random()*1024,Math.random()*1024,2,2)}
+fx.strokeStyle='#d9b265aa';[[455,3],[440,1.5]].forEach(([r,w])=>{fx.lineWidth=w;fx.beginPath();fx.arc(512,512,r,0,7);fx.stroke()});
+fx.fillStyle='#d9b26545';fx.font='72px serif';fx.textAlign='center';S.forEach((s,i)=>{const a=i*Math.PI/2+Math.PI/4;fx.fillText(s,512+Math.cos(a)*385,512+Math.sin(a)*385+24)});
+const ft=new THREE.CanvasTexture(fk);ft.encoding=THREE.sRGBEncoding;ft.anisotropy=8;
+const tab=new THREE.Mesh(new THREE.CylinderGeometry(15,15,.4,64),new THREE.MeshStandardMaterial({map:ft,roughness:.95}));tab.position.y=-.2;tab.receiveShadow=true;scene.add(tab);
+const rim=new THREE.Mesh(new THREE.TorusGeometry(15.2,.8,16,96),new THREE.MeshStandardMaterial({color:0x5a3a22,roughness:.4,metalness:.1}));rim.rotation.x=Math.PI/2;scene.add(rim);
+const gr=new THREE.Mesh(new THREE.TorusGeometry(14.5,.07,8,96),new THREE.MeshStandardMaterial({color:0xd9b265,metalness:.9,roughness:.25}));gr.rotation.x=Math.PI/2;gr.position.y=.02;scene.add(gr);
+// floating dust motes
+const dg=new THREE.BufferGeometry(),dp=new Float32Array(360);for(let i=0;i<360;i+=3){dp[i]=(Math.random()-.5)*30;dp[i+1]=Math.random()*9+1;dp[i+2]=(Math.random()-.5)*24}
+dg.setAttribute('position',new THREE.BufferAttribute(dp,3));scene.add(new THREE.Points(dg,new THREE.PointsMaterial({size:.08,color:0xffe7a8,transparent:true,opacity:.55,depthWrite:false})));
+// glow under draw piles
+const gk=mkc(128,128),gx=gk.getContext('2d'),gd=gx.createRadialGradient(64,64,8,64,64,64);gd.addColorStop(0,'#ffd88a');gd.addColorStop(1,'#ffd88a00');gx.fillStyle=gd;gx.fillRect(0,0,128,128);
+const gt=new THREE.CanvasTexture(gk),glow=[-1.8,1.8].map(x=>{const m=new THREE.Mesh(new THREE.PlaneGeometry(4.2,4.2),new THREE.MeshBasicMaterial({map:gt,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false}));m.rotation.x=-Math.PI/2;m.position.set(x,.015,.6);scene.add(m);return m});
+
+// card faces (high-res)
+const cache={};
+const PA=ys=>[...ys.map(y=>[.3,y]),...ys.map(y=>[.7,y])],P4=PA([.2,.8]),P6=PA([.2,.5,.8]),
+PIP={2:[[.5,.2],[.5,.8]],3:[[.5,.2],[.5,.5],[.5,.8]],4:P4,5:[...P4,[.5,.5]],6:P6,7:[...P6,[.5,.35]],8:[...P6,[.5,.35],[.5,.65]],9:[...PA([.2,.4,.6,.8]),[.5,.5]],10:[...PA([.2,.4,.6,.8]),[.5,.3],[.5,.7]]};
+function face(c){const key=c.r+'-'+c.s;if(cache[key])return cache[key];
+ const k=mkc(360,504),x=k.getContext('2d');x.scale(2,2);x.textAlign='center';
+ const pg=x.createLinearGradient(0,0,180,252);pg.addColorStop(0,'#fffefa');pg.addColorStop(1,'#f0e6cf');
+ x.beginPath();x.roundRect(2,2,176,248,14);x.fillStyle=pg;x.fill();x.strokeStyle='#8f845f';x.lineWidth=2;x.stroke();
+ x.strokeStyle='#d8cdb0';x.lineWidth=1;x.strokeRect(8,8,164,236);
+ if(!c.r){const g=x.createLinearGradient(0,0,180,252);g.addColorStop(0,'#7a35a8');g.addColorStop(1,'#3d1559');x.fillStyle=g;x.fillRect(20,28,140,196);
+  x.fillStyle='#ffe9a8';x.font='bold 22px Georgia';x.fillText('JOKER',90,58);x.fillText('JOKER',90,214);x.font='110px serif';x.fillStyle='#e6c47c';x.fillText('★',90,150);x.font='14px Georgia';x.fillText('WILD',90,176)}
+ else{const col=c.s%2?'#c4202b':'#16161d',sy=S[c.s],lr=L[c.r];x.fillStyle=col;
+  const idx=()=>{x.font='bold 32px Georgia';x.fillText(lr,24,38);x.font='28px serif';x.fillText(sy,24,70)};
+  idx();x.save();x.translate(180,252);x.rotate(Math.PI);idx();x.restore();
+  if(c.r==1){x.font='120px serif';x.fillText(sy,90,162);x.strokeStyle='#d9b265';x.lineWidth=2;x.beginPath();x.arc(90,126,50,0,7);x.stroke()}
+  else if(c.r>10){const g=x.createLinearGradient(0,52,0,200);g.addColorStop(0,'#fbefc6');g.addColorStop(1,'#e6c97e');x.fillStyle=g;x.fillRect(44,52,92,148);
+   x.strokeStyle='#b8893a';x.lineWidth=3;x.strokeRect(44,52,92,148);x.lineWidth=1;x.strokeRect(50,58,80,136);
+   x.fillStyle=col;x.font='62px serif';x.fillText(['♞','♛','♚'][c.r-11],90,118);x.font='bold 38px Georgia';x.fillText(lr,90,166);x.font='24px serif';x.fillText(sy,90,86);x.fillText(sy,90,190)}
+  else PIP[c.r].forEach(([px,py])=>{x.save();x.translate(px*180,py*252);if(py>.5)x.rotate(Math.PI);x.font='42px serif';x.fillText(sy,0,14);x.restore()})}
+ const t=new THREE.CanvasTexture(k);t.anisotropy=8;t.encoding=THREE.sRGBEncoding;return cache[key]=t}
+// card back: lattice + gold medallion
+const bk=mkc(360,504),bx=bk.getContext('2d');bx.scale(2,2);bx.textAlign='center';
+bx.beginPath();bx.roundRect(2,2,176,248,14);bx.fillStyle='#fffaf0';bx.fill();
+const bg=bx.createLinearGradient(0,0,180,252);bg.addColorStop(0,'#a3202f');bg.addColorStop(1,'#5e0f1b');
+bx.beginPath();bx.roundRect(10,10,160,232,8);bx.fillStyle=bg;bx.fill();bx.save();bx.clip();bx.strokeStyle='#e8c77c66';bx.lineWidth=1;
+for(let i=-14;i<26;i++){bx.beginPath();bx.moveTo(i*12,0);bx.lineTo(i*12+260,260);bx.moveTo(i*12+260,0);bx.lineTo(i*12,260);bx.stroke()}bx.restore();
+bx.strokeStyle='#d9b265';bx.lineWidth=2;bx.strokeRect(16,16,148,220);bx.beginPath();bx.arc(90,126,36,0,7);bx.fillStyle='#5e0f1b';bx.fill();bx.stroke();
+bx.beginPath();bx.arc(90,126,30,0,7);bx.stroke();bx.fillStyle='#d9b265';bx.font='42px serif';bx.fillText('♠',90,141);
+const backT=new THREE.CanvasTexture(bk);backT.encoding=THREE.sRGBEncoding;backT.anisotropy=8;
+const G=new THREE.BoxGeometry(1.25,1.75,.03),sideM=new THREE.MeshStandardMaterial({color:0xe9e2d0}),backM=new THREE.MeshStandardMaterial({map:backT,roughness:.45,alphaTest:.5});
+function mk(c){const t=face(c),fm=new THREE.MeshStandardMaterial({map:t,emissiveMap:t,emissive:0x888888,roughness:.4,alphaTest:.5});
+ c.m=new THREE.Mesh(G,[sideM,sideM,sideM,sideM,fm,backM]);c.m.castShadow=c.m.receiveShadow=true;c.m.userData.c=c;
+ c.m.position.set(0,.03,.6);c.m.rotation.x=Math.PI/2;c.tp=[0,.03,.6];c.tr=[Math.PI/2,0];c.sc=1;scene.add(c.m)}
+const tgt=(c,x,y,z,rx,rz,sc)=>{c.tp=[x,y,z];c.tr=[rx,rz];c.sc=sc||1};
+
+/* ===== Game state ===== */
+let stock=[],disc=[],cut,H=[[],[],[]],turn,phase='deal',sel,hov,labs=[],all=[];
+const $=id=>document.getElementById(id),msg=t=>$('msg').textContent=t,sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const rnd=n=>crypto.getRandomValues(new Uint32Array(1))[0]%n;
+function shuf(a){for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a}
+let drag=null,pd=null,maxW=12,cx=0;
+
+async function newGame(){
+ all.forEach(c=>scene.remove(c.m));all=[];let id=0;
+ for(let d=0;d<2;d++){for(let s=0;s<4;s++)for(let r=1;r<14;r++)all.push({r,s,id:id++});all.push({r:0,s:4,id:id++})}
+ all.forEach(mk);stock=shuf(all.slice());H=[[],[],[]];cut=null;disc=[];W=-1;turn=0;phase='deal';sel=hov=null;
+ $('modal').style.display='none';$('intro').style.display='none';labs.forEach(l=>l.el.remove());labs=[];hand();
+ stock.forEach((c,i)=>tgt(c,0,.03+i*.004,.6,Math.PI/2,0));
+ msg('Shuffling the deck…');await sleep(700);
+ const A=stock.slice(0,53),B=stock.slice(53);
+ for(let r=0;r<3;r++){                                   // riffle shuffle x3
+  A.forEach((c,i)=>tgt(c,-3.2,.03+i*.004,.6,Math.PI/2,.2));B.forEach((c,i)=>tgt(c,3.2,.03+i*.004,.6,Math.PI/2,-.2));snd(260,.06);await sleep(600);
+  for(let i=0;i<53;i++)[A[i],B[i]].forEach((c,j)=>setTimeout(()=>{tgt(c,0,.03+(2*i+j)*.004,.6,Math.PI/2,(c.id%7-3)*.02);if(!(i%4))snd(480+j*90,.03)},i*22));
+  await sleep(53*22+450)}
+ msg('Spreading the deck…');                              // face-up fan across the table in two rows
+ stock.forEach((c,i)=>{const j=i%53,row=i<53;setTimeout(()=>{tgt(c,(j/52-.5)*17,.05+j*.004,row?-1.5:2.7,-Math.PI/2,0);if(!(i%5))snd(600+j*5,.025)},i*14)});
+ await sleep(106*14+1800);
+ msg('Gathering the deck…');
+ stock.forEach((c,i)=>setTimeout(()=>tgt(c,-1.8,.03+i*.004,.6,Math.PI/2,0),i*9));await sleep(106*9+900);
+ msg('Dealing 13 cards to each player…');
+ for(let i=0;i<39;i++){H[i%3].push(stock.pop());render();snd(700+(i%3)*120,.04);await sleep(130)}
+ await sleep(500);cut=stock.pop();W=cut.r||1;disc=[stock.pop()];render();snd(900,.06);
+ await sleep(600);phase='draw';render();msg('Wild joker: '+(cut.r?L[cut.r]+S[cut.s]:'A')+'. Your turn: tap the glowing deck or discard to draw.')}
+
+function place(){
+ stock.forEach((c,i)=>tgt(c,-1.8,.75+i*.007,.6+i*.004,Math.PI/2+.5,(c.id%7-3)*.01,1.4));
+ disc.forEach((c,i)=>tgt(c,1.8+(c.id%5-2)*.04,.75+i*.014,.6+i*.008+(c.id%3-1)*.03,-Math.PI/2+.5,(c.id%9-4)*.03,1.4));
+ if(cut)tgt(cut,-4.9,.75,.6,-Math.PI/2+.5,0,1.25);
+ [1,2].forEach(b=>H[b].forEach((c,i)=>tgt(c,(b==1?-5:5)-(H[b].length-1)*.1+i*.2,.5+i*.004,-5.2,Math.PI/2+.5,0,.9)))}
+function hand(){
+ const h=H[0],n=h.length,segs=[];let i=0,lo=null;
+ while(i<n){let g=null;
+  for(let j=Math.min(n,i+13);j>=i+3;j--){const ks=kinds(h.slice(i,j));if(ks.length){g={cards:h.slice(i,j),k:ks.includes('pure')?'pure':ks.includes('imp')?'imp':'set'};break}}
+  if(g){segs.push(g);lo=null;i+=g.cards.length}else{if(!lo){lo={cards:[],k:'loose'};segs.push(lo)}lo.cards.push(h[i++])}}
+ const sq=segs.filter(g=>g.k=='pure'||g.k=='imp'),f1=sq.find(g=>g.k=='pure'),f2=sq.find(g=>g!=f1),ty=g=>g.k=='pure'?'pure':'impure';
+ segs.forEach(g=>g.t=g.k=='set'?'Set':g.k=='loose'?'':g==f1?'1st Life · pure':f1&&g==f2?'2nd Life · '+ty(g):'Series · '+ty(g));
+ const sp=Math.min(1,Math.max(.3,(maxW-1.6)/(n-1+.9*Math.max(0,segs.length-1)))),gap=sp*.9;
+ let x=cx-((n-1)*sp+(segs.length-1)*gap)/2,k=0;labs.forEach(l=>l.el.remove());labs=[];
+ segs.forEach(g=>{const x0=x;
+  g.cards.forEach(c=>{const up=c===sel,t=(x-cx)/6.5,lf=(up?.9:0)+(c===hov&&!drag?.35:0);tgt(c,x,.9+k*.026+lf*.72,5.6+k*.027-lf*.7,-Math.PI/2+.8,-t*.08,1.22);x+=sp;k++});
+  if(g.t){const el=document.createElement('div');el.className='lab '+g.k;el.textContent=g.t;document.body.appendChild(el);labs.push({el,x:(x0+x-sp)/2})}
+  x+=gap});
+ if(drag)tgt(drag.c,drag.x,1.9,4.9,-Math.PI/2+.8,0,1.35);
+ const dead=segs.filter(g=>g.k=='loose').reduce((a,g)=>a+g.cards.reduce((b,c)=>b+pts(c),0),0);
+ $('st').innerHTML=`Wild joker: <b>${cut?(cut.r?L[cut.r]+S[cut.s]:'A'):'…'}</b> (every ${L[W]||'?'} is a joker)<br>Deck ${stock.length} · Discards ${disc.length}<br>Turn: <b>${turn?'Bot '+turn:'You'}</b><br>1st Life (pure): ${f1?'✅':'❌'} · 2nd Life: ${f1&&f2?'✅':'❌'}<br>Points in hand: <b>${dead}</b>`;
+ [1,2].forEach(b=>{const t=$('t'+b);t.textContent='Bot '+b+' · '+H[b].length+' cards';t.classList.toggle('on',turn==b&&phase!='over')});
+ posLabs()}
+function posLabs(){const P=(x,y,z)=>new THREE.Vector3(x,y,z).project(camera),set=(el,v)=>{el.style.left=(v.x+1)/2*innerWidth+'px';el.style.top=(1-v.y)/2*innerHeight+'px'};
+ labs.forEach(l=>set(l.el,P(l.x,.1,7.1)));set($('t1'),P(-5,.5,-6.3));set($('t2'),P(5,.5,-6.3));
+ [['p1',-4.9],['p2',-1.8],['p3',1.8]].forEach(([id,x])=>{const e=$(id);e.style.display=cut?'block':'none';set(e,P(x,.1,2.4))})}
+const render=()=>{place();hand()};
+function drawStock(){if(!stock.length){const t=disc.pop();stock=shuf(disc);disc=[t]}return stock.pop()}
+function next(){turn=(turn+1)%3;if(turn){bot(turn)}else{phase='draw';msg('Your turn: draw from the deck or the discard pile.');render()}}
+function bot(b){msg('Bot '+b+' is playing…');render();
+ setTimeout(()=>{const h=H[b],top=disc[disc.length-1],take=best(h.concat(top)).r.c<solve(h).c;
+  h.push(take?disc.pop():drawStock());place();snd(520,.04);
+  setTimeout(()=>{const o=best(h);const c=h.splice(o.i,1)[0];disc.push(c);snd(380,.05);
+   if(o.r.ok){finish(b,false)}else{next()}},1000)},1000)}
+function finish(w,bad){phase='over';
+ const sc=[0,1,2].map(p=>{if(p==w&&!bad)return 0;const A=solve(H[p]);return A.pure?Math.min(80,A.dead):80});
+ if(bad)sc[w]=80;render();if(w==0&&!bad)confetti();
+ $('modal').innerHTML=`<b style="font-size:20px">${bad?'Invalid declare!':(w?'Bot '+w+' wins':'You win! 🎉')}</b><br>${bad?'You need a pure sequence, a 2nd sequence, and every card grouped. 80 penalty points.<br>':''}You: ${sc[0]} · Bot 1: ${sc[1]} · Bot 2: ${sc[2]}<br><br><button onclick="newGame()">Play again</button>`;
+ setTimeout(()=>$('modal').style.display='block',w==0&&!bad?1200:300)}
+const mine=()=>phase=='disc'&&sel;
+$('bd').onclick=()=>{if(!mine())return msg('Draw a card, then tap one to lift it and press Discard.');H[0].splice(H[0].indexOf(sel),1);disc.push(sel);sel=null;phase='wait';snd(380,.05);next()};
+$('bs').onclick=()=>{if(!mine())return msg('Draw, then lift the card you will finish with.');
+ H[0].splice(H[0].indexOf(sel),1);disc.push(sel);sel=null;finish(0,!solve(H[0]).ok)};
+$('bh').onclick=()=>{if(phase=='draw'){const base=solve(H[0]).c,w=best(H[0].concat(disc[disc.length-1])).r.c;
+  msg(w<base?'Hint: take the open discard. It improves your hand.':'Hint: draw from the deck.')}
+ else if(phase=='disc'){const b=best(H[0]);sel=H[0][b.i];hand();msg(b.r.ok?'Hint: you can declare! Lift this card and press Declare.':'Hint: discard the lifted card.')}};
+$('bo').onclick=()=>{if(phase=='deal'||phase=='over')return;H[0].sort((a,b)=>a.s-b.s||a.r-b.r);snd(500,.04);hand()};
+$('bg').onclick=()=>{if(phase=='deal'||phase=='over')return;const A=solve(H[0]);H[0]=[...A.groups.flatMap(g=>g.cards),...A.loose];snd(560,.04);hand()};
+$('bf').onclick=()=>{if(phase=='deal'||phase=='over')return;shuf(H[0]);H[0].forEach((c,i)=>setTimeout(()=>snd(300+i*25,.02),i*30));hand()};
+const mvSel=d=>{if(!sel)return msg('Tap a card to lift it, then use the arrows to move it.');const h=H[0],i=h.indexOf(sel),j=i+d;if(j<0||j>=h.length)return;h.splice(i,1);h.splice(j,0,sel);snd(440,.03);hand()};
+$('bl').onclick=()=>mvSel(-1);$('br').onclick=()=>mvSel(1);
+$('go').onclick=()=>newGame();
+
+/* ===== Input: tap to lift, drag to rearrange ===== */
+const rc=new THREE.Raycaster(),mv=new THREE.Vector2(),pl=new THREE.Plane(new THREE.Vector3(0,1,0),-.7),pt=new THREE.Vector3();
+const ray=e=>{mv.set(e.clientX/innerWidth*2-1,-(e.clientY/innerHeight)*2+1);rc.setFromCamera(mv,camera)};
+const hitHand=()=>{const hs=rc.intersectObjects(H[0].map(c=>c.m));return hs.length?hs[0].object.userData.c:null};
+cvEl.addEventListener('pointerdown',e=>{if(phase=='deal'||phase=='over')return;ray(e);
+ const hc=hitHand();if(hc){pd={c:hc,x:e.clientX};return}
+ if(phase=='draw'){const t=disc[disc.length-1],q=stock[stock.length-1],hit=m=>rc.intersectObject(m).length;
+  if(t&&hit(t.m))H[0].push(disc.pop());else if(q&&hit(q.m))H[0].push(drawStock());else return;
+  snd(520,.05);phase='disc';msg('Tap a card to lift it, then Discard or Declare. Drag cards to rearrange.');place();hand()}});
+addEventListener('pointermove',e=>{
+ if(!pd){if(phase=='deal'||phase=='over')return;ray(e);const h=hitHand();if(h!==hov){hov=h;cvEl.style.cursor=h?'grab':'default';hand()}return}
+ if(!drag&&Math.abs(e.clientX-pd.x)<8)return;ray(e);if(!rc.ray.intersectPlane(pl,pt))return;
+ if(!drag){drag={c:pd.c,x:pt.x};cvEl.style.cursor='grabbing';snd(420,.03)}drag.x=pt.x;
+ const h=H[0],cur=h.indexOf(drag.c);let ni=0;h.forEach(c=>{if(c!==drag.c&&c.tp[0]<pt.x)ni++});
+ if(ni!=cur){h.splice(cur,1);h.splice(ni,0,drag.c)}hand()});
+addEventListener('pointerup',()=>{if(!pd)return;if(!drag){sel=sel===pd.c?null:pd.c;snd(600,.03)}else snd(360,.04);pd=null;drag=null;hov=null;hand()});
+
+/* ===== Win confetti ===== */
+let cf=null;
+function confetti(){const n=320,g=new THREE.BufferGeometry(),pos=new Float32Array(n*3),col=new Float32Array(n*3),vel=[];
+ for(let i=0;i<n;i++){pos.set([0,2,1],i*3);const c=new THREE.Color().setHSL(Math.random(),.9,.6);col.set([c.r,c.g,c.b],i*3);vel.push([(Math.random()-.5)*.4,.25+Math.random()*.35,(Math.random()-.5)*.4])}
+ g.setAttribute('position',new THREE.BufferAttribute(pos,3));g.setAttribute('color',new THREE.BufferAttribute(col,3));
+ const m=new THREE.Points(g,new THREE.PointsMaterial({size:.25,vertexColors:true}));scene.add(m);cf={m,vel,pos,t:0}}
+
+function fit(){const w=innerWidth,h=innerHeight,a=w/h;ren.setSize(w,h);camera.aspect=a;
+ const d=Math.max(13,15/(2*Math.tan(camera.fov*Math.PI/360)*a));camera.userData.d=d;camera.position.set(0,.72*d,2.8+.69*d);camera.lookAt(0,0,2.4);camera.updateProjectionMatrix();camera.updateMatrixWorld();const v=new THREE.Vector3(1,.7,5.6).project(camera),u=Math.abs(v.x)*innerWidth/2;maxW=(innerWidth-130)*.97/u;cx=-65/u;posLabs()}
+addEventListener('resize',fit);fit();
+let T=0;
+(function loop(){requestAnimationFrame(loop);T+=.016;const q=.14;
+ all.forEach(c=>{const p=c.m.position,r=c.m.rotation,ty=c.tp[1]+Math.min(Math.hypot(c.tp[0]-p.x,c.tp[2]-p.z)*.25,2.4);   // arcing flight
+  p.x+=(c.tp[0]-p.x)*q;p.y+=(ty-p.y)*q;p.z+=(c.tp[2]-p.z)*q;r.x+=(c.tr[0]-r.x)*q;r.z+=(c.tr[1]-r.z)*q;c.m.scale.setScalar(c.m.scale.x+(c.sc-c.m.scale.x)*q)});
+ const gl=phase=='draw'?.4+.35*Math.sin(T*5):0;glow.forEach(m=>m.material.opacity=gl);
+ for(let i=1;i<360;i+=3){dp[i]+=.004;if(dp[i]>10)dp[i]=1}dg.attributes.position.needsUpdate=true;
+ if(cf){const P=cf.pos;for(let i=0;i<cf.vel.length;i++){const v=cf.vel[i];v[1]-=.008;P[i*3]+=v[0];P[i*3+1]=Math.max(.05,P[i*3+1]+v[1]);P[i*3+2]+=v[2];if(P[i*3+1]<=.05){v[0]=v[1]=v[2]=0}}
+  cf.m.geometry.attributes.position.needsUpdate=true;if(++cf.t>420){scene.remove(cf.m);cf=null}}
+ camera.position.x=Math.sin(T*.25)*.4;camera.lookAt(0,0,2.4);posLabs();ren.render(scene,camera)})();
+</script></body></html>
