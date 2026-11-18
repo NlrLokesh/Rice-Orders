@@ -1,1031 +1,154 @@
-
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Nellore Rice Club - Wholesale Rice Bags</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700;900&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rummy 13 · 3D</title>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --gold: #d4af37; --gold-light: #f7d774; --gold-dark: #a67c00;
-    --gold-shine: #fff2b3; --black: #050505; --black-mid: #0f0f0f;
-    --black-card: #161616; --black-border: #2f2f2f;
-    --white: #ffffff; --white-dim: #d6d6d6; --red-warn: #ff4d4d;
-    --green-good: #3ddc84;
-  }
-  body { font-family: 'Montserrat', sans-serif; background: var(--black); color: var(--white); min-height: 100vh; overflow-x: hidden; -webkit-overflow-scrolling: touch; -webkit-tap-highlight-color: transparent; }
-
-  header { background: var(--black-mid); border-bottom: 1px solid var(--gold-dark); padding: 22px 20px 18px; text-align: center; position: sticky; top: 0; z-index: 1000; overflow: hidden; -webkit-transform: translateZ(0); transform: translateZ(0); }
-  header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent); }
-  header::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-dark), transparent); }
-  .header-tag { font-size: 9px; font-weight: 600; letter-spacing: 4px; color: var(--gold); text-transform: uppercase; margin-bottom: 6px; }
-  .header-title { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 900; letter-spacing: 2px; background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold-light) 40%, var(--gold) 60%, var(--gold-shine) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-  .header-sub { font-size: 10px; color: var(--white-dim); letter-spacing: 3px; margin-top: 5px; font-weight: 300; text-transform: uppercase; }
-
-  .container { max-width: 500px; margin: 0 auto; padding: 20px 15px 30px; }
-
-  .section-title { display: flex; align-items: center; gap: 10px; font-size: 9px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin: 24px 0 12px; }
-  .section-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--gold-dark), transparent); }
-
-  /* =========================================================
-     CSS ANIMATED OFFER BANNER (THUNDER, FLOWERS, SAVINGS)
-     ========================================================= */
-  .offer-banner {
-    background: linear-gradient(135deg, #1f1800 0%, #0a0800 100%);
-    border: 1px solid var(--gold-dark);
-    border-radius: 14px;
-    padding: 24px 20px;
-    margin-bottom: 24px;
-    position: relative;
-    overflow: hidden;
-    text-align: center;
-    box-shadow: 0 10px 30px rgba(212,175,55,0.15);
-    z-index: 1;
-  }
-  
-  /* Thunder Flashes */
-  .offer-banner::after {
-    content: ''; position: absolute; inset: 0; background: #ffffff;
-    opacity: 0; pointer-events: none; z-index: 2;
-    animation: thunderFlash 6s infinite;
-  }
-  @keyframes thunderFlash {
-    0%, 91%, 95%, 98%, 100% { opacity: 0; }
-    92% { opacity: 0.15; }
-    96% { opacity: 0.25; }
-  }
-
-  /* Floating Flowers & Sparks */
-  .float-item { position: absolute; font-size: 18px; opacity: 0; z-index: 1; animation: floatUp 4s infinite ease-in; }
-  .f1 { left: 10%; bottom: -20px; animation-duration: 5s; font-size: 24px; } /* Lotus */
-  .f2 { left: 85%; bottom: -20px; animation-delay: 1.5s; font-size: 20px; } /* Sparkle */
-  .f3 { left: 50%; bottom: -20px; animation-delay: 2.5s; font-size: 16px; } /* Blossom */
-  .f4 { left: 25%; bottom: -20px; animation-delay: 0.5s; font-size: 22px; } /* Thunder */
-  .f5 { left: 70%; bottom: -20px; animation-delay: 3s; font-size: 14px; } /* Sparkle */
-  
-  @keyframes floatUp {
-    0% { transform: translateY(0) rotate(0deg) scale(0.8); opacity: 0; }
-    20% { opacity: 0.6; }
-    80% { opacity: 0.6; }
-    100% { transform: translateY(-120px) rotate(180deg) scale(1.2); opacity: 0; }
-  }
-
-  /* Banner Content */
-  .offer-content { position: relative; z-index: 3; }
-  .offer-badge {
-    display: inline-block; background: var(--gold-dark); color: var(--black);
-    font-size: 9px; font-weight: 800; letter-spacing: 2px; padding: 4px 10px;
-    border-radius: 20px; text-transform: uppercase; margin-bottom: 10px;
-    box-shadow: 0 0 10px var(--gold-dark);
-  }
-  .offer-title {
-    font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 900;
-    color: var(--gold-light); margin-bottom: 6px;
-    text-shadow: 0 0 15px rgba(212,175,55,0.6);
-    animation: pulseTitle 2s infinite alternate;
-  }
-  @keyframes pulseTitle {
-    0% { transform: scale(1); text-shadow: 0 0 10px rgba(212,175,55,0.4); }
-    100% { transform: scale(1.05); text-shadow: 0 0 25px rgba(212,175,55,0.8), 0 0 5px #fff; }
-  }
-  .offer-desc { font-size: 11.5px; color: var(--white-dim); line-height: 1.5; margin-bottom: 12px; }
-  .offer-desc b { color: var(--white); font-weight: 700; background: rgba(212,175,55,0.2); padding: 2px 6px; border-radius: 4px; }
-  .offer-hint { font-size: 10px; color: var(--gold); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; animation: bounceHint 2s infinite; }
-  @keyframes bounceHint { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(3px); } }
-  /* ========================================================= */
-
-  .customer-card { background: var(--black-card); border: 1px solid var(--black-border); border-radius: 14px; padding: 18px; position: relative; overflow: hidden; }
-  .customer-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-dark), transparent); }
-  .input-group { position: relative; }
-  .input-group input { width: 100%; padding: 12px 14px 12px 42px; background: var(--black-mid); border: 1px solid var(--black-border); border-radius: 8px; color: var(--white); font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 500; outline: none; transition: border 0.25s, box-shadow 0.25s; -webkit-appearance: none; appearance: none; }
-  .input-group input::placeholder { color: #cccccc; font-weight: 400; }
-  .input-group input:focus { border-color: var(--gold-dark); box-shadow: 0 0 0 3px rgba(212,175,55,0.08); }
-  .input-group input:disabled { opacity: 0.6; }
-  .input-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 14px; pointer-events: none; }
-
-  /* --- Confirm details / location button --- */
-  .confirm-row { display: flex; gap: 10px; margin-top: 14px; align-items: stretch; }
-  .btn-confirm { flex: 1; width: auto; padding: 14px; margin-top: 0; background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: var(--black); border: none; border-radius: 10px; font-family: 'Montserrat', sans-serif; font-size: 12.5px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform 0.2s, box-shadow 0.2s, background 0.3s, color 0.3s; -webkit-appearance: none; appearance: none; }
-  .btn-confirm:active { transform: scale(0.98); }
-  .btn-confirm.confirmed { background: linear-gradient(135deg, #0d6e2f, #25D366); color: #fff; cursor: default; }
-  .btn-confirm.confirmed:active { transform: none; }
-  .btn-refresh { flex-shrink: 0; width: 50px; background: var(--black-mid); border: 1px solid var(--gold-dark); border-radius: 10px; color: var(--gold-light); font-size: 19px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.25s, background 0.3s, border-color 0.3s; -webkit-appearance: none; appearance: none; }
-  .btn-refresh:hover { border-color: var(--gold); background: #1a1500; }
-  .btn-refresh:active { transform: scale(0.9) rotate(-40deg); }
-  .confirm-hint { font-size: 10px; color: #888; text-align: center; margin-top: 8px; letter-spacing: 0.3px; line-height: 1.5; }
-  .confirm-hint.ok { color: var(--green-good); font-weight: 600; }
-
-  /* --- Wholesale notice strip --- */
-  .notice-strip { background: #1a1400; border: 1px solid var(--gold-dark); border-radius: 12px; padding: 14px 16px; margin-bottom: 16px; }
-  .notice-row { display: flex; align-items: flex-start; gap: 10px; font-size: 11.5px; color: var(--white-dim); line-height: 1.5; padding: 5px 0; }
-  .notice-row:not(:last-child) { border-bottom: 1px dashed #2a2200; }
-  .notice-row .n-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
-  .notice-row b { color: var(--gold-light); }
-  .notice-footer { text-align: center; font-size: 10.5px; color: var(--gold-dark); font-style: italic; margin-top: 10px; padding-top: 10px; border-top: 1px solid #2a2200; letter-spacing: 0.3px; line-height: 1.6; }
-
-  .item { display: flex; align-items: center; background: var(--black-card); border: 1px solid var(--black-border); border-radius: 14px; padding: 14px; margin-bottom: 10px; transition: border-color 0.3s ease, background-color 0.3s ease; position: relative; overflow: hidden; cursor: default; user-select: none; -webkit-user-select: none; -webkit-transform: translateZ(0); transform: translateZ(0); }
-  .item::before { content: ''; position: absolute; inset: 0; border-radius: 14px; background: linear-gradient(135deg, rgba(212,175,55,0.05), transparent 60%); opacity: 0; transition: opacity 0.3s; pointer-events: none; }
-  .item.active { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold-dark), 0 8px 30px rgba(212,175,55,0.18); background: #1c1800; }
-  .item.active::before { opacity: 1; }
-
-  .check-badge { position: absolute; top: 10px; right: 10px; width: 22px; height: 22px; background: linear-gradient(135deg, var(--gold-dark), var(--gold-light)); border-radius: 50%; font-size: 11px; color: var(--black); display: flex; align-items: center; justify-content: center; font-weight: 900; opacity: 0; transform: scale(0.5) translateZ(0); transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1); pointer-events: none; z-index: 6; }
-  .item.active .check-badge { opacity: 1; transform: scale(1) translateZ(0); }
-
-  .item img { width: 66px; height: 92px; object-fit: cover; object-position: center; border-radius: 8px; flex-shrink: 0; border: 1px solid #222; transition: border-color 0.3s; pointer-events: none; aspect-ratio: 3 / 4; background: #1a1a1a; display: block; }
-  .item.active img { border-color: var(--gold-dark); }
-  .img-slot { position: relative; flex-shrink: 0; }
-  .img-slot .img-tag { position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%); font-size: 7px; letter-spacing: 0.5px; color: #555; text-transform: uppercase; white-space: nowrap; }
-
-  .details { flex: 1; margin-left: 13px; min-width: 0; }
-  .item-name { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; color: #ffffff; transition: color 0.3s; line-height: 1.25; }
-  .item.active .item-name { color: var(--gold-light); }
-  .item-sub { font-size: 9px; letter-spacing: 1.2px; color: #b0b0b0; text-transform: uppercase; margin-top: 3px; font-weight: 600; transition: color 0.3s; line-height: 1.5; }
-  .item.active .item-sub { color: var(--gold-dark); }
-  .item-price { font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 600; color: var(--gold); margin-top: 7px; letter-spacing: 0.3px; }
-  .item-price .rupee { font-size: 13px; font-weight: 700; }
-  .item-price .amount { font-size: 16px; font-weight: 700; }
-  .item-price .per-bag { font-size: 11px; color: #666; font-weight: 400; margin-left: 2px; }
-
-  .qty-wrapper { display: flex; flex-direction: column; align-items: center; gap: 5px; margin-right: 30px; position: relative; z-index: 6; flex-shrink: 0; }
-  .qty-label { font-size: 8px; letter-spacing: 1.5px; color: var(--gold-dark); text-transform: uppercase; font-weight: 600; transition: color 0.3s; }
-  .item.active .qty-label { color: var(--gold); }
-  select.qty-select { padding: 9px 26px 9px 12px; border-radius: 8px; border: 1px solid var(--gold-dark); background: var(--black-mid); color: #888; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; outline: none; transition: all 0.3s; min-width: 76px; -webkit-appearance: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23a67c00' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; pointer-events: auto; }
-  .item.active select.qty-select { border-color: var(--gold); color: var(--gold-light); background-color: #1a1500; box-shadow: 0 0 0 1px var(--gold-dark), 0 3px 12px rgba(212,175,55,0.18); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23d4af37' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); }
-
-  .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-80px) translateZ(0); background: #1e0000; border: 1px solid var(--red-warn); color: var(--red-warn); font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.5px; padding: 12px 22px; border-radius: 10px; box-shadow: 0 6px 24px rgba(255,77,77,0.25); z-index: 9999; transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s; white-space: nowrap; opacity: 0; pointer-events: none; -webkit-transform: translateX(-50%) translateY(-80px) translateZ(0); }
-  .toast.show { transform: translateX(-50%) translateY(0) translateZ(0); -webkit-transform: translateX(-50%) translateY(0) translateZ(0); opacity: 1; }
-  .toast.info { background: #001a0a; border-color: var(--gold-dark); color: var(--gold-light); box-shadow: 0 6px 24px rgba(212,175,55,0.2); }
-
-  .summary-card { background: var(--black-card); border: 1px solid var(--black-border); border-radius: 14px; padding: 18px; position: relative; overflow: hidden; }
-  .summary-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-dark), transparent); }
-  .summary-customer { display: flex; align-items: center; gap: 10px; padding-bottom: 12px; margin-bottom: 4px; border-bottom: 1px solid #222; }
-  .cust-icon { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, var(--gold-dark), var(--gold)); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
-  .cust-info { display: flex; flex-direction: column; }
-  .cust-label { font-size: 8px; letter-spacing: 2px; color: var(--gold-dark); text-transform: uppercase; font-weight: 700; }
-  .cust-name { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: var(--gold-light); margin-top: 1px; line-height: 1.2; }
-  .summary-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #1e1e1e; font-size: 13px; }
-  .summary-row:last-of-type { border-bottom: none; }
-  .s-name { color: var(--white); font-weight: 500; }
-  .s-qty { color: #bbbbbb; font-size: 11px; font-weight: 600; }
-  .s-price { color: var(--gold); font-weight: 700; font-size: 13px; }
-  .summary-total { display: flex; justify-content: space-between; align-items: center; padding-top: 14px; margin-top: 10px; border-top: 1px solid var(--gold-dark); }
-  .t-label { font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 700; color: var(--white-dim); letter-spacing: 1.5px; text-transform: uppercase; }
-  .t-amount { font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 700; background: linear-gradient(135deg, var(--gold-dark), var(--gold-light), var(--gold-shine)); -webkit-background-clip: text-fill-color: transparent; background-clip: text; }
-  .summary-empty { text-align: center; padding: 8px 0; color: #999; font-size: 12px; letter-spacing: 1px; font-style: italic; }
-
-  .btn-whatsapp { width: 100%; padding: 16px; margin-top: 16px; background: linear-gradient(135deg, #0d6e2f, #25D366); color: white; border: none; border-radius: 12px; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 20px rgba(37,211,102,0.2), inset 0 1px 0 rgba(255,255,255,0.1); transition: transform 0.25s, box-shadow 0.25s; position: relative; overflow: hidden; -webkit-appearance: none; appearance: none; }
-  .btn-whatsapp:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(37,211,102,0.3); }
-  .btn-whatsapp:active { transform: scale(0.98); }
-  .btn-whatsapp:disabled { opacity: 0.7; cursor: not-allowed; }
-
-  .footer-note { text-align: center; font-size: 9px; color: #2e2e2e; letter-spacing: 2px; margin-top: 14px; text-transform: uppercase; padding-bottom: 10px; }
-
-  .popup-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.82); z-index: 9998; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
-  .popup-overlay.show { opacity: 1; pointer-events: all; }
-  .popup-box { background: var(--black-card); border: 1px solid var(--gold-dark); border-radius: 20px; padding: 28px 24px 24px; max-width: 340px; width: 100%; position: relative; overflow: hidden; transform: scale(0.9) translateY(20px); transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1); text-align: center; }
-  .popup-overlay.show .popup-box { transform: scale(1) translateY(0); }
-  .popup-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent); }
-  .popup-icon { font-size: 42px; margin-bottom: 12px; display: block; line-height: 1; }
-  .popup-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--gold-light); margin-bottom: 8px; line-height: 1.3; }
-  .popup-subtitle { font-size: 12px; color: #888; letter-spacing: 0.5px; line-height: 1.6; margin-bottom: 24px; }
-  .popup-subtitle span { color: var(--gold-dark); font-weight: 600; }
-  .popup-buttons { display: flex; gap: 12px; }
-  .popup-btn { flex: 1; padding: 14px 10px; border: none; border-radius: 12px; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 1px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; -webkit-appearance: none; appearance: none; display: flex; flex-direction: column; align-items: center; gap: 5px; }
-  .popup-btn:active { transform: scale(0.96); }
-  .popup-btn .btn-emoji { font-size: 22px; }
-  .popup-btn-yes { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: var(--black); box-shadow: 0 4px 16px rgba(212,175,55,0.25); }
-  .popup-btn-no { background: var(--black-mid); color: var(--white-dim); border: 1px solid var(--black-border); }
-
-  /* --- Location loading overlay --- */
-  .loading-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.86); z-index: 9998; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
-  .loading-overlay.show { opacity: 1; pointer-events: all; }
-  .loading-box { background: var(--black-card); border: 1px solid var(--gold-dark); border-radius: 20px; padding: 34px 26px 28px; max-width: 320px; width: 100%; position: relative; overflow: hidden; transform: scale(0.9) translateY(20px); transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1); text-align: center; }
-  .loading-overlay.show .loading-box { transform: scale(1) translateY(0); }
-  .loading-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent); }
-
-  .gps-spinner-wrap { position: relative; width: 64px; height: 64px; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; }
-  .gps-spinner-ring { position: absolute; inset: 0; border: 3px solid rgba(212,175,55,0.15); border-top-color: var(--gold); border-radius: 50%; animation: gps-spin 0.9s linear infinite; }
-  .gps-spinner-ring.slow { border-top-color: var(--gold-light); animation-duration: 1.6s; inset: 9px; opacity: 0.75; }
-  .gps-spinner-pin { font-size: 20px; position: relative; z-index: 2; animation: gps-pulse 1.4s ease-in-out infinite; }
-  @keyframes gps-spin { to { transform: rotate(360deg); } }
-  @keyframes gps-pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.15); opacity: 0.7; } }
-
-  .loading-title { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; color: var(--gold-light); margin-bottom: 6px; line-height: 1.3; min-height: 22px; transition: opacity 0.25s; }
-  .loading-sub { font-size: 11px; color: #999; letter-spacing: 0.3px; line-height: 1.6; margin-bottom: 16px; }
-  .loading-dots span { display: inline-block; animation: gps-dots 1.4s infinite; opacity: 0; }
-  .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
-  .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
-  @keyframes gps-dots { 0%, 20% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
-
-  /* Live accuracy meter */
-  .accuracy-wrap { margin-top: 4px; }
-  .accuracy-label-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
-  .accuracy-tag { font-size: 9px; letter-spacing: 1.5px; color: #777; text-transform: uppercase; font-weight: 700; }
-  .accuracy-value { font-size: 13px; font-weight: 700; color: var(--gold); font-family: 'Montserrat', sans-serif; transition: color 0.3s; }
-  .accuracy-track { width: 100%; height: 7px; background: #221c00; border-radius: 6px; overflow: hidden; position: relative; }
-  .accuracy-fill { height: 100%; width: 4%; border-radius: 6px; background: linear-gradient(90deg, var(--red-warn), var(--gold), var(--green-good)); transition: width 0.6s cubic-bezier(0.34,1.2,0.64,1); }
-
-  /* Elapsed-time progress bar */
-  .time-track { width: 100%; height: 3px; background: #1a1a1a; border-radius: 3px; overflow: hidden; margin-top: 14px; }
-  .time-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--gold-dark), var(--gold-light)); transition: width 0.3s linear; }
-
-  /* Confirmation-state badge in the loading box */
-  .confirm-state { margin-top: 10px; font-size: 10px; letter-spacing: 0.8px; color: #777; text-align: center; }
-  .confirm-state b { color: var(--green-good); }
-
-  /* Rotating tip */
-  .loading-tip { margin-top: 16px; padding-top: 14px; border-top: 1px dashed #2a2200; font-size: 10.5px; color: #999; line-height: 1.6; min-height: 32px; display: flex; align-items: center; justify-content: center; }
-  .loading-tip .tip-emoji { margin-right: 5px; }
-  .tip-text { transition: opacity 0.35s ease; opacity: 1; }
-  .tip-text.fade { opacity: 0; }
-
-  /* --- Map pin adjustment overlay --- */
-  #pinMap { width: 100%; height: 260px; border-radius: 12px; overflow: hidden; border: 1px solid var(--gold-dark); }
-  .map-note { font-size: 10.5px; color: #999; text-align: center; margin-top: 10px; line-height: 1.6; }
-  .map-note b { color: var(--gold-light); }
-  .leaflet-container { background: #1a1a1a; font-family: 'Montserrat', sans-serif; }
-</style>
-</head>
-<body>
-
-<div class="toast" id="toast"></div>
-
-<div class="popup-overlay" id="locationPopup">
-  <div class="popup-box">
-    <span class="popup-icon">&#127968;</span>
-    <div class="popup-title">Are you at Home?</div>
-    <div class="popup-subtitle">If you're home, we'll <span>capture your precise location</span> for the delivery rider. Not home right now? No problem — you can still place the order.</div>
-    <div class="popup-buttons">
-      <button class="popup-btn popup-btn-yes" onclick="handleLocationChoice(true)"><span class="btn-emoji">&#9989;</span>Yes, I'm Home</button>
-      <button class="popup-btn popup-btn-no" onclick="handleLocationChoice(false)"><span class="btn-emoji">&#128694;</span>No, I'm Not</button>
-    </div>
-  </div>
-</div>
-
-<div class="loading-overlay" id="locationLoading">
-  <div class="loading-box">
-    <div class="gps-spinner-wrap">
-      <div class="gps-spinner-ring"></div>
-      <div class="gps-spinner-ring slow"></div>
-      <span class="gps-spinner-pin">&#128205;</span>
-    </div>
-    <div class="loading-title" id="loadingTitle">Finding Your Precise Location</div>
-    <div class="loading-sub">Locking onto satellites for pinpoint accuracy<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></div>
-
-    <div class="accuracy-wrap">
-      <div class="accuracy-label-row">
-        <span class="accuracy-tag">Signal Precision</span>
-        <span class="accuracy-value" id="accuracyValue">searching&hellip;</span>
-      </div>
-      <div class="accuracy-track"><div class="accuracy-fill" id="accuracyFill"></div></div>
-    </div>
-
-    <div class="confirm-state" id="confirmState">Waiting for a cluster of matching readings to confirm the fix&hellip;</div>
-
-    <div class="time-track"><div class="time-fill" id="timeFill"></div></div>
-
-    <div class="loading-tip"><span class="tip-emoji">&#128161;</span><span class="tip-text" id="tipText">Standing near a window or open door helps lock the signal faster.</span></div>
-  </div>
-</div>
-
-<div class="loading-overlay" id="mapAdjustOverlay">
-  <div class="loading-box" style="max-width:380px;">
-    <div class="loading-title" style="margin-bottom:6px;">Confirm Your Exact Spot</div>
-    <div class="loading-sub" style="margin-bottom:14px;">GPS narrowed it down, but signal bounce near buildings can shift it a bit. <b>Drag the pin</b> onto your house if it's not exactly right.</div>
-    <div id="pinMap"></div>
-    <div class="map-note" id="mapAccuracyNote"></div>
-    <button class="btn-confirm" style="width:100%;margin-top:16px;" onclick="confirmMapPin()">
-      <span style="font-size:15px">&#128205;</span> This Is My Location
-    </button>
-  </div>
-</div>
-
-<header>
-  <div class="header-tag">&#10022; Wholesale Rice Bags &#10022;</div>
-  <div class="header-title">Nellore Rice Club</div>
-  <div class="header-sub">Best Quality &middot; Best Service</div>
-</header>
-
-<div class="container">
-
-  <!-- New CSS Animated Offer Banner -->
-  <div class="offer-banner">
-    <div class="thunder-flash"></div>
-    <div class="float-item f1">&#129699;</div> <!-- Lotus -->
-    <div class="float-item f2">&#10024;</div> <!-- Sparkles -->
-    <div class="float-item f3">&#127800;</div> <!-- Cherry Blossom -->
-    <div class="float-item f4">&#9889;</div> <!-- Thunder -->
-    <div class="float-item f5">&#10024;</div> <!-- Sparkles -->
-    
-    <div class="offer-content">
-      <div class="offer-badge">Limited Time Offer</div>
-      <h2 class="offer-title">&#9889; MEGA SAVINGS &#9889;</h2>
-      <p class="offer-desc">Buy <b>3 or more items</b> to unlock exclusive wholesale grocery prices instantly.</p>
-      <div class="offer-hint">Select your bags below &darr;</div>
-    </div>
-  </div>
-
-  <div class="section-title">&#10022; Your Details</div>
-  <div class="customer-card">
-    <div class="input-group" style="margin-bottom:10px;">
-      <span class="input-icon">&#128100;</span>
-      <input type="text" id="customerName" placeholder="Full Name" autocomplete="name" autocorrect="off" autocapitalize="words" spellcheck="false" oninput="updateSummary(); resetConfirmIfChanged();"/>
-    </div>
-    <div class="input-group">
-      <span class="input-icon">&#128222;</span>
-      <input type="tel" id="customerPhone" placeholder="Phone Number (10 digits)" maxlength="10" autocomplete="tel" inputmode="numeric" pattern="[0-9]*" oninput="filterPhone(this); updateSummary(); resetConfirmIfChanged();"/>
-    </div>
-    <div class="confirm-row">
-      <button class="btn-confirm" id="confirmBtn" onclick="confirmDetails()">
-        <span style="font-size:15px">&#128205;</span> Confirm Details &amp; Detect Location
-      </button>
-      <button class="btn-refresh" id="refreshBtn" onclick="reconfirmLocation()" title="Redo location detection" aria-label="Redo location detection">&#128260;</button>
-    </div>
-    <div class="confirm-hint" id="confirmHint">We'll ask if you're home now, so placing the order later is instant.</div>
-  </div>
-
-  <div class="section-title">&#10022; Delivery &amp; Payment</div>
-  <div class="notice-strip">
-    <div class="notice-row"><span class="n-icon">&#128666;</span><span><b>Free Home Delivery</b> on every order, anywhere in Nellore City.</span></div>
-    <div class="notice-row"><span class="n-icon">&#9200;</span><span><b>Next Day Delivery</b> — order today, get your bags tomorrow.</span></div>
-    <div class="notice-row"><span class="n-icon">&#128176;</span><span><b>Cash on Delivery only</b> — pay the delivery person directly.</span></div>
-    <div class="notice-row"><span class="n-icon">&#128683;</span><span><b>No credits, no pending payments.</b> Full payment compulsory at the time of delivery.</span></div>
-    <div class="notice-footer">We are wholesalers — every rupee counts towards our profit, so our margins are kept very low. Thank you for understanding.</div>
-  </div>
-
-  <div class="section-title">&#10022; Select Rice Bags</div>
-
-  <div id="rice-items"></div>
-
-  <div class="section-title">&#10022; Order Summary</div>
-  <div class="summary-card">
-    <div class="summary-empty" id="summaryEmpty">No items selected yet</div>
-    <div id="summaryCustomer"></div>
-    <div id="summaryRows"></div>
-  </div>
-
-  <button class="btn-whatsapp" id="waBtn" onclick="sendToWhatsApp()">
-    <span style="font-size:18px">&#128172;</span> Place Order on WhatsApp
-  </button>
-  <div class="footer-note">&#10022; Orders confirmed via WhatsApp only &#10022;</div>
-</div>
-
+html,body{margin:0;height:100%;overflow:hidden;background:#0b1410;font-family:Georgia,serif;color:#f3ead2}
+canvas{display:block}
+.box{position:fixed;background:#0b1410d9;border:1px solid #c9a35b;border-radius:10px;padding:10px 14px;font-size:14px;line-height:1.6}
+#st{top:10px;left:10px}
+#msg{top:10px;left:50%;transform:translateX(-50%);text-align:center;max-width:42vw;font-size:15px}
+#btn{right:10px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:8px}
+button{font:inherit;background:#c9a35b;color:#1b1206;border:0;border-radius:8px;padding:9px 14px;cursor:pointer}
+button:hover{background:#e0bd78}
+.lab{position:fixed;transform:translate(-50%,0);font-size:13px;white-space:nowrap;padding:2px 9px;border-radius:9px;background:#0b1410cc;border:1px solid #c9a35b;pointer-events:none}
+.lab.pure{border-color:#4fd18b;color:#9af0c2}
+.lab.set{border-color:#7fb6ff;color:#b9d7ff}
+#modal{inset:0;margin:auto;width:290px;height:fit-content;text-align:center;display:none;font-size:16px}
+@media(max-width:600px){#msg{max-width:55vw;font-size:13px}#st{font-size:12px;padding:6px 9px}}
+</style></head><body>
+<div id="st" class="box"></div><div id="msg" class="box"></div>
+<div id="btn" class="box"><button id="bh">Hint</button><button id="bd">Discard</button><button id="bs">Declare</button></div>
+<div id="modal" class="box"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-/* ============================================================
-   DATA — edit bag details/prices here only. Everything else
-   is generated. Replace the empty img src with your own image
-   URL later — the slot is already left open on the left side
-   of each bag.
-   ============================================================ */
-// [ id, name, subtitle, price, imgUrl ]
-var RICE_BAGS = [
-  ['r1', 'Kurnool Rice Bag', '25 Kgs &middot; Old Rice &middot; Jilakara Masura', 1450, 'Kurnool.webp'],
-  ['r2', '24 Carat Gold', '24 Kgs &middot; Old Rice &middot; Jilakara Masura &middot; From Nandhyala', 1430, 'Carat.webp'],
-  ['r3', 'Steam Rice', '25 Kgs &middot; MVR Khageshwar Brand', 1430, 'mvr.webp'],
-  ['r4', 'Molagolukulu Sannalu', '24 Kgs &middot; Old Rice &middot; Pine Apple Bag &middot; From Chirala', 1530, 'sannalu.webp']
-];
-
-var toastTimer = null;
-
-/* ============================================================
-   RENDERING
-   ============================================================ */
-function renderItems() {
-  var wrap = document.getElementById('rice-items');
-  var html = '';
-  RICE_BAGS.forEach(function(row){
-    var id = row[0], name = row[1], sub = row[2], price = row[3], img = row[4];
-    html += '<div class="item" id="' + id + '">' +
-      '<div class="check-badge">&#10003;</div>' +
-      '<div class="img-slot"><img src="' + img + '" loading="lazy" decoding="async" width="66" height="92" alt="' + name + '" onerror="this.style.opacity=0.15;"></div>' +
-      '<div class="details">' +
-        '<div class="item-name">' + name + '</div>' +
-        '<div class="item-sub">' + sub + '</div>' +
-        '<div class="item-price"><span class="rupee">&#8377;</span><span class="amount">' + price + '</span><span class="per-bag"> / bag</span></div>' +
-      '</div>' +
-      '<div class="qty-wrapper"><span class="qty-label">Quantity</span>' +
-      '<select class="qty-select" onchange="onQtyChange(this,\'' + id + '\')">' +
-        '<option value="0">-- bags</option>' +
-        [1,2,3,4,5].map(function(n){ return '<option value="' + n + '">' + n + ' bag' + (n>1?'s':'') + '</option>'; }).join('') +
-      '</select></div>' +
-    '</div>';
-  });
-  wrap.innerHTML = html;
-}
-
-function findBag(id) { for (var i=0;i<RICE_BAGS.length;i++) if (RICE_BAGS[i][0]===id) return RICE_BAGS[i]; return null; }
-
-/* ============================================================
-   INTERACTIONS
-   ============================================================ */
-function filterPhone(input) { input.value = input.value.replace(/[^0-9]/g,''); }
-
-function onQtyChange(selectEl, id) {
-  var item = document.getElementById(id);
-  var val = parseInt(selectEl.value) || 0;
-  if (val > 0) { item.classList.add('active'); } else { item.classList.remove('active'); }
-  updateSummary();
-}
-
-function updateSummary() {
-  var name = document.getElementById('customerName').value.trim();
-  var custPhone = document.getElementById('customerPhone').value.trim();
-  var grandTotal = 0, hasAny = false, html = '';
-
-  RICE_BAGS.forEach(function(row){
-    var id = row[0], bagName = row[1], price = row[3];
-    var qty = parseInt(document.getElementById(id).querySelector('select').value) || 0;
-    if (qty > 0) {
-      var it = price * qty;
-      grandTotal += it; hasAny = true;
-      html += '<div class="summary-row"><span class="s-name">' + bagName + '</span><span class="s-qty">x' + qty + '</span><span class="s-price">&#8377; ' + it.toFixed(0) + '</span></div>';
-    }
-  });
-
-  var emptyEl = document.getElementById('summaryEmpty');
-  var customerEl = document.getElementById('summaryCustomer');
-  var rowsEl = document.getElementById('summaryRows');
-
-  if (!hasAny) { emptyEl.style.display = 'block'; customerEl.innerHTML = ''; rowsEl.innerHTML = ''; return; }
-  emptyEl.style.display = 'none';
-
-  if (name) {
-    var phoneHtml = custPhone ? '<span style="font-size:11px;color:#b0b0b0;margin-top:3px;display:block;font-family:Montserrat,sans-serif;font-weight:500;">&#128222; ' + custPhone + '</span>' : '';
-    customerEl.innerHTML = '<div class="summary-customer"><div class="cust-icon">&#128100;</div><div class="cust-info"><span class="cust-label">Order for</span><span class="cust-name">' + name + '</span>' + phoneHtml + '</div></div>';
-  } else { customerEl.innerHTML = ''; }
-
-  html += '<div class="summary-total"><span class="t-label">Grand Total</span><span class="t-amount">&#8377; ' + grandTotal.toFixed(0) + '</span></div>';
-  rowsEl.innerHTML = html;
-}
-
-function showToast(msg, type) {
-  var t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast' + (type === 'info' ? ' info' : '');
-  t.classList.add('show');
-  if (toastTimer) clearTimeout(toastTimer);
-  toastTimer = setTimeout(function() { t.classList.remove('show'); }, 3500);
-}
-
-function buildWhatsAppURL(locationText) {
-  var name = document.getElementById('customerName').value.trim();
-  var custPhone = document.getElementById('customerPhone').value.trim();
-  var lines = [], grandTotal = 0, count = 1;
-
-  RICE_BAGS.forEach(function(row){
-    var id = row[0], bagName = row[1], price = row[3];
-    var qty = parseInt(document.getElementById(id).querySelector('select').value) || 0;
-    if (qty > 0) {
-      var it = price * qty;
-      lines.push(count + '. ' + bagName + ' x' + qty + ' - Rs.' + it.toFixed(0));
-      grandTotal += it; count++;
-    }
-  });
-
-  var parts = [
-    'Nellore Rice Club Order',
-    '----------------------------',
-    'Name: ' + name,
-    'Phone: ' + custPhone,
-    'Location: ' + locationText,
-    '----------------------------'
-  ].concat(lines).concat([
-    '',
-    '*Total: Rs.' + grandTotal.toFixed(0) + '*',
-    '',
-    '(Cash on Delivery, Next Day Delivery, No pending payment)'
-  ]);
-
-  var msg = encodeURIComponent(parts.join('\n'));
-  var phone = '918008970033';
-
-  return 'https://wa.me/' + phone + '?text=' + msg;
-}
-
-function validateDetails(focusOnError) {
-  var name = document.getElementById('customerName').value.trim();
-  var custPhone = document.getElementById('customerPhone').value.trim();
-  if (!name) {
-    showToast('Please enter your Full Name');
-    if (focusOnError) document.getElementById('customerName').focus();
-    return false;
-  }
-  if (!custPhone) {
-    showToast('Please enter your Phone Number');
-    if (focusOnError) document.getElementById('customerPhone').focus();
-    return false;
-  }
-  if (custPhone.length !== 10 || !/^[6-9][0-9]{9}$/.test(custPhone)) {
-    showToast('Enter a valid 10-digit Indian mobile number');
-    if (focusOnError) document.getElementById('customerPhone').focus();
-    return false;
-  }
-  return true;
-}
-
-/* ============================================================
-   STEP 1 — CONFIRM DETAILS
-   ============================================================ */
-var detailsConfirmed = false;
-var confirmedLocationText = null;
-
-function resetConfirmIfChanged() {
-  if (!detailsConfirmed) return;
-  detailsConfirmed = false;
-  confirmedLocationText = null;
-  var btn = document.getElementById('confirmBtn');
-  btn.classList.remove('confirmed');
-  btn.innerHTML = '<span style="font-size:15px">&#128205;</span> Confirm Details &amp; Detect Location';
-  var hint = document.getElementById('confirmHint');
-  hint.classList.remove('ok');
-  hint.textContent = 'We\'ll ask if you\'re home now, so placing the order later is instant.';
-}
-
-function confirmDetails() {
-  if (detailsConfirmed) return; 
-  if (!validateDetails(true)) return;
-
-  startLocationWarmup();
-  document.getElementById('locationPopup').classList.add('show');
-}
-
-/* ============================================================
-   REFRESH / RECONFIRM 
-   ============================================================ */
-function reconfirmLocation() {
-  if (!validateDetails(true)) return;
-
-  stopLocationWarmup();
-  detailsConfirmed = false;
-  confirmedLocationText = null;
-
-  var btn = document.getElementById('confirmBtn');
-  btn.disabled = false;
-  btn.classList.remove('confirmed');
-  btn.innerHTML = '<span style="font-size:15px">&#128205;</span> Confirm Details &amp; Detect Location';
-
-  var hint = document.getElementById('confirmHint');
-  hint.classList.remove('ok');
-  hint.textContent = 'Redetecting your location — please confirm again.';
-
-  showToast('Refreshing your location…', 'info');
-  confirmDetails();
-}
-
-function finishConfirm(locationText, statusHint) {
-  var btn = document.getElementById('confirmBtn');
-  btn.disabled = false;
-  detailsConfirmed = true;
-  confirmedLocationText = locationText;
-  btn.classList.add('confirmed');
-  btn.innerHTML = '<span style="font-size:15px">&#9989;</span> Details Confirmed';
-  var hint = document.getElementById('confirmHint');
-  hint.classList.add('ok');
-  hint.textContent = statusHint;
-}
-
-function handleLocationChoice(isHome) {
-  document.getElementById('locationPopup').classList.remove('show');
-  var btn = document.getElementById('confirmBtn');
-
-  if (!isHome) {
-    stopLocationWarmup();
-    finishConfirm('Customer not at home right now - please confirm delivery address on call', 'Saved as "Not at home". You\'re all set — select your bags below.');
-    return;
-  }
-
-  btn.disabled = true;
-
-  if (geoState.best && geoState.best.coords.accuracy <= TIERS[0].acc && geoState.best._highConfidence) {
-    stopLocationWarmup();
-    var accLabel = '\u00B1' + Math.round(geoState.best.coords.accuracy) + 'm, confirmed';
-    openMapAdjust(
-      geoState.best.coords.latitude, geoState.best.coords.longitude,
-      'GPS accuracy <b>' + accLabel + '</b>. Drag the pin onto your house if it looks off.',
-      function(finalLat, finalLng, adjusted) {
-        var label = adjusted ? accLabel + ', adjusted by customer on map' : accLabel;
-        finishConfirm(formatLocationText(finalLat, finalLng, label), 'Location locked (' + label + '). You\'re all set — select your bags below.');
-        btn.disabled = false;
-      }
-    );
-    return;
-  }
-
-  if (geoState.unsupported) {
-    finishConfirm('Location not supported on this device', 'Saved. You\'re all set — select your bags below.');
-    btn.disabled = false;
-    return;
-  }
-
-  if (geoState.denied) {
-    finishConfirm('Location permission denied', 'Saved. You\'re all set — select your bags below.');
-    btn.disabled = false;
-    return;
-  }
-
-  showLoadingOverlay();
-
-  var finished = false;
-  var pollTimer = null;
-  var maxTimer = setTimeout(function() { checkAndFinish(true); }, MAX_WAIT);
-
-  function checkAndFinish(forceFinish) {
-    if (finished) return;
-    var elapsed = Date.now() - geoState.startTime;
-    var acceptAcc = currentTierAccuracy(elapsed);
-    var haveGoodEnough = geoState.best && geoState.best.coords.accuracy <= acceptAcc;
-
-    if (haveGoodEnough && elapsed < REQUIRE_HIGH_CONFIDENCE_UNTIL) {
-      haveGoodEnough = haveGoodEnough && geoState.best._highConfidence;
-    }
-
-    if (!forceFinish && !haveGoodEnough && !geoState.denied) return;
-
-    finished = true;
-    clearTimeout(maxTimer);
-    clearInterval(pollTimer);
-    stopLocationWarmup();
-    hideLoadingOverlay();
-    btn.disabled = false;
-
-    var chosen = geoState.best || geoState.fallback;
-    if (chosen) {
-      var confirmedTag;
-      if (!geoState.best) {
-        confirmedTag = 'unconfirmed - use with care';
-      } else if (!geoState.best._highConfidence) {
-        confirmedTag = 'confirmed, limited signal - use with care';
-      } else {
-        confirmedTag = 'confirmed';
-      }
-      var accLabel = '\u00B1' + Math.round(chosen.coords.accuracy) + 'm, ' + confirmedTag;
-      openMapAdjust(
-        chosen.coords.latitude, chosen.coords.longitude,
-        'GPS accuracy <b>' + accLabel + '</b>. Drag the pin onto your house if it looks off.',
-        function(finalLat, finalLng, adjusted) {
-          var label = adjusted ? accLabel + ', adjusted by customer on map' : accLabel;
-          finishConfirm(formatLocationText(finalLat, finalLng, label), 'Location locked (' + label + '). You\'re all set — select your bags below.');
-        }
-      );
-    } else if (geoState.denied) {
-      finishConfirm('Location permission denied', 'Saved. You\'re all set — select your bags below.');
-    } else {
-      finishConfirm('Could not get precise location', 'Saved. You\'re all set — select your bags below.');
-    }
-  }
-
-  pollTimer = setInterval(function() { checkAndFinish(false); }, 300);
-}
-
-/* ============================================================
-   STEP 2 — PLACE ORDER
-   ============================================================ */
-function sendToWhatsApp() {
-  if (!validateDetails(true)) return;
-
-  var hasAny = false;
-  RICE_BAGS.forEach(function(row){
-    if (parseInt(document.getElementById(row[0]).querySelector('select').value) > 0) hasAny = true;
-  });
-  if (!hasAny) { showToast('Please select at least one rice bag'); return; }
-
-  if (!detailsConfirmed) {
-    showToast('Please tap "Confirm Details & Detect Location" first');
-    document.getElementById('confirmBtn').scrollIntoView({ behavior: 'smooth', block: 'center' });
-    return;
-  }
-
-  window.location.href = buildWhatsAppURL(confirmedLocationText);
-}
-
-/* ============================================================
-   PRECISE GEOLOCATION
-   ============================================================ */
-var geoState = { best: null, fallback: null, history: [], watchId: null, denied: false, unsupported: false, startTime: null };
-
-var TIERS = [
-  { until: 45000, acc: 6 },
-  { until: 65000, acc: 8 },
-  { until: 85000, acc: 12 },
-  { until: 100000, acc: 18 }
-];
-var MAX_WAIT = 100000;
-var CONFIRM_RADIUS = 12;
-var MIN_GPS_WARMUP = 8000;
-var ACCURACY_REJECT = 35;
-var CONFIRM_MIN_CLUSTER = 3;
-var CONFIRM_MIN_TIMESPAN = 5000;
-var HISTORY_MAX = 14;
-var MIN_JITTER = 0.5;
-var REQUIRE_HIGH_CONFIDENCE_UNTIL = 70000;
-
-var TIPS = [
-  '&#128246; Standing near a window or open door helps lock the signal faster.',
-  '&#127968; If you\'re indoors, a spot closer to a wall facing the sky helps GPS see more satellites.',
-  '&#128640; We\'re holding out for the tightest fix possible — worth the extra few seconds!',
-  '&#128737;&#65039; Our delivery rider uses this exact pin, so precision now means no wrong turns later.',
-  '&#127794; Nearly there — refining between the last couple of metres.',
-  '&#128269; Cross-checking multiple satellite readings to rule out any stray signal bounce.'
-];
-
-function haversineMeters(lat1, lon1, lat2, lon2) {
-  var R = 6371000;
-  var toRad = function(d) { return d * Math.PI / 180; };
-  var dLat = toRad(lat2 - lat1);
-  var dLon = toRad(lon2 - lon1);
-  var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-          Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-          Math.sin(dLon / 2) * Math.sin(dLon / 2);
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
-}
-
-function clusterMaxPairwiseDistance(cluster) {
-  var maxD = 0;
-  for (var a = 0; a < cluster.length; a++) {
-    for (var b = a + 1; b < cluster.length; b++) {
-      var d = haversineMeters(cluster[a].coords.latitude, cluster[a].coords.longitude, cluster[b].coords.latitude, cluster[b].coords.longitude);
-      if (d > maxD) maxD = d;
-    }
-  }
-  return maxD;
-}
-
-function clusterHasAltitude(cluster) {
-  for (var i = 0; i < cluster.length; i++) {
-    var c = cluster[i].coords;
-    if (typeof c.altitude === 'number' && c.altitude !== null) return true;
-  }
-  return false;
-}
-
-function considerReading(pos) {
-  var elapsed = Date.now() - geoState.startTime;
-
-  if (pos.coords.accuracy > ACCURACY_REJECT) return;
-
-  pos._t = Date.now();
-  geoState.history.push(pos);
-  if (geoState.history.length > HISTORY_MAX) geoState.history.shift();
-
-  if (elapsed >= MIN_GPS_WARMUP) {
-    if (!geoState.fallback || pos.coords.accuracy < geoState.fallback.coords.accuracy) {
-      geoState.fallback = pos;
-    }
-  }
-
-  if (elapsed < MIN_GPS_WARMUP) return;
-
-  var winner = null, winnerScore = -Infinity;
-  for (var i = 0; i < geoState.history.length; i++) {
-    var center = geoState.history[i];
-    var cluster = [center];
-    for (var j = 0; j < geoState.history.length; j++) {
-      if (i === j) continue;
-      var other = geoState.history[j];
-      var d = haversineMeters(center.coords.latitude, center.coords.longitude, other.coords.latitude, other.coords.longitude);
-      if (d <= CONFIRM_RADIUS) cluster.push(other);
-    }
-    if (cluster.length < CONFIRM_MIN_CLUSTER) continue;
-
-    var times = cluster.map(function(p) { return p._t; });
-    var timespan = Math.max.apply(null, times) - Math.min.apply(null, times);
-    if (timespan < CONFIRM_MIN_TIMESPAN) continue;
-
-    var jitter = clusterMaxPairwiseDistance(cluster);
-    var hasAlt = clusterHasAltitude(cluster);
-    var highConfidence = hasAlt || jitter >= MIN_JITTER;
-    var bestAcc = Math.min.apply(null, cluster.map(function(p) { return p.coords.accuracy; }));
-
-    var score = cluster.length * 100 + (highConfidence ? 50 : 0) + Math.max(0, 40 - bestAcc);
-    if (score > winnerScore) {
-      winnerScore = score;
-      winner = { cluster: cluster, jitter: jitter, hasAlt: hasAlt, highConfidence: highConfidence, bestAcc: bestAcc, score: score };
-    }
-  }
-
-  if (winner) {
-    var sumLat = 0, sumLng = 0, sumW = 0;
-    winner.cluster.forEach(function(p) {
-      var w = 1 / (p.coords.accuracy * p.coords.accuracy);
-      sumLat += p.coords.latitude * w;
-      sumLng += p.coords.longitude * w;
-      sumW += w;
-    });
-    var synthetic = {
-      coords: { latitude: sumLat / sumW, longitude: sumLng / sumW, accuracy: winner.bestAcc },
-      _t: Date.now(),
-      _clusterSize: winner.cluster.length,
-      _highConfidence: winner.highConfidence,
-      _jitter: winner.jitter,
-      _hasAltitude: winner.hasAlt,
-      _score: winner.score
-    };
-
-    if (!geoState.best || synthetic._score > geoState.best._score) {
-      geoState.best = synthetic;
-    }
-  }
-}
-
-function startLocationWarmup() {
-  geoState.best = null;
-  geoState.fallback = null;
-  geoState.history = [];
-  geoState.denied = false;
-  geoState.unsupported = false;
-  geoState.startTime = Date.now();
-
-  if (!navigator.geolocation) { geoState.unsupported = true; return; }
-
-  geoState.watchId = navigator.geolocation.watchPosition(
-    function(pos) {
-      considerReading(pos);
-      updateLiveUI();
-    },
-    function(err) {
-      if (err.code === err.PERMISSION_DENIED) geoState.denied = true;
-    },
-    { enableHighAccuracy: true, timeout: MAX_WAIT, maximumAge: 0 }
-  );
-}
-
-function stopLocationWarmup() {
-  if (geoState.watchId !== null) {
-    navigator.geolocation.clearWatch(geoState.watchId);
-    geoState.watchId = null;
-  }
-}
-
-function formatLocationText(lat, lng, accLabel) {
-  var latF = lat.toFixed(7);
-  var lngF = lng.toFixed(7);
-  return latF + ', ' + lngF + ' (accuracy ' + accLabel + ') https://maps.google.com/?q=' + latF + ',' + lngF;
-}
-
-/* ============================================================
-   MAP PIN ADJUSTMENT 
-   ============================================================ */
-var pinMapInstance = null, pinMarker = null, mapPinCallback = null, mapOriginalCoords = null;
-
-function ensureLeafletIconFix() {
-  if (window.__leafletIconFixed || typeof L === 'undefined') return;
-  delete L.Icon.Default.prototype._getIconUrl;
-  L.Icon.Default.mergeOptions({
-    iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
-    iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
-    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png'
-  });
-  window.__leafletIconFixed = true;
-}
-
-function openMapAdjust(lat, lng, accuracyNote, onConfirm) {
-  mapPinCallback = onConfirm;
-  mapOriginalCoords = { lat: lat, lng: lng };
-  document.getElementById('mapAccuracyNote').innerHTML = accuracyNote;
-  document.getElementById('mapAdjustOverlay').classList.add('show');
-
-  setTimeout(function() {
-    ensureLeafletIconFix();
-    if (typeof L === 'undefined') {
-      document.getElementById('mapAdjustOverlay').classList.remove('show');
-      if (mapPinCallback) mapPinCallback(lat, lng, false);
-      return;
-    }
-    if (!pinMapInstance) {
-      pinMapInstance = L.map('pinMap', { attributionControl: false }).setView([lat, lng], 19);
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-        maxZoom: 20,
-        subdomains: 'abcd'
-      }).addTo(pinMapInstance);
-      pinMarker = L.marker([lat, lng], { draggable: true }).addTo(pinMapInstance);
-    } else {
-      pinMapInstance.setView([lat, lng], 19);
-      pinMarker.setLatLng([lat, lng]);
-    }
-    pinMapInstance.invalidateSize();
-  }, 250);
-}
-
-function confirmMapPin() {
-  document.getElementById('mapAdjustOverlay').classList.remove('show');
-  var finalLat = mapOriginalCoords.lat, finalLng = mapOriginalCoords.lng, adjusted = false;
-  if (pinMarker) {
-    var ll = pinMarker.getLatLng();
-    finalLat = ll.lat;
-    finalLng = ll.lng;
-    adjusted = haversineMeters(mapOriginalCoords.lat, mapOriginalCoords.lng, finalLat, finalLng) > 1;
-  }
-  if (mapPinCallback) mapPinCallback(finalLat, finalLng, adjusted);
-}
-
-/* ---------- Live "locking in" UI ---------- */
-var uiTimer = null, tipTimer = null, tipIndex = 0;
-
-function accuracyColor(acc) {
-  if (acc <= 10) return 'var(--green-good)';
-  if (acc <= 25) return 'var(--gold-light)';
-  return 'var(--red-warn)';
-}
-
-function statusForAccuracy(acc, elapsed) {
-  if (acc === null) return elapsed < 4000 ? 'Searching for satellites' : 'Locking onto your signal';
-  if (acc <= 8) return 'Pinpoint lock achieved!';
-  if (acc <= 12) return 'Excellent precision — refining';
-  if (acc <= 20) return 'Good precision — tightening further';
-  return 'Refining your location';
-}
-
-function updateLiveUI() {
-  var titleEl = document.getElementById('loadingTitle');
-  var accValueEl = document.getElementById('accuracyValue');
-  var accFillEl = document.getElementById('accuracyFill');
-  var confirmStateEl = document.getElementById('confirmState');
-  if (!titleEl) return;
-
-  var elapsed = geoState.startTime ? (Date.now() - geoState.startTime) : 0;
-  var acc = geoState.best ? geoState.best.coords.accuracy : null;
-
-  titleEl.textContent = statusForAccuracy(acc, elapsed) + (acc === null ? '…' : '');
-
-  if (acc !== null) {
-    accValueEl.textContent = '\u00B1' + Math.round(acc) + 'm';
-    accValueEl.style.color = accuracyColor(acc);
-    var pct = Math.max(4, Math.min(100, 100 - ((acc - 5) / 95) * 96));
-    accFillEl.style.width = pct + '%';
-    var csize = geoState.best._clusterSize || 2;
-    if (confirmStateEl) {
-      confirmStateEl.innerHTML = geoState.best._highConfidence
-        ? '<b>Confirmed</b> by ' + csize + ' matching readings'
-        : 'Have ' + csize + ' matching readings — waiting for a stronger signal to fully confirm';
-    }
-  } else {
-    accValueEl.textContent = 'searching…';
-    accValueEl.style.color = '#777';
-    accFillEl.style.width = '4%';
-    if (confirmStateEl) {
-      confirmStateEl.innerHTML = geoState.fallback
-        ? 'Have a rough reading — waiting for more matching readings to confirm it'
-        : 'Waiting for a cluster of matching readings to confirm the fix…';
-    }
-  }
-
-  var timeFillEl = document.getElementById('timeFill');
-  if (timeFillEl) {
-    var timePct = Math.min(100, (elapsed / MAX_WAIT) * 100);
-    timeFillEl.style.width = timePct + '%';
-  }
-}
-
-function startTipRotation() {
-  tipIndex = 0;
-  var tipEl = document.getElementById('tipText');
-  tipEl.innerHTML = TIPS[0];
-  tipTimer = setInterval(function() {
-    tipEl.classList.add('fade');
-    setTimeout(function() {
-      tipIndex = (tipIndex + 1) % TIPS.length;
-      tipEl.innerHTML = TIPS[tipIndex];
-      tipEl.classList.remove('fade');
-    }, 350);
-  }, 4200);
-}
-function stopTipRotation() {
-  if (tipTimer) { clearInterval(tipTimer); tipTimer = null; }
-}
-
-function showLoadingOverlay() {
-  updateLiveUI();
-  document.getElementById('locationLoading').classList.add('show');
-  startTipRotation();
-  uiTimer = setInterval(updateLiveUI, 400);
-}
-function hideLoadingOverlay() {
-  document.getElementById('locationLoading').classList.remove('show');
-  stopTipRotation();
-  if (uiTimer) { clearInterval(uiTimer); uiTimer = null; }
-}
-
-function currentTierAccuracy(elapsed) {
-  for (var i = 0; i < TIERS.length; i++) {
-    if (elapsed <= TIERS[i].until) return TIERS[i].acc;
-  }
-  return TIERS[TIERS.length - 1].acc;
-}
-
-/* ============================================================
-   INIT
-   ============================================================ */
-renderItems();
-updateSummary();
-</script>
-</body>
-</html>
+/* ===== Rules engine: 13-card Indian Rummy (2 decks + 2 printed jokers) ===== */
+const L=['','A','2','3','4','5','6','7','8','9','10','J','Q','K'],S=['♠','♥','♦','♣'];
+let W=1;
+const pts=c=>!c.r?0:(c.r==1||c.r>10)?10:c.r;
+const isJ=c=>!c.r||c.r==W;               // printed joker or wild-joker rank
+function kinds(cs){                       // which melds can these cards form?
+ const js=cs.filter(isJ).length,R=cs.filter(c=>!isJ(c)),o=[];if(!R.length)return o;
+ if(cs.length<5&&R.every(c=>c.r==R[0].r)&&new Set(R.map(c=>c.s)).size==R.length)o.push('set');
+ if(cs.length<14&&R.every(c=>c.s==R[0].s)){const rs=R.map(c=>c.r);
+  if(new Set(rs).size==rs.length)for(const hi of[0,1]){const q=rs.map(r=>hi&&r==1?14:r);
+   if(Math.max(...q)-Math.min(...q)+1-R.length<=js){o.push(js?'imp':'pure');break}}}
+ return o}
+function solve(h){                        // best grouping: pure + 2nd sequence first, then least dead points
+ const n=h.length,N=1<<n,by=[...Array(n)].map(()=>[]);
+ for(let m=7;m<N;m++){const cs=[];for(let i=0;i<n;i++)if(m>>i&1)cs.push(h[i]);
+  if(cs.length>2)for(const k of kinds(cs))by[31-Math.clz32(m&-m)].push([m,k])}
+ const memo=new Map(),f=(mk,p,s)=>{
+  if(!mk)return{c:(p?0:200)+(s>1?0:100)};
+  const key=mk*8+p*4+s;if(memo.has(key))return memo.get(key);
+  const lb=31-Math.clz32(mk&-mk);let b={c:1e9};
+  for(const[m,k]of by[lb])if((m&mk)==m){const r=f(mk^m,(p||k=='pure')?1:0,Math.min(2,s+(k=='set'?0:1)));if(r.c<b.c)b={c:r.c,m,k,nx:r}}
+  const r=f(mk^(1<<lb),p,s),d=pts(h[lb])+r.c;if(d<b.c)b={c:d,d:lb,nx:r};
+  memo.set(key,b);return b};
+ let r=f(N-1,0,0);const o={c:r.c,groups:[],loose:[]};
+ while(r.nx){if(r.m)o.groups.push({k:r.k,cards:h.filter((_,i)=>r.m>>i&1)});else o.loose.push(h[r.d]);r=r.nx}
+ const ord={pure:0,imp:1,set:2};let q=0;
+ o.groups.sort((a,b)=>ord[a.k]-ord[b.k]).forEach(g=>{
+  g.cards.sort((a,b)=>isJ(a)-isJ(b)||a.r-b.r);
+  if(g.k=='set')g.t='Set';else{q++;g.t=q==1?(g.k=='pure'?'1st Life · pure':'Series · impure'):q==2?'2nd Life · '+(g.k=='pure'?'pure':'impure'):'Series'}});
+ o.loose.sort((a,b)=>a.s-b.s||a.r-b.r);
+ o.pure=o.groups.some(g=>g.k=='pure');o.seq=o.groups.filter(g=>g.k!='set').length;
+ o.dead=o.loose.reduce((a,c)=>a+pts(c),0);o.ok=o.pure&&o.seq>1&&!o.loose.length;return o}
+function best(h){let b=null;h.forEach((c,i)=>{const r=solve(h.filter((_,j)=>j!=i)),k=r.c-pts(c)/100;if(!b||k<b.k)b={i,r,k}});return b}
+
+/* ===== 3D scene ===== */
+const cvEl=document.createElement('canvas'),ren=new THREE.WebGLRenderer({antialias:true,canvas:cvEl});
+ren.setPixelRatio(Math.min(devicePixelRatio,2));ren.shadowMap.enabled=true;ren.shadowMap.type=THREE.PCFSoftShadowMap;
+ren.outputEncoding=THREE.sRGBEncoding;ren.toneMapping=THREE.ACESFilmicToneMapping;document.body.prepend(cvEl);
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x0b1410);
+const camera=new THREE.PerspectiveCamera(45,1,.1,100);
+scene.add(new THREE.HemisphereLight(0xfff4e0,0x1a3326,.85));
+const sun=new THREE.DirectionalLight(0xfff1d6,1.1);sun.position.set(4,14,8);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);
+Object.assign(sun.shadow.camera,{left:-13,right:13,top:13,bottom:-13});scene.add(sun);
+const mkc=(w,h)=>{const k=document.createElement('canvas');k.width=w;k.height=h;return k};
+const fk=mkc(256,256),fx=fk.getContext('2d');fx.fillStyle='#1f5a3c';fx.fillRect(0,0,256,256);
+for(let i=0;i<5000;i++){fx.fillStyle=`rgba(${Math.random()<.5?'0,0,0':'255,255,255'},.05)`;fx.fillRect(Math.random()*256,Math.random()*256,2,2)}
+const ft=new THREE.CanvasTexture(fk);ft.wrapS=ft.wrapT=THREE.RepeatWrapping;ft.repeat.set(6,6);ft.encoding=THREE.sRGBEncoding;
+const tab=new THREE.Mesh(new THREE.CylinderGeometry(15,15,.4,64),new THREE.MeshStandardMaterial({map:ft,roughness:.95}));tab.position.y=-.2;tab.receiveShadow=true;scene.add(tab);
+const rim=new THREE.Mesh(new THREE.TorusGeometry(15,.7,16,96),new THREE.MeshStandardMaterial({color:0x5a3a22,roughness:.45}));rim.rotation.x=Math.PI/2;scene.add(rim);
+
+const cache={};
+function face(c){const key=c.r+'-'+c.s;if(cache[key])return cache[key];
+ const k=mkc(180,252),x=k.getContext('2d');x.beginPath();x.roundRect(2,2,176,248,18);x.fillStyle='#fffaf0';x.fill();x.strokeStyle='#bbb';x.lineWidth=3;x.stroke();x.textAlign='center';
+ if(!c.r){x.fillStyle='#6a2c91';x.font='bold 30px Georgia';x.fillText('JOKER',90,135)}
+ else{x.fillStyle=c.s%2?'#c0262d':'#1a1a1a';x.font='bold 34px Georgia';x.fillText(L[c.r],28,44);x.font='28px serif';x.fillText(S[c.s],28,78);x.font='92px serif';x.fillText(S[c.s],90,155)}
+ const t=new THREE.CanvasTexture(k);t.anisotropy=8;t.encoding=THREE.sRGBEncoding;return cache[key]=t}
+const bk=mkc(180,252),bx=bk.getContext('2d');bx.beginPath();bx.roundRect(2,2,176,248,18);bx.fillStyle='#8c1d2b';bx.fill();bx.strokeStyle='#fffaf0';bx.lineWidth=8;bx.stroke();
+bx.strokeStyle='#c9a35b';bx.lineWidth=3;for(let i=0;i<9;i++){bx.strokeRect(24+i*3,24+i*3,132-i*6,204-i*6)}
+const backT=new THREE.CanvasTexture(bk);backT.encoding=THREE.sRGBEncoding;
+const G=new THREE.BoxGeometry(1,1.4,.02),sideM=new THREE.MeshStandardMaterial({color:0xe9e2d0}),backM=new THREE.MeshStandardMaterial({map:backT,roughness:.45,alphaTest:.5});
+function mk(c){const fm=new THREE.MeshStandardMaterial({map:face(c),roughness:.45,alphaTest:.5});
+ c.m=new THREE.Mesh(G,[sideM,sideM,sideM,sideM,fm,backM]);c.m.castShadow=c.m.receiveShadow=true;c.m.userData.c=c;
+ c.m.position.set(-1.3,.5,.6);c.m.rotation.x=Math.PI/2;c.tp=[-1.3,.5,.6];c.tr=[Math.PI/2,0];scene.add(c.m)}
+const tgt=(c,x,y,z,rx,rz)=>{c.tp=[x,y,z];c.tr=[rx,rz]};
+
+/* ===== Game state ===== */
+let stock,disc,cut,H,turn,phase,sel,AN,labs=[],all=[];
+const $=id=>document.getElementById(id),msg=t=>$('msg').textContent=t;
+const rnd=n=>crypto.getRandomValues(new Uint32Array(1))[0]%n;
+function shuf(a){for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a}
+function newGame(){
+ all.forEach(c=>scene.remove(c.m));all=[];let id=0;
+ for(let d=0;d<2;d++){for(let s=0;s<4;s++)for(let r=1;r<14;r++)all.push({r,s,id:id++});all.push({r:0,s:4,id:id++})}
+ all.forEach(mk);stock=shuf(all.slice());H=[[],[],[]];
+ for(let i=0;i<13;i++)for(let p=0;p<3;p++)H[p].push(stock.pop());
+ cut=stock.pop();W=cut.r||1;disc=[stock.pop()];turn=0;phase='draw';sel=null;
+ $('modal').style.display='none';msg('Your turn: tap the deck or the open discard to draw.');render()}
+function place(){
+ stock.forEach((c,i)=>tgt(c,-1.3,.03+i*.004,.6,Math.PI/2,0));
+ disc.forEach((c,i)=>tgt(c,1.3+(c.id%5-2)*.04,.03+i*.01,.6+(c.id%3-1)*.05,-Math.PI/2,(c.id%9-4)*.05));
+ tgt(cut,-2.9,.03,.6,-Math.PI/2,Math.PI/2);
+ [1,2].forEach(b=>H[b].forEach((c,i)=>tgt(c,(b==1?-4.6:4.6)-(H[b].length-1)*.095+i*.19,.5+i*.004,-5.2,Math.PI/2+.5,0)))}
+function hand(){
+ const A=solve(H[0]);AN=A;const segs=A.groups.map(g=>g.cards);if(A.loose.length)segs.push(A.loose);
+ const n=H[0].length,sp=Math.min(.64,10.5/(n+segs.length)),gap=sp*.8;
+ let x=-(n*sp+(segs.length-1)*gap)/2+sp/2,i=0;H[0]=[];labs.forEach(l=>l.el.remove());labs=[];
+ segs.forEach((s,si)=>{const x0=x;
+  s.forEach(c=>{H[0].push(c);const up=c===sel;tgt(c,x,.6+i*.006+(up?.5:0),5.4-(up?.5:0),-Math.PI/2+.5,0);x+=sp;i++});
+  const g=A.groups[si];if(g){const el=document.createElement('div');el.className='lab '+g.k;el.textContent=g.t;document.body.appendChild(el);labs.push({el,x:(x0+x-sp)/2})}
+  x+=gap});
+ $('st').innerHTML=`Wild joker: <b>${cut.r?L[cut.r]+S[cut.s]:'A'}</b> (every ${L[W]} is a joker)<br>Deck ${stock.length} · Bot 1: ${H[1].length} · Bot 2: ${H[2].length}<br>Turn: <b>${turn?'Bot '+turn:'You'}</b><br>1st Life (pure): ${A.pure?'✅':'❌'}<br>2nd Life: ${A.pure&&A.seq>1?'✅':'❌'}<br>Points in hand: <b>${A.dead}</b>`;
+ posLabs()}
+function posLabs(){camera.updateMatrixWorld();labs.forEach(l=>{const v=new THREE.Vector3(l.x,.1,6.4).project(camera);l.el.style.left=(v.x+1)/2*innerWidth+'px';l.el.style.top=(1-v.y)/2*innerHeight+'px'})}
+const render=()=>{place();hand()};
+function drawStock(){if(!stock.length){const t=disc.pop();stock=shuf(disc);disc=[t]}return stock.pop()}
+function next(){turn=(turn+1)%3;if(turn){bot(turn)}else{phase='draw';msg('Your turn: draw from the deck or the discard pile.');render()}}
+function bot(b){msg('Bot '+b+' is playing…');render();
+ setTimeout(()=>{const h=H[b],top=disc[disc.length-1],take=best(h.concat(top)).r.c<solve(h).c;
+  h.push(take?disc.pop():drawStock());place();
+  setTimeout(()=>{const o=best(h);const c=h.splice(o.i,1)[0];disc.push(c);
+   if(o.r.ok){finish(b,false)}else{next()}},900)},900)}
+function finish(w,bad){phase='over';
+ const sc=[0,1,2].map(p=>{if(p==w&&!bad)return 0;const A=solve(H[p]);return A.pure?Math.min(80,A.dead):80});
+ if(bad)sc[w]=80;render();
+ $('modal').innerHTML=`<b>${bad?'Invalid declare!':(w?'Bot '+w+' wins':'You win! 🎉')}</b><br>${bad?'You need a pure sequence, a 2nd sequence, and every card grouped. 80 penalty points.<br>':''}You: ${sc[0]} · Bot 1: ${sc[1]} · Bot 2: ${sc[2]}<br><br><button onclick="newGame()">Play again</button>`;
+ $('modal').style.display='block'}
+function mine(){return phase=='disc'&&sel}
+$('bd').onclick=()=>{if(!mine())return msg('Draw a card, then tap one to discard.');H[0].splice(H[0].indexOf(sel),1);disc.push(sel);sel=null;phase='wait';next()};
+$('bs').onclick=()=>{if(!mine())return msg('Draw, then lift the card you will finish with.');
+ H[0].splice(H[0].indexOf(sel),1);disc.push(sel);sel=null;finish(0,!solve(H[0]).ok)};
+$('bh').onclick=()=>{if(phase=='draw'){const base=solve(H[0]).c,w=best(H[0].concat(disc[disc.length-1])).r.c;
+  msg(w<base?'Hint: take the open discard. It improves your hand.':'Hint: draw from the deck.')}
+ else if(phase=='disc'){const b=best(H[0]);sel=H[0][b.i];hand();msg(b.r.ok?'Hint: you can declare! Lift this card and press Declare.':'Hint: discard the lifted card.')}};
+const rc=new THREE.Raycaster(),mv=new THREE.Vector2();
+cvEl.addEventListener('pointerdown',e=>{if(turn||phase=='over'||phase=='wait')return;
+ mv.set(e.clientX/innerWidth*2-1,-(e.clientY/innerHeight)*2+1);rc.setFromCamera(mv,camera);
+ const hit=m=>m&&rc.intersectObject(m)[0];
+ const hs=rc.intersectObjects(H[0].map(c=>c.m));
+ if(phase=='disc'&&hs.length){const c=hs[0].object.userData.c;sel=sel===c?null:c;hand();return}
+ if(phase=='draw'){
+  if(hit(disc.length&&disc[disc.length-1].m)){H[0].push(disc.pop());phase='disc';msg('Tap a card to lift it, then Discard (or Declare).');render()}
+  else if(hit(stock.length&&stock[stock.length-1].m)){H[0].push(drawStock());phase='disc';msg('Tap a card to lift it, then Discard (or Declare).');render()}}});
+function fit(){const w=innerWidth,h=innerHeight,a=w/h;ren.setSize(w,h);camera.aspect=a;
+ const d=Math.max(14,12.5/(2*Math.tan(camera.fov*Math.PI/360)*a));camera.position.set(0,.72*d,2.5+.69*d);camera.lookAt(0,0,2.2);camera.updateProjectionMatrix();posLabs()}
+addEventListener('resize',fit);fit();
+(function loop(){requestAnimationFrame(loop);const k=.16;
+ all.forEach(c=>{const p=c.m.position,r=c.m.rotation;p.x+=(c.tp[0]-p.x)*k;p.y+=(c.tp[1]-p.y)*k;p.z+=(c.tp[2]-p.z)*k;r.x+=(c.tr[0]-r.x)*k;r.z+=(c.tr[1]-r.z)*k});
+ ren.render(scene,camera)})();
+newGame();
+</script></body></html>
