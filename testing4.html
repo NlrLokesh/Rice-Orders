@@ -881,7 +881,7 @@ function hand(){
   g.cards.forEach(c=>{const up=selS.has(c),t=(x-cx)/6.5,lf=up?.42:0,zo=up?.03:0;tgt(c,x,handY+k*0.0244+lf*0.7174+zo*0.6967,handZ+k*0.0251-lf*0.6967+zo*0.7174,-Math.PI/2+.8,-t*.08,HS);x+=sp;k++});
   setPlate(gi,g,x0,x-sp,k0,k-1,sp,gap,handY,handZ);x+=gap});
  for(let i=segs.length;i<plates.length;i++)plates[i].on=false;
- if(drag)tgt(drag.c,drag.x,handY+.95,handZ-.65,-Math.PI/2+.8,0,HS*1.08);
+ if(drag)tgt(drag.c,drag.x,handY+0.32,handZ-0.55,-Math.PI/2+.8,0,HS);
  [1,2].forEach(b=>{
   const pill=$('b'+b+'-cards');if(pill)pill.textContent=H[b].length+' Cards';
   const t=$('t'+b);if(t)t.classList.toggle('on',turn==b&&phase!='over');
@@ -1192,9 +1192,17 @@ cvEl.addEventListener('pointerdown',e=>{if(!e.isPrimary||pd||phase=='deal'||phas
 addEventListener('pointermove',e=>{if(!e.isPrimary)return;if(pd&&!e.buttons){cancelPtr();return}
  if(!pd){if(phase=='deal'||phase=='over'||phase=='home')return;ray(e);const h=hitHand();if(h!==hov){hov=h;cvEl.style.cursor=h?'grab':'default'}return}
  if(!drag&&Math.hypot(e.clientX-pd.sx,e.clientY-pd.sy)<24)return;ray(e);if(!rc.ray.intersectPlane(pl,pt))return;
- if(!drag){drag={c:pd.c,x:pt.x,origG:pd.c.g,origIdx:H[0].indexOf(pd.c)};cvEl.style.cursor='grabbing';snd(420,.03)}
+ if(!drag){
+  drag={c:pd.c,x:pt.x,origG:pd.c.g,origIdx:H[0].indexOf(pd.c)};
+  if(pd.c&&pd.c.m)pd.c.m.renderOrder=-1;
+  if(pd.c&&pd.c.fx)pd.c.fx.renderOrder=-1;
+  cvEl.style.cursor='grabbing';snd(420,.03);
+ }
  drag.x=pt.x;
- tgt(drag.c,drag.x,1.85,4.95,-Math.PI/2+.8,0,HS*1.08)});
+ const isShort=(innerWidth>innerHeight&&innerHeight<=480);
+ const handY=isShort?0.85:0.9;
+ const handZ=isShort?5.25:5.6;
+ tgt(drag.c,drag.x,handY+0.32,handZ-0.55,-Math.PI/2+.8,0,HS)});
 addEventListener('pointerup',e=>{if(!pd||!e.isPrimary)return;
  if(!drag){selS.has(pd.c)?selS.delete(pd.c):selS.add(pd.c);snd(600,.03)}
  else{snd(360,.04);const c=drag.c,dropX=drag.x,origG=drag.origG;
@@ -1235,9 +1243,11 @@ addEventListener('pointerup',e=>{if(!pd||!e.isPrimary)return;
   loose.forEach(c=>finalH.push(c));
   H[0]=finalH;
  }
+ if(drag&&drag.c&&drag.c.m)drag.c.m.renderOrder=0;
+ if(drag&&drag.c&&drag.c.fx)drag.c.fx.renderOrder=6;
  pd=null;drag=null;hov=null;hand()});
 addEventListener('pointercancel',()=>cancelPtr());
-function cancelPtr(){if(drag){tidy()}pd=null;drag=null;hov=null;hand()}
+function cancelPtr(){if(drag&&drag.c&&drag.c.m)drag.c.m.renderOrder=0;if(drag&&drag.c&&drag.c.fx)drag.c.fx.renderOrder=6;if(drag){tidy()}pd=null;drag=null;hov=null;hand()}
 
 /* ===== Joker & wild-card Jester hat badge ===== */
 const spk=(()=>{const k=mkc(128,128),x=k.getContext('2d');
@@ -1282,12 +1292,12 @@ function fit(){const w=innerWidth,h=innerHeight,a=w/h;ren.setSize(w,h);camera.as
   fitW=11.2;
   HS=Math.min(1.4,Math.max(1.15,(w/400)*1.25));
  }else{
-  if(h<=400){
-   fitW=15.2;
-   HS=Math.min(0.98,Math.max(0.78,(h/400)*0.92));
+  if(h<=420){
+   fitW=14.0;
+   HS=1.08;
   }else if(h<=520){
-   fitW=14.8;
-   HS=Math.min(1.14,Math.max(0.92,(h/520)*1.08));
+   fitW=14.2;
+   HS=1.18;
   }else{
    fitW=14.2;
    HS=1.28;
@@ -1316,8 +1326,8 @@ addEventListener('resize',fit);fit();updateButtons();
 let T=0;
 (function loop(){requestAnimationFrame(loop);T+=.016;const q=.14;
  const jk=phase=='deal'?[]:H[0].filter(isJ);
- all.forEach(c=>{const p=c.m.position,r=c.m.rotation,dXZ=Math.hypot(c.tp[0]-p.x,c.tp[2]-p.z),fly=dXZ>0.8,ty=c.tp[1]+(fly?Math.min(dXZ*0.65,3.4):0),tz=c.tp[2]+(fly?Math.min(dXZ*0.25,1.2):0);
-  p.x+=(c.tp[0]-p.x)*q;p.y+=(ty-p.y)*q;p.z+=(tz-p.z)*q;r.x+=(c.tr[0]-r.x)*q;r.z+=(c.tr[1]-r.z)*q;c.m.scale.setScalar(c.m.scale.x+(c.sc-c.m.scale.x)*q);const j=jk.includes(c)||(cut&&c===cut);if(j||c.fx)glint(c,j)});
+ all.forEach(c=>{const p=c.m.position,r=c.m.rotation,dXZ=Math.hypot(c.tp[0]-p.x,c.tp[2]-p.z),isDragging=(drag&&c===drag.c),fly=!isDragging&&(dXZ>0.8),ty=c.tp[1]+(fly?Math.min(dXZ*0.65,3.4):0),tz=c.tp[2]+(fly?Math.min(dXZ*0.25,1.2):0),rate=isDragging?0.32:q;
+  p.x+=(c.tp[0]-p.x)*rate;p.y+=(ty-p.y)*rate;p.z+=(tz-p.z)*rate;r.x+=(c.tr[0]-r.x)*q;r.z+=(c.tr[1]-r.z)*q;c.m.scale.setScalar(c.m.scale.x+(c.sc-c.m.scale.x)*q);const j=jk.includes(c)||(cut&&c===cut);if(j||c.fx)glint(c,j)});
  const gl=phase=='draw'?.4+.35*Math.sin(T*5):0;glow.forEach(m=>m.material.opacity=gl);
  for(let i=1;i<360;i+=3){dp[i]+=.004;if(dp[i]>10)dp[i]=1}dg.attributes.position.needsUpdate=true;
  plates.forEach(P=>{const tg=P.tg,m=P.m,u=P.u,live=P.on&&phase!='deal';
