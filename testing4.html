@@ -4,7 +4,7 @@
 <title>Rummy 13 · 3D</title>
 <style>
 :root{--bg:#07100c;--ink:#f3ead2;--gold:#d9b265;--panel:#08110ddd;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:Georgia,serif;color:var(--ink)}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:Georgia,serif;color:var(--ink);-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 canvas{display:block;touch-action:none}
 .box{position:fixed;background:var(--panel);border:1px solid var(--gold);border-radius:12px;padding:10px 14px;font-size:14px;line-height:1.6;backdrop-filter:blur(6px);box-shadow:0 6px 24px #000a,inset 0 0 18px #d9b26522}
 #msg{top:calc(10px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);text-align:center;max-width:40vw;font-size:15px}
@@ -18,7 +18,6 @@ button:hover{transform:translateY(-1px);filter:brightness(1.08)}button:active{tr
 #modal{display:none}
 h1{margin:0 0 4px;font-size:38px;letter-spacing:2px;color:var(--gold)}
 p{margin:6px 0 14px;font-size:14px;opacity:.9}
-/* royal group plaques: gold-bordered nameplate on a gold rail, one jewel per group (emerald 1st Life, peridot 2nd Life, topaz other, ruby ungrouped) */
 .chip{position:fixed;left:0;top:0;z-index:2;transform:translate(-50%,-50%);display:flex;align-items:center;gap:8px;padding:4px 16px 4px 10px;border:1.5px solid transparent;border-radius:9px;font-size:12px;letter-spacing:.9px;font-variant:small-caps;white-space:nowrap;pointer-events:none;opacity:0;color:#f4e3b0;
  background:linear-gradient(180deg,#1d1710,#0b0805) padding-box,linear-gradient(135deg,#fff3bd,#d4a23a 30%,#7d5718 52%,#e8c35f 76%,#fff1ae) border-box;
  box-shadow:0 4px 12px #000b,0 0 16px var(--gl),inset 0 0 12px var(--gl2),inset 0 1px 0 #ffffff30;transition:box-shadow .45s,color .45s}
@@ -45,23 +44,18 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
 <div id="modal" class="box mid"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-/* ===== Rules engine: 13-card Indian Rummy (2 decks + 2 printed jokers) ===== */
 const L=['','A','2','3','4','5','6','7','8','9','10','J','Q','K'],S=['♠','♥','♦','♣'];
 let W=1;
 const pts=c=>!c.r?0:(c.r==1||c.r>10)?10:c.r;
 const isJ=c=>!c.r||c.r==W;
-// ranks form a run (Ace low or high); slack = number of jokers that may fill holes
 const run=(rs,slack)=>new Set(rs).size==rs.length&&[0,1].some(hi=>{const q=rs.map(r=>hi&&r==1?14:r);return Math.max(...q)-Math.min(...q)+1-rs.length<=slack});
 function kinds(cs){
- const R=cs.filter(c=>!isJ(c)),js=cs.length-R.length,o=[];if(!R.length)return o;
+ const R=cs.filter(c=>!isJ(c)),js=cs.length-R.length,o=[];if(cs.length<3||!R.length)return o;
  if(cs.length<5&&R.every(c=>c.r==R[0].r)&&new Set(R.map(c=>c.s)).size==R.length)o.push('set');
  if(cs.length<14){
-  // PURE: every card is used as itself. A wild-rank card in its own suit and place (e.g. 4♠ 5♠ 6♠ when 6 is wild) is natural, so it is still pure.
   if(cs.every(c=>c.r&&c.s==cs[0].s)&&run(cs.map(c=>c.r),0))o.push('pure');
-  // IMPURE: printed jokers or wild cards stand in for missing cards
   else if(js&&R.every(c=>c.s==R[0].s)&&run(R.map(c=>c.r),js))o.push('imp')}
  return o}
-// nice display order inside a group (jokers sit in the holes of an impure run)
 function arrange(cs,k){
  const R=cs.filter(c=>!isJ(c)),J=cs.filter(isJ);
  if(k=='set')return R.concat(J);
@@ -90,14 +84,11 @@ function solve(h){
  o.pure=o.groups.some(g=>g.k=='pure');o.seq=o.groups.filter(g=>g.k!='set').length;
  o.dead=o.loose.reduce((a,c)=>a+pts(c),0);o.ok=o.pure&&o.seq>1&&!o.loose.length;return o}
 function best(h){let b=null;h.forEach((c,i)=>{const r=solve(h.filter((_,j)=>j!=i)),k=r.c-pts(c)/100;if(!b||k<b.k)b={i,r,k}});return b}
-// Split the hand (in its current order) into runs of neighbouring cards: valid groups or loose cards.
-// Picks the best reading of the arrangement: fewest dead points, a pure sequence first, a 2nd sequence next, then the longest groups.
 function segment(h){
  const n=h.length,memo=new Map(),cnt={};h.forEach(c=>{if(c.g)cnt[c.g]=(cnt[c.g]||0)+1});
- // manual group (Group button): counts only while all its cards sit together; mb[i] = its length when it starts at i
  const mb=Array(n).fill(0);
  for(let i=0;i<n;){const g=h[i].g;let j=i+1;if(g){while(j<n&&h[j].g==g)j++;if(j-i==cnt[g]&&j-i>1)mb[i]=j-i}i=j}
- const nx=Array(n+1).fill(n);let q=n;for(let i=n-1;i>=0;i--){nx[i]=q;if(mb[i])q=i}   // nx[i] = start of the next manual group after i
+ const nx=Array(n+1).fill(n);let q=n;for(let i=n-1;i>=0;i--){nx[i]=q;if(mb[i])q=i}
  const f=(i,p,s)=>{
   if(i>=n)return{c:(p?0:200)+(s>1?0:100)};
   const key=i*6+p*3+s;if(memo.has(key))return memo.get(key);
@@ -118,14 +109,12 @@ function segment(h){
   i+=r.len;r=r.nx}
  return segs}
 
-/* ===== Sound ===== */
 let ac;const snd=(f=400,v=.05)=>{try{ac=ac||new AudioContext();const o=ac.createOscillator(),g=ac.createGain(),t=ac.currentTime;o.type='triangle';o.frequency.value=f;g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.001,t+.08);o.connect(g);g.connect(ac.destination);o.start();o.stop(t+.09)}catch(e){}};
 
-/* ===== 3D scene ===== */
 const cvEl=document.createElement('canvas'),ren=new THREE.WebGLRenderer({antialias:true,canvas:cvEl,stencil:true}),
- ST=!!(ren.getContext().getContextAttributes()||{}).stencil,   // stencil lets the group glow draw only where no card is
+ ST=!!(ren.getContext().getContextAttributes()||{}).stencil,
  stW=m=>{if(ST)Object.assign(m,{stencilWrite:true,stencilFunc:THREE.AlwaysStencilFunc,stencilRef:1,stencilZPass:THREE.ReplaceStencilOp});return m};
-ren.setPixelRatio(Math.min(devicePixelRatio,3));const AN=ren.capabilities.getMaxAnisotropy();ren.shadowMap.enabled=true;ren.shadowMap.type=THREE.PCFSoftShadowMap;
+ren.setPixelRatio(Math.min(devicePixelRatio,2));const AN=ren.capabilities.getMaxAnisotropy();ren.shadowMap.enabled=true;ren.shadowMap.type=THREE.PCFSoftShadowMap;
 ren.outputEncoding=THREE.sRGBEncoding;document.body.prepend(cvEl);
 const scene=new THREE.Scene();scene.background=new THREE.Color(0x07100c);
 const camera=new THREE.PerspectiveCamera(45,1,.1,100);
@@ -134,7 +123,6 @@ const sun=new THREE.DirectionalLight(0xfff1d6,.9);sun.position.set(4,14,8);sun.c
 Object.assign(sun.shadow.camera,{left:-13,right:13,top:13,bottom:-13});scene.add(sun);
 const lamp=new THREE.PointLight(0xffd9a0,.7,45);lamp.position.set(0,10,2);scene.add(lamp);
 const mkc=(w,h)=>{const k=document.createElement('canvas');k.width=w;k.height=h;return k};
-// felt with vignette, gold inlay and suit emblems
 const fk=mkc(1024,1024),fx=fk.getContext('2d'),fg=fx.createRadialGradient(512,512,40,512,512,512);
 fg.addColorStop(0,'#2f8558');fg.addColorStop(.7,'#1d5a3c');fg.addColorStop(1,'#0f3624');fx.fillStyle=fg;fx.fillRect(0,0,1024,1024);
 for(let i=0;i<14000;i++){fx.fillStyle=`rgba(${Math.random()<.5?'0,0,0':'255,255,255'},.04)`;fx.fillRect(Math.random()*1024,Math.random()*1024,2,2)}
@@ -144,14 +132,11 @@ const ft=new THREE.CanvasTexture(fk);ft.encoding=THREE.sRGBEncoding;ft.anisotrop
 const tab=new THREE.Mesh(new THREE.CylinderGeometry(15,15,.4,64),new THREE.MeshStandardMaterial({map:ft,roughness:.95}));tab.position.y=-.2;tab.receiveShadow=true;scene.add(tab);
 const rim=new THREE.Mesh(new THREE.TorusGeometry(15.2,.8,16,96),new THREE.MeshStandardMaterial({color:0x5a3a22,roughness:.4,metalness:.1}));rim.rotation.x=Math.PI/2;scene.add(rim);
 const gr=new THREE.Mesh(new THREE.TorusGeometry(14.5,.07,8,96),new THREE.MeshStandardMaterial({color:0xd9b265,metalness:.9,roughness:.25}));gr.rotation.x=Math.PI/2;gr.position.y=.02;scene.add(gr);
-// floating dust motes
 const dg=new THREE.BufferGeometry(),dp=new Float32Array(360);for(let i=0;i<360;i+=3){dp[i]=(Math.random()-.5)*30;dp[i+1]=Math.random()*9+1;dp[i+2]=(Math.random()-.5)*24}
 dg.setAttribute('position',new THREE.BufferAttribute(dp,3));scene.add(new THREE.Points(dg,new THREE.PointsMaterial({size:.08,color:0xffe7a8,transparent:true,opacity:.55,depthWrite:false})));
-// glow under draw piles
 const gk=mkc(128,128),gx=gk.getContext('2d'),gd=gx.createRadialGradient(64,64,8,64,64,64);gd.addColorStop(0,'#ffd88a');gd.addColorStop(1,'#ffd88a00');gx.fillStyle=gd;gx.fillRect(0,0,128,128);
 const gt=new THREE.CanvasTexture(gk),glow=[-1.8,1.8].map(x=>{const m=new THREE.Mesh(new THREE.PlaneGeometry(4.2,4.2),new THREE.MeshBasicMaterial({map:gt,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false}));m.rotation.x=-Math.PI/2;m.position.set(x,.015,.6);scene.add(m);return m});
 
-// card faces (high-res)
 const cache={};
 const PA=ys=>[...ys.map(y=>[.3,y]),...ys.map(y=>[.7,y])],P4=PA([.2,.8]),P6=PA([.2,.5,.8]),
 PIP={2:[[.5,.2],[.5,.8]],3:[[.5,.2],[.5,.5],[.5,.8]],4:P4,5:[...P4,[.5,.5]],6:P6,7:[...P6,[.5,.35]],8:[...P6,[.5,.35],[.5,.65]],9:[...PA([.2,.4,.6,.8]),[.5,.5]],10:[...PA([.2,.4,.6,.8]),[.5,.3],[.5,.7]]};
@@ -175,7 +160,6 @@ function face(c){const key=c.r+'-'+c.s;if(cache[key])return cache[key];
    half();x.save();x.translate(90,126);x.rotate(Math.PI);x.translate(-90,-126);half();x.restore()}
   else PIP[c.r].forEach(([px,py])=>{x.save();x.translate(px*180,py*252);if(py>.5)x.rotate(Math.PI);x.font='46px serif';x.fillText(sy,0,16);x.restore()})}
  const t=new THREE.CanvasTexture(k);t.anisotropy=AN;t.encoding=THREE.sRGBEncoding;return cache[key]=t}
-// card back: lattice + gold medallion
 const bk=mkc(540,756),bx=bk.getContext('2d');bx.scale(3,3);bx.textAlign='center';
 bx.beginPath();bx.roundRect(2,2,176,248,14);bx.fillStyle='#fffaf0';bx.fill();
 const bg=bx.createLinearGradient(0,0,180,252);bg.addColorStop(0,'#a3202f');bg.addColorStop(1,'#5e0f1b');
@@ -190,8 +174,6 @@ function mk(c){const t=face(c),fm=stW(new THREE.MeshStandardMaterial({map:t,emis
  c.m.position.set(0,.03,.6);c.m.rotation.x=Math.PI/2;c.tp=[0,.03,.6];c.tr=[Math.PI/2,0];c.sc=1;scene.add(c.m)}
 const tgt=(c,x,y,z,rx,rz,sc)=>{c.tp=[x,y,z];c.tr=[rx,rz];c.sc=sc||1};
 
-/* ===== Animated group underlines: a glowing line under every group of cards ===== */
-// jewel colours: 1st Life = emerald (special: thicker rail, light pulses, twinkles), 2nd Life = light green, other groups = yellow, ungrouped = red
 const PAL={
  life1:{a:[.03,.75,.43],b:[.6,1,.85],f:[.01,.19,.11],s:1,d:0,ic:'♛'},
  life2:{a:[.55,.93,.4],b:[.92,1,.75],f:[.13,.3,.09],s:.55,d:0,ic:'✦'},
@@ -239,20 +221,19 @@ void main(){
 function plate(i){if(plates[i])return plates[i];
  const mat=new THREE.ShaderMaterial({transparent:true,depthWrite:false,depthTest:!ST,side:THREE.DoubleSide,vertexShader:PVS,fragmentShader:PFS,
   uniforms:{uSize:{value:new THREE.Vector2(3,3)},uA:{value:new THREE.Color()},uB:{value:new THREE.Color()},uF:{value:new THREE.Color()},uT:{value:0},uS:{value:0},uO:{value:0},uD:{value:0}}});
- if(ST)Object.assign(mat,{stencilWrite:true,stencilFunc:THREE.NotEqualStencilFunc,stencilRef:1});   // never paint over a card
+ if(ST)Object.assign(mat,{stencilWrite:true,stencilFunc:THREE.NotEqualStencilFunc,stencilRef:1});
  const m=new THREE.Mesh(new THREE.PlaneGeometry(1,1),mat),el=document.createElement('div');
  m.visible=false;m.renderOrder=2;m.rotation.x=TILT;scene.add(m);
  el.className='chip';el.innerHTML='<span class="ic"></span><span class="tx"></span>';document.body.appendChild(el);
  return plates[i]={m,u:mat.uniforms,el,ic:el.children[0],tx:el.children[1],on:false,o:0,snap:true,role:'',ts:0,td:0,cw:3,ch:3,cA:new THREE.Color(),cB:new THREE.Color(),cF:new THREE.Color(),tg:{x:0,y:0,z:0,rz:0,w:3,h:3}}}
 function setPlate(i,g,x0,x1,k0,k1,sp,gap){
  const P=plate(i),km=(k0+k1)/2,xm=(x0+x1)/2,pal=PAL[g.role],fresh=!P.on&&P.o<.03,
-  th=g.role=='life1'?.13:g.role=='loose'?.06:.09,dn=CH/2+.24+th/2,   // rail thickness / distance from card centre down to the rail
-  ins=Math.max(.1,(.4-(sp+gap-CW))/2);   // keeps neighbouring rails and their diamonds apart
+  th=g.role=='life1'?.13:g.role=='loose'?.06:.09,dn=CH/2+.24+th/2,
+  ins=Math.max(.1,(.4-(sp+gap-CW))/2);
  Object.assign(P.tg,{x:xm,y:.9+km*.026-UY*dn,z:5.6+km*.027-UZ*dn,rz:-(xm-cx)/6.5*.08,w:Math.max(.7,x1-x0+CW-2*ins),h:th});
  if(P.role!=g.role||fresh){P.role=g.role;P.cA.setRGB(...pal.a);P.cB.setRGB(...pal.b);P.cF.setRGB(...pal.f);P.ts=pal.s;P.td=pal.d;P.ic.textContent=pal.ic;P.el.className='chip '+g.role}
  if(P.tx.textContent!=g.t)P.tx.textContent=g.t;
  P.on=true;if(fresh)P.snap=true}
-/* ===== Game state ===== */
 let stock=[],disc=[],cut,H=[[],[],[]],turn,phase='deal',selS=new Set(),gseq=0,hov,all=[];
 const $=id=>document.getElementById(id),msg=t=>$('msg').textContent=t,sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const rnd=n=>crypto.getRandomValues(new Uint32Array(1))[0]%n;
@@ -266,16 +247,16 @@ async function newGame(){
  $('modal').style.display='none';$('intro').style.display='none';plates.forEach(P=>{P.on=false;P.o=0;P.m.visible=false;P.el.style.opacity=0});hand();
  stock.forEach((c,i)=>tgt(c,0,.03+i*.004,.6,Math.PI/2,0));
  msg('Shuffling the deck…');await sleep(700);
- const A=stock.slice(0,53),B=stock.slice(53);
- for(let r=0;r<3;r++){                                   // riffle shuffle x3
+ 
+ for(let r=0;r<2;r++){const k=53+rnd(9)-4,A=stock.slice(0,k),B=stock.slice(k),pa=A.slice(),pb=B.slice(),mg=[];
   A.forEach((c,i)=>tgt(c,-3.2,.03+i*.004,.6,Math.PI/2,.2));B.forEach((c,i)=>tgt(c,3.2,.03+i*.004,.6,Math.PI/2,-.2));snd(260,.06);await sleep(600);
-  for(let i=0;i<53;i++)[A[i],B[i]].forEach((c,j)=>setTimeout(()=>{tgt(c,0,.03+(2*i+j)*.004,.6,Math.PI/2,(c.id%7-3)*.02);if(!(i%4))snd(480+j*90,.03)},i*22));
-  await sleep(53*22+450)}
- msg('Spreading the deck…');                              // face-up fan across the table in two rows
- stock.forEach((c,i)=>{const j=i%53,row=i<53;setTimeout(()=>{tgt(c,(j/52-.5)*17,.05+j*.004,row?-1.5:2.7,-Math.PI/2,0);if(!(i%5))snd(600+j*5,.025)},i*14)});
- await sleep(106*14+1800);
- msg('Gathering the deck…');
- stock.forEach((c,i)=>setTimeout(()=>tgt(c,-1.8,.03+i*.004,.6,Math.PI/2,0),i*9));await sleep(106*9+900);
+  while(pa.length||pb.length)mg.push(rnd(pa.length+pb.length)<pa.length?pa.shift():pb.shift());stock=mg;mg.forEach((c,i)=>setTimeout(()=>{tgt(c,0,.03+i*.004,.6,Math.PI/2,(c.id%7-3)*.02);if(!(i%4))snd(480+(i%2)*90,.03)},i*14));
+  await sleep(mg.length*14+500)}
+ 
+ 
+ 
+ 
+ place();await sleep(900);
  msg('Dealing 13 cards to each player…');
  for(let i=0;i<39;i++){H[i%3].push(stock.pop());render();snd(700+(i%3)*120,.04);await sleep(130)}
  await sleep(500);cut=stock.pop();W=cut.r||1;disc=[stock.pop()];render();snd(900,.06);
@@ -283,12 +264,11 @@ async function newGame(){
 
 function place(){
  stock.forEach((c,i)=>tgt(c,-1.8,.75+i*.007,.6+i*.004,Math.PI/2+.5,(c.id%7-3)*.01,1.4));
- disc.forEach((c,i)=>tgt(c,1.8+(c.id%5-2)*.04,.75+i*.014,.6+i*.008+(c.id%3-1)*.03,-Math.PI/2+.5,(c.id%9-4)*.03,1.4));
+ {const n=disc.length,b0=Math.max(0,n-6);disc.forEach((c,i)=>tgt(c,1.8+(c.id%5-2)*.05,.75+Math.min(i,b0)*.004+Math.max(0,i-b0)*.05,.6,-Math.PI/2+.5,(c.id%9-4)*.03,1.4))}
  if(cut)tgt(cut,-4.9,.75,.6,-Math.PI/2+.5,0,1.25);
  [1,2].forEach(b=>H[b].forEach((c,i)=>tgt(c,(b==1?-5:5)-(H[b].length-1)*.1+i*.2,.5+i*.004,-5.2,Math.PI/2+.5,0,.9)))}
 function hand(){
  const h=H[0],n=h.length,segs=segment(h);
- // 1st Life = first pure sequence, 2nd Life = the next sequence (impure or pure), even before a pure one exists
  const sq=segs.filter(g=>g.k=='pure'||g.k=='imp'),f1=sq.find(g=>g.k=='pure'),f2=sq.find(g=>g!=f1),ty=g=>g.k=='pure'?'Pure':'Impure';
  segs.forEach(g=>{g.p=g.cards.reduce((a,c)=>a+pts(c),0);
   g.role=g.k=='loose'?'loose':g.k=='bad'?'bad':g==f1?'life1':g==f2?'life2':'other';
@@ -296,7 +276,7 @@ function hand(){
  const gs=Math.max(0,segs.length-1),sp=Math.min(1,Math.max(.3,(maxW-CW-.07-.32*gs)/(Math.max(1,n-1)+.9*gs))),gap=sp*.9+.32;
  let x=cx-((n-1)*sp+gs*gap)/2,k=0;
  segs.forEach((g,gi)=>{const x0=x,k0=k;
-  g.cards.forEach(c=>{const up=selS.has(c),t=(x-cx)/6.5,lf=(up?.9:0)+(c===hov&&!drag?.35:0);tgt(c,x,.9+k*.026+lf*.72,5.6+k*.027-lf*.7,-Math.PI/2+.8,-t*.08,HS);x+=sp;k++});
+  g.cards.forEach(c=>{const up=selS.has(c),t=(x-cx)/6.5,lf=up?.9:0;tgt(c,x,.9+k*.026+lf*.72,5.6+k*.027-lf*.7,-Math.PI/2+.8,-t*.08,HS);x+=sp;k++});
   setPlate(gi,g,x0,x-sp,k0,k-1,sp,gap);x+=gap});
  for(let i=segs.length;i<plates.length;i++)plates[i].on=false;
  if(drag)tgt(drag.c,drag.x,1.9,4.9,-Math.PI/2+.8,0,HS*1.1);
@@ -308,15 +288,14 @@ function posLabs(){const P=(x,y,z)=>new THREE.Vector3(x,y,z).project(camera),set
   tv.copy(q.m.position);pv.copy(tv).project(camera);set(e,pv);e.style.opacity=q.o.toFixed(2)});
  set($('t1'),P(-5,.5,-6.3));set($('t2'),P(5,.5,-6.3));
  [['p1',-4.9],['p2',-1.8],['p3',1.8]].forEach(([id,x])=>{const e=$(id);e.style.display=cut?'block':'none';set(e,P(x,.1,2.4))})}
-// a manual group survives only while its cards sit together; a card dragged away leaves the group
 function fixGroups(){const m={};H[0].forEach((c,i)=>{if(c.g)(m[c.g]=m[c.g]||[]).push(i)});Object.values(m).forEach(ix=>{if(ix.length<2||ix[ix.length-1]-ix[0]!=ix.length-1)ix.forEach(i=>delete H[0][i].g)})}
 function leave(c){if(!c.g)return;const ix=[];H[0].forEach((d,i)=>{if(d.g==c.g)ix.push(i)});if(ix[ix.length-1]-ix[0]!=ix.length-1)delete c.g}
-// valid groups stay on the left in their order, every ungrouped card moves to the right end (relative order kept)
 function tidy(){fixGroups();for(let i=0;i<3;i++){const sg=segment(H[0]),o=[...sg.filter(g=>g.k!='loose').flatMap(g=>g.cards),...sg.filter(g=>g.k=='loose').flatMap(g=>g.cards)];
  if(o.every((c,j)=>c===H[0][j]))break;H[0]=o}}
 const render=()=>{place();hand()};
-function drawStock(){if(!stock.length){const t=disc.pop();stock=shuf(disc);disc=[t]}return stock.pop()}
-function next(){turn=(turn+1)%3;if(turn){bot(turn)}else{phase='draw';msg('Your turn: draw from the deck or the discard pile.');render()}}
+function refill(){if(!stock.length&&disc.length>1){const t=disc.pop();stock=shuf(disc);disc=[t]}}
+function drawStock(){refill();return stock.pop()}
+function next(){turn=(turn+1)%3;if(turn){bot(turn)}else{phase='wait';refill();render();setTimeout(()=>{if(phase=='wait'){phase='draw';msg('Your turn: draw from the deck or the discard pile.')}},600)}}
 function bot(b){msg('Bot '+b+' is playing…');render();
  setTimeout(()=>{const h=H[b],top=disc[disc.length-1],take=best(h.concat(top)).r.c<solve(h).c;
   h.push(take?disc.pop():drawStock());place();snd(520,.04);
@@ -331,7 +310,6 @@ const mine=()=>phase=='disc'&&selS.size==1,one=()=>[...selS][0];
 $('bd').onclick=()=>{if(!mine())return msg('Draw a card, then select one card and press Discard.');const c=one();H[0].splice(H[0].indexOf(c),1);disc.push(c);selS.clear();tidy();phase='wait';snd(380,.05);next()};
 $('bs').onclick=()=>{if(!mine())return msg('Draw, then select the one card you will finish with.');
  const c=one();H[0].splice(H[0].indexOf(c),1);disc.push(c);selS.clear();finish(0,!solve(H[0]).ok)};
-// Group: the selected cards become one group (pressing it again on a whole group removes that group)
 $('bgp').onclick=()=>{if(phase=='deal'||phase=='over')return;const h=H[0],cs=h.filter(c=>selS.has(c));
  if(cs.length<2)return msg('Select 2 or more cards, then press Group.');
  const g0=cs[0].g;
@@ -344,24 +322,42 @@ $('bh').onclick=()=>{if(phase=='draw'){const base=solve(H[0]).c,w=best(H[0].conc
 $('bg').onclick=()=>{if(phase=='deal'||phase=='over')return;const A=solve(H[0]);H[0].forEach(c=>delete c.g);selS.clear();H[0]=[...A.groups.flatMap(g=>g.cards),...A.loose];snd(560,.04);hand()};
 $('go').onclick=()=>newGame();
 
-/* ===== Input: tap to lift, drag to rearrange ===== */
 const rc=new THREE.Raycaster(),mv=new THREE.Vector2(),pl=new THREE.Plane(new THREE.Vector3(0,1,0),-.7),pt=new THREE.Vector3();
 const ray=e=>{mv.set(e.clientX/innerWidth*2-1,-(e.clientY/innerHeight)*2+1);rc.setFromCamera(mv,camera)};
 const hitHand=()=>{const hs=rc.intersectObjects(H[0].map(c=>c.m));return hs.length?hs[0].object.userData.c:null};
-cvEl.addEventListener('pointerdown',e=>{if(phase=='deal'||phase=='over')return;ray(e);
- const hc=hitHand();if(hc){pd={c:hc,x:e.clientX};return}
- if(phase=='draw'){const t=disc[disc.length-1],q=stock[stock.length-1],hit=m=>rc.intersectObject(m).length;
-  if(t&&hit(t.m))H[0].push(disc.pop());else if(q&&hit(q.m))H[0].push(drawStock());else return;
-  snd(520,.05);phase='disc';msg('Tap cards to select: 1 to Discard or Declare, 2+ to Group. Drag to rearrange.');tidy();place();hand()}});
-addEventListener('pointermove',e=>{
- if(!pd){if(phase=='deal'||phase=='over')return;ray(e);const h=hitHand();if(h!==hov){hov=h;cvEl.style.cursor=h?'grab':'default';hand()}return}
+cvEl.addEventListener('contextmenu',e=>e.preventDefault());
+cvEl.addEventListener('pointerdown',e=>{if(!e.isPrimary||pd||phase=='deal'||phase=='over')return;ray(e);
+ const hs=rc.intersectObjects(H[0].map(c=>c.m)),ps=phase=='draw'?rc.intersectObjects(disc.concat(stock).map(c=>c.m)):[];
+ if(hs.length&&(!ps.length||hs[0].distance<ps[0].distance)){pd={c:hs[0].object.userData.c,x:e.clientX};try{cvEl.setPointerCapture(e.pointerId)}catch(_){}return}
+ if(phase=='draw'){const pc=ps.length?ps[0].object.userData.c:null;
+  if(!pc)return;H[0].push(disc.includes(pc)?disc.pop():drawStock());
+  selS.clear();snd(520,.05);phase='disc';msg('Tap cards to select: 1 to Discard or Declare, 2+ to Group. Drag to rearrange.');tidy();place();hand()}});
+addEventListener('pointermove',e=>{if(!e.isPrimary)return;if(pd&&!e.buttons){cancelPtr();return}
+ if(!pd){if(phase=='deal'||phase=='over')return;ray(e);const h=hitHand();if(h!==hov){hov=h;cvEl.style.cursor=h?'grab':'default'}return}
  if(!drag&&Math.abs(e.clientX-pd.x)<8)return;ray(e);if(!rc.ray.intersectPlane(pl,pt))return;
- if(!drag){drag={c:pd.c,x:pt.x};cvEl.style.cursor='grabbing';snd(420,.03)}drag.x=pt.x;
+ if(!drag){drag={c:pd.c,x:pt.x,g0:pd.c.g};cvEl.style.cursor='grabbing';snd(420,.03)}drag.x=pt.x;
  const h=H[0],cur=h.indexOf(drag.c);let ni=0;h.forEach(c=>{if(c!==drag.c&&c.tp[0]<pt.x)ni++});
- if(ni!=cur){h.splice(cur,1);h.splice(ni,0,drag.c)}hand()});
-addEventListener('pointerup',()=>{if(!pd)return;if(!drag){selS.has(pd.c)?selS.delete(pd.c):selS.add(pd.c);snd(600,.03)}else{snd(360,.04);leave(drag.c);tidy()}pd=null;drag=null;hov=null;hand()});
+ if(ni!=cur){h.splice(cur,1);h.splice(ni,0,drag.c)}
+ const o=h.filter(c=>c!==drag.c),sp={};o.forEach((c,i)=>{if(c.g){const s=sp[c.g]||(sp[c.g]={g:c.g,a:i,b:i,n:0});s.b=i;s.n++}});
+ let tg,bd=1e9;
+ Object.values(sp).forEach(s=>{const ca=o[s.a].tp[0],cb=o[s.b].tp[0];
+  if(s.b-s.a==s.n-1&&s.n+(s.g==drag.g0?1:0)>1&&ni>=s.a&&ni<=s.b+1&&pt.x>=ca-CW/2&&pt.x<=cb+CW/2){const d=Math.min(Math.abs(pt.x-ca),Math.abs(pt.x-cb));if(d<bd){bd=d;tg=s.g}}});
+ if(tg)drag.c.g=tg;else delete drag.c.g;
+ hand()});
+addEventListener('pointerup',e=>{if(!pd||!e.isPrimary)return;if(!drag){selS.has(pd.c)?selS.delete(pd.c):selS.add(pd.c);snd(600,.03)}else{snd(360,.04);leave(drag.c);if(drag.c.g)selS.delete(drag.c);tidy()}pd=null;drag=null;hov=null;hand()});
+addEventListener('pointercancel',()=>cancelPtr());
+function cancelPtr(){if(drag){leave(drag.c);tidy()}pd=null;drag=null;hov=null;hand()}
 
-/* ===== Win confetti ===== */
+/* ===== Joker & wild-card sparkle (only cards in your hand) ===== */
+const spk=(()=>{const k=mkc(96,96),x=k.getContext('2d'),g=x.createLinearGradient(0,0,96,96);
+ g.addColorStop(0,'#fff3bd');g.addColorStop(1,'#e0a92f');x.beginPath();for(let i=0;i<10;i++){const r=i%2?19:44,a=-Math.PI/2+i*Math.PI/5;x.lineTo(48+r*Math.cos(a),52+r*Math.sin(a))}x.closePath();x.fillStyle=g;x.fill();x.lineWidth=5;x.lineJoin='round';x.strokeStyle='#5a3a0c';x.stroke();
+ const tx=new THREE.CanvasTexture(k);tx.encoding=THREE.sRGBEncoding;return tx})();
+function glint(c,on){
+ if(!c.fx){const s=new THREE.Sprite(new THREE.SpriteMaterial({map:spk,transparent:true,depthTest:false,depthWrite:false}));s.renderOrder=6;c.m.add(s);c.fx=s}
+ const s=c.fx;s.visible=on;if(!on)return;
+ const t=T*3+c.id*1.7,p=.5+.5*Math.sin(t);
+ s.position.set(-.45,.98,.03);s.scale.setScalar(.27+.04*p);s.material.rotation=.12*Math.sin(t*.7)}
+
 let cf=null;
 function confetti(){const n=320,g=new THREE.BufferGeometry(),pos=new Float32Array(n*3),col=new Float32Array(n*3),vel=[];
  for(let i=0;i<n;i++){pos.set([0,2,1],i*3);const c=new THREE.Color().setHSL(Math.random(),.9,.6);col.set([c.r,c.g,c.b],i*3);vel.push([(Math.random()-.5)*.4,.25+Math.random()*.35,(Math.random()-.5)*.4])}
@@ -373,11 +369,11 @@ function fit(){const w=innerWidth,h=innerHeight,a=w/h;ren.setSize(w,h);camera.as
 addEventListener('resize',fit);fit();
 let T=0;
 (function loop(){requestAnimationFrame(loop);T+=.016;const q=.14;
- all.forEach(c=>{const p=c.m.position,r=c.m.rotation,ty=c.tp[1]+Math.min(Math.hypot(c.tp[0]-p.x,c.tp[2]-p.z)*.25,2.4);   // arcing flight
-  p.x+=(c.tp[0]-p.x)*q;p.y+=(ty-p.y)*q;p.z+=(c.tp[2]-p.z)*q;r.x+=(c.tr[0]-r.x)*q;r.z+=(c.tr[1]-r.z)*q;c.m.scale.setScalar(c.m.scale.x+(c.sc-c.m.scale.x)*q)});
+ const jk=phase=='deal'?[]:H[0].filter(isJ);
+ all.forEach(c=>{const p=c.m.position,r=c.m.rotation,ty=c.tp[1]+Math.min(Math.hypot(c.tp[0]-p.x,c.tp[2]-p.z)*.25,2.4);
+  p.x+=(c.tp[0]-p.x)*q;p.y+=(ty-p.y)*q;p.z+=(c.tp[2]-p.z)*q;r.x+=(c.tr[0]-r.x)*q;r.z+=(c.tr[1]-r.z)*q;c.m.scale.setScalar(c.m.scale.x+(c.sc-c.m.scale.x)*q);const j=jk.includes(c);if(j||c.fx)glint(c,j)});
  const gl=phase=='draw'?.4+.35*Math.sin(T*5):0;glow.forEach(m=>m.material.opacity=gl);
  for(let i=1;i<360;i+=3){dp[i]+=.004;if(dp[i]>10)dp[i]=1}dg.attributes.position.needsUpdate=true;
- // group plates: glide to their group, fade in/out, blend colours when a group changes role
  plates.forEach(P=>{const tg=P.tg,m=P.m,u=P.u,live=P.on&&phase!='deal';
   if(P.snap||(live&&P.o<.02)){m.position.set(tg.x,tg.y,tg.z);m.rotation.z=tg.rz;P.cw=tg.w;P.ch=tg.h;u.uA.value.copy(P.cA);u.uB.value.copy(P.cB);u.uF.value.copy(P.cF);u.uS.value=P.ts;u.uD.value=P.td;P.snap=false}
   P.o+=((live?1:0)-P.o)*.1;m.visible=P.o>.01;if(!m.visible)return;
