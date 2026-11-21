@@ -7,10 +7,14 @@
 html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:Georgia,serif;color:var(--ink);-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 canvas{display:block;touch-action:none}
 .box{position:fixed;background:var(--panel);border:1px solid var(--gold);border-radius:12px;padding:10px 14px;font-size:14px;line-height:1.6;backdrop-filter:blur(6px);box-shadow:0 6px 24px #000a,inset 0 0 18px #d9b26522}
-#msg{top:calc(10px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);text-align:center;max-width:40vw;font-size:15px}
-#btn{right:10px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:7px}
+#msg{display:none !important}
+#btn{right:10px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:7px;z-index:20}
 button{font:inherit;background:linear-gradient(#e6c47c,#c39a4c);color:#1b1206;border:0;border-radius:8px;padding:8px 13px;cursor:pointer;box-shadow:0 2px 0 #7a5a22;transition:transform .12s}
 button:hover{transform:translateY(-1px);filter:brightness(1.08)}button:active{transform:translateY(1px)}
+#bd{background:linear-gradient(180deg,#dc2626,#991b1b);color:#fff;box-shadow:0 2px 0 #5f1111;text-shadow:0 1px 2px #0008;font-weight:600}
+#bd:hover{background:linear-gradient(180deg,#ef4444,#b91c1c)}
+#bs{background:linear-gradient(180deg,#1b8744,#0e5629);color:#fff;box-shadow:0 2px 0 #083719;text-shadow:0 1px 2px #0008;font-weight:bold}
+#bs:hover{background:linear-gradient(180deg,#22a353,#126932)}
 .lab{position:fixed;transform:translate(-50%,0);font-size:13px;white-space:nowrap;padding:2px 10px;border-radius:9px;background:#0b1410dd;border:1px solid var(--gold);pointer-events:none}
 .tag{position:fixed;transform:translate(-50%,-100%);padding:3px 12px;border-radius:14px;background:#0b1410dd;border:1px solid #6f6446;font-size:13px;pointer-events:none;transition:.3s}
 .tag.on{border-color:var(--gold);box-shadow:0 0 16px #d9b265cc;color:#ffe9b0}
@@ -35,11 +39,19 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
 @keyframes shine{from{background-position:160% 0}to{background-position:-60% 0}}
 @keyframes pulse1{50%{box-shadow:0 4px 12px #000b,0 0 28px #19e68ccc,inset 0 0 14px #19e68c66,inset 0 1px 0 #ffffff30}}
 @keyframes blink{50%{opacity:.35}}
-@media(max-width:600px){#msg{max-width:48vw;font-size:12px;padding:6px 8px}button{padding:6px 9px;font-size:13px}.box{padding:8px}.chip{font-size:11px;padding:3px 13px 3px 8px}.chip.life1{font-size:12px;padding:4px 15px 4px 9px}}
+@media(max-width:600px){button{padding:6px 9px;font-size:13px}.box{padding:8px}.chip{font-size:11px;padding:3px 13px 3px 8px}.chip.life1{font-size:12px;padding:4px 15px 4px 9px}}
+@media (orientation: portrait), (max-aspect-ratio: 1/1){
+ #btn{right:auto;left:50%;top:auto;bottom:calc(10px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);flex-direction:row;justify-content:center;align-items:center;gap:8px;padding:6px 10px;width:auto;max-width:calc(100vw - 16px);box-sizing:border-box}
+ #btn button{padding:8px 12px;font-size:13px;white-space:nowrap;flex:1 1 auto}
+}
+@media (orientation: portrait) and (max-width: 380px){
+ #btn{gap:5px;padding:5px 6px;bottom:calc(6px + env(safe-area-inset-bottom,0px))}
+ #btn button{padding:7px 7px;font-size:11.5px}
+}
 </style></head><body>
-<div id="msg" class="box"></div>
+<div id="msg" class="box" style="display:none"></div>
 <div id="t1" class="tag"></div><div id="t2" class="tag"></div><div id="p1" class="lab" style="display:none">Wild joker</div><div id="p2" class="lab" style="display:none">Deck</div><div id="p3" class="lab" style="display:none">Open discard</div>
-<div id="btn" class="box"><button id="bh">Hint</button><button id="bgp">Group</button><button id="bg">Auto-group</button><button id="bd">Discard</button><button id="bs">Declare</button></div>
+<div id="btn" class="box"><button id="bgp">Group</button><button id="bg">Auto-group</button><button id="bd">Discard</button><button id="bs">Declare</button></div>
 <div id="intro" class="box mid"><h1>Rummy 13</h1><p>Indian Rummy with 2 decks and 3 players. Make a pure sequence, a second sequence, group every card, then Declare.</p><button id="go">Start game</button></div>
 <div id="modal" class="box mid"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -316,9 +328,6 @@ $('bgp').onclick=()=>{if(phase=='deal'||phase=='over')return;const h=H[0],cs=h.f
  if(g0&&cs.every(c=>c.g==g0)&&h.filter(c=>c.g==g0).length==cs.length){cs.forEach(c=>delete c.g);selS.clear();snd(420,.04);tidy();hand();return msg('Group removed.')}
  const rest=h.filter(c=>!selS.has(c)),id=++gseq;rest.splice(h.indexOf(cs[0]),0,...cs);H[0]=rest;cs.forEach(c=>c.g=id);
  selS.clear();snd(560,.04);tidy();hand();msg('Cards grouped.')};
-$('bh').onclick=()=>{if(phase=='draw'){const base=solve(H[0]).c,w=best(H[0].concat(disc[disc.length-1])).r.c;
-  msg(w<base?'Hint: take the open discard. It improves your hand.':'Hint: draw from the deck.')}
- else if(phase=='disc'){const b=best(H[0]);selS.clear();selS.add(H[0][b.i]);hand();msg(b.r.ok?'Hint: you can declare! Lift this card and press Declare.':'Hint: discard the lifted card.')}};
 $('bg').onclick=()=>{if(phase=='deal'||phase=='over')return;const A=solve(H[0]);H[0].forEach(c=>delete c.g);selS.clear();H[0]=[...A.groups.flatMap(g=>g.cards),...A.loose];snd(560,.04);hand()};
 $('go').onclick=()=>newGame();
 
@@ -365,7 +374,9 @@ function confetti(){const n=320,g=new THREE.BufferGeometry(),pos=new Float32Arra
  const m=new THREE.Points(g,new THREE.PointsMaterial({size:.25,vertexColors:true}));scene.add(m);cf={m,vel,pos,t:0}}
 
 function fit(){const w=innerWidth,h=innerHeight,a=w/h;ren.setSize(w,h);camera.aspect=a;
- const d=Math.max(13,15/(2*Math.tan(camera.fov*Math.PI/360)*a));camera.userData.d=d;camera.position.set(0,.72*d,2.8+.69*d);camera.lookAt(0,0,2.4);camera.updateProjectionMatrix();camera.updateMatrixWorld();const v=new THREE.Vector3(1,.7,5.6).project(camera),u=Math.abs(v.x)*innerWidth/2;maxW=(innerWidth-130)*.97/u;cx=-65/u;posLabs()}
+ const isPortrait=h>w,d=Math.max(13,15/(2*Math.tan(camera.fov*Math.PI/360)*a));camera.userData.d=d;camera.position.set(0,.72*d,2.8+.69*d);camera.lookAt(0,0,2.4);camera.updateProjectionMatrix();camera.updateMatrixWorld();const v=new THREE.Vector3(1,.7,5.6).project(camera),u=Math.abs(v.x)*innerWidth/2;
+ if(isPortrait){maxW=(innerWidth-20)*.97/u;cx=0}else{maxW=(innerWidth-130)*.97/u;cx=-65/u}
+ if(H[0]&&H[0].length)hand();else posLabs()}
 addEventListener('resize',fit);fit();
 let T=0;
 (function loop(){requestAnimationFrame(loop);T+=.016;const q=.14;
