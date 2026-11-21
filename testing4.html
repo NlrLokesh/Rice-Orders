@@ -7,10 +7,8 @@
 html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:Georgia,serif;color:var(--ink)}
 canvas{display:block;touch-action:none}
 .box{position:fixed;background:var(--panel);border:1px solid var(--gold);border-radius:12px;padding:10px 14px;font-size:14px;line-height:1.6;backdrop-filter:blur(6px);box-shadow:0 6px 24px #000a,inset 0 0 18px #d9b26522}
-#st{top:calc(10px + env(safe-area-inset-top,0px));left:10px}
 #msg{top:calc(10px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);text-align:center;max-width:40vw;font-size:15px}
 #btn{right:10px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:7px}
-.r{display:flex;gap:6px}.r button{flex:1}
 button{font:inherit;background:linear-gradient(#e6c47c,#c39a4c);color:#1b1206;border:0;border-radius:8px;padding:8px 13px;cursor:pointer;box-shadow:0 2px 0 #7a5a22;transition:transform .12s}
 button:hover{transform:translateY(-1px);filter:brightness(1.08)}button:active{transform:translateY(1px)}
 .lab{position:fixed;transform:translate(-50%,0);font-size:13px;white-space:nowrap;padding:2px 10px;border-radius:9px;background:#0b1410dd;border:1px solid var(--gold);pointer-events:none}
@@ -20,27 +18,29 @@ button:hover{transform:translateY(-1px);filter:brightness(1.08)}button:active{tr
 #modal{display:none}
 h1{margin:0 0 4px;font-size:38px;letter-spacing:2px;color:var(--gold)}
 p{margin:6px 0 14px;font-size:14px;opacity:.9}
-/* group chips (1st Life = emerald, 2nd Life = light green, other groups = yellow, ungrouped = red) */
-.chip{position:fixed;left:0;top:0;z-index:2;transform:translate(-50%,-32%);display:flex;align-items:center;gap:6px;padding:3px 12px 3px 8px;border-radius:999px;font-size:12.5px;letter-spacing:.4px;white-space:nowrap;pointer-events:none;overflow:hidden;opacity:0;
- color:var(--tx);border:1px solid var(--bd);background-color:var(--bg2);background-image:linear-gradient(180deg,#ffffff26,#0000 60%);
- box-shadow:0 0 14px var(--gl),inset 0 0 9px var(--gl2),0 3px 8px #0008;backdrop-filter:blur(6px);
- transition:color .45s,border-color .45s,background-color .45s,box-shadow .45s}
-.chip .ic{font-size:1.15em;line-height:1;filter:drop-shadow(0 0 4px var(--bd))}
-.chip.life1{--tx:#d8fff0;--bd:#2fe79b;--gl:#19e68c99;--gl2:#19e68c40;--bg2:#05432a;font-weight:bold;font-size:13.5px;padding:4px 15px 4px 10px;animation:pulse1 2.2s ease-in-out infinite}
-.chip.life1::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 35%,#ffffff66 50%,transparent 65%);background-size:260% 100%;animation:shine 2.6s linear infinite}
-.chip.life2{--tx:#f3ffe2;--bd:#b5f58a;--gl:#a5f07a80;--gl2:#a5f07a33;--bg2:#2d4d14}
-.chip.other{--tx:#fff6c2;--bd:#ffd84a;--gl:#ffd84a80;--gl2:#ffd84a33;--bg2:#4b3b08}
-.chip.loose{--tx:#ffd6da;--bd:#ff5f6e;--gl:#ff4d5e80;--gl2:#ff4d5e33;--bg2:#4a0b14}
+/* royal group plaques: gold-bordered nameplate on a gold rail, one jewel per group (emerald 1st Life, peridot 2nd Life, topaz other, ruby ungrouped) */
+.chip{position:fixed;left:0;top:0;z-index:2;transform:translate(-50%,-50%);display:flex;align-items:center;gap:8px;padding:4px 16px 4px 10px;border:1.5px solid transparent;border-radius:9px;font-size:12px;letter-spacing:.9px;font-variant:small-caps;white-space:nowrap;pointer-events:none;opacity:0;color:#f4e3b0;
+ background:linear-gradient(180deg,#1d1710,#0b0805) padding-box,linear-gradient(135deg,#fff3bd,#d4a23a 30%,#7d5718 52%,#e8c35f 76%,#fff1ae) border-box;
+ box-shadow:0 4px 12px #000b,0 0 16px var(--gl),inset 0 0 12px var(--gl2),inset 0 1px 0 #ffffff30;transition:box-shadow .45s,color .45s}
+.chip::before,.chip::after{content:"";position:absolute;top:50%;width:7px;height:7px;background:linear-gradient(135deg,#fff3bd,#b98a2c);box-shadow:0 0 0 1px #0008;transform:translateY(-50%) rotate(45deg)}
+.chip::before{left:-7px}.chip::after{right:-7px}
+.chip .ic{width:11px;height:11px;font-size:0;border-radius:2px;transform:rotate(45deg);background:linear-gradient(135deg,var(--gm1),var(--gm2));box-shadow:0 0 9px var(--gem),inset 0 0 0 1px #ffffff70}
+.chip.life1{--gm1:#8dffd0;--gm2:#04a45c;--gem:#19e68c;--gl:#19e68c99;--gl2:#19e68c3d;font-weight:bold;font-size:13.5px;padding:5px 19px 5px 11px;outline:1px solid #f1d27a80;outline-offset:3px;animation:pulse1 2.4s ease-in-out infinite}
+.chip.life1 .ic{width:13px;height:13px}
+.chip.life1 .tx{background:linear-gradient(100deg,#f4e3b0 38%,#ffffff 50%,#f4e3b0 62%) 0 0/260% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 2.8s linear infinite}
+.chip.life1 .tx::before{content:"♛ "}
+.chip.life2{--gm1:#e9ffc2;--gm2:#7ed348;--gem:#a5f07a;--gl:#a5f07a66;--gl2:#a5f07a2b}
+.chip.other{--gm1:#fff4a8;--gm2:#f1b100;--gem:#ffd84a;--gl:#ffd84a66;--gl2:#ffd84a2b}
+.chip.loose,.chip.bad{--gm1:#ffb8bf;--gm2:#d3152b;--gem:#ff4d5e;--gl:#ff4d5e55;--gl2:#ff4d5e2a;color:#ffd6da}
 .chip.loose .ic{animation:blink 1.4s ease-in-out infinite}
 @keyframes shine{from{background-position:160% 0}to{background-position:-60% 0}}
-@keyframes pulse1{50%{box-shadow:0 0 26px #19e68ccc,inset 0 0 12px #19e68c66,0 3px 8px #0008}}
+@keyframes pulse1{50%{box-shadow:0 4px 12px #000b,0 0 28px #19e68ccc,inset 0 0 14px #19e68c66,inset 0 1px 0 #ffffff30}}
 @keyframes blink{50%{opacity:.35}}
-.lg{font-size:11px;opacity:.9;margin-top:2px}.lg i{display:inline-block;width:9px;height:9px;border-radius:3px;margin:0 3px 0 8px}.lg i:first-child{margin-left:0}
-@media(max-width:600px){#msg{max-width:48vw;font-size:12px;padding:6px 8px}#st{font-size:11px;padding:6px 8px}button{padding:6px 9px;font-size:13px}.box{padding:8px}.chip{font-size:11px;padding:2px 9px 2px 6px}.chip.life1{font-size:12px;padding:3px 11px 3px 7px}}
+@media(max-width:600px){#msg{max-width:48vw;font-size:12px;padding:6px 8px}button{padding:6px 9px;font-size:13px}.box{padding:8px}.chip{font-size:11px;padding:3px 13px 3px 8px}.chip.life1{font-size:12px;padding:4px 15px 4px 9px}}
 </style></head><body>
-<div id="st" class="box"></div><div id="msg" class="box"></div>
+<div id="msg" class="box"></div>
 <div id="t1" class="tag"></div><div id="t2" class="tag"></div><div id="p1" class="lab" style="display:none">Wild joker</div><div id="p2" class="lab" style="display:none">Deck</div><div id="p3" class="lab" style="display:none">Open discard</div>
-<div id="btn" class="box"><button id="bh">Hint</button><button id="bo">Sort</button><button id="bg">Auto-group</button><button id="bf">Shuffle</button><div class="r"><button id="bl">◀</button><button id="br">▶</button></div><button id="bd">Discard</button><button id="bs">Declare</button></div>
+<div id="btn" class="box"><button id="bh">Hint</button><button id="bgp">Group</button><button id="bg">Auto-group</button><button id="bd">Discard</button><button id="bs">Declare</button></div>
 <div id="intro" class="box mid"><h1>Rummy 13</h1><p>Indian Rummy with 2 decks and 3 players. Make a pure sequence, a second sequence, group every card, then Declare.</p><button id="go">Start game</button></div>
 <div id="modal" class="box mid"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -93,13 +93,23 @@ function best(h){let b=null;h.forEach((c,i)=>{const r=solve(h.filter((_,j)=>j!=i
 // Split the hand (in its current order) into runs of neighbouring cards: valid groups or loose cards.
 // Picks the best reading of the arrangement: fewest dead points, a pure sequence first, a 2nd sequence next, then the longest groups.
 function segment(h){
- const n=h.length,memo=new Map(),f=(i,p,s)=>{
+ const n=h.length,memo=new Map(),cnt={};h.forEach(c=>{if(c.g)cnt[c.g]=(cnt[c.g]||0)+1});
+ // manual group (Group button): counts only while all its cards sit together; mb[i] = its length when it starts at i
+ const mb=Array(n).fill(0);
+ for(let i=0;i<n;){const g=h[i].g;let j=i+1;if(g){while(j<n&&h[j].g==g)j++;if(j-i==cnt[g]&&j-i>1)mb[i]=j-i}i=j}
+ const nx=Array(n+1).fill(n);let q=n;for(let i=n-1;i>=0;i--){nx[i]=q;if(mb[i])q=i}   // nx[i] = start of the next manual group after i
+ const f=(i,p,s)=>{
   if(i>=n)return{c:(p?0:200)+(s>1?0:100)};
   const key=i*6+p*3+s;if(memo.has(key))return memo.get(key);
-  const r0=f(i+1,p,s);let b={c:r0.c+pts(h[i]),len:1,nx:r0};
-  for(let j=Math.min(n,i+13);j>=i+3;j--){const ks=kinds(h.slice(i,j));if(!ks.length)continue;
-   const k=ks.includes('pure')?'pure':ks.includes('imp')?'imp':'set',r=f(j,(p||k=='pure')?1:0,Math.min(2,s+(k=='set'?0:1))),c=r.c+.01;
-   if(c<b.c-1e-9)b={c,len:j-i,k,nx:r}}
+  let b;
+  if(mb[i]){const L=mb[i],cs=h.slice(i,i+L),ks=kinds(cs),k=ks.length?(ks.includes('pure')?'pure':ks.includes('imp')?'imp':'set'):'bad',
+    r=f(i+L,(p||k=='pure')?1:0,Math.min(2,s+(k=='pure'||k=='imp'?1:0)));
+   b={c:r.c+(k=='bad'?cs.reduce((a,c)=>a+pts(c),0):.01),len:L,k,nx:r}}
+  else{
+   const r0=f(i+1,p,s);b={c:r0.c+pts(h[i]),len:1,nx:r0};
+   for(let j=Math.min(nx[i],i+13);j>=i+3;j--){const ks=kinds(h.slice(i,j));if(!ks.length)continue;
+    const k=ks.includes('pure')?'pure':ks.includes('imp')?'imp':'set',r=f(j,(p||k=='pure')?1:0,Math.min(2,s+(k=='set'?0:1))),c=r.c+.01;
+    if(c<b.c-1e-9)b={c,len:j-i,k,nx:r}}}
   memo.set(key,b);return b};
  const segs=[];let r=f(0,0,0),i=0;
  while(i<n){
@@ -115,7 +125,7 @@ let ac;const snd=(f=400,v=.05)=>{try{ac=ac||new AudioContext();const o=ac.create
 const cvEl=document.createElement('canvas'),ren=new THREE.WebGLRenderer({antialias:true,canvas:cvEl,stencil:true}),
  ST=!!(ren.getContext().getContextAttributes()||{}).stencil,   // stencil lets the group glow draw only where no card is
  stW=m=>{if(ST)Object.assign(m,{stencilWrite:true,stencilFunc:THREE.AlwaysStencilFunc,stencilRef:1,stencilZPass:THREE.ReplaceStencilOp});return m};
-ren.setPixelRatio(Math.min(devicePixelRatio,2));ren.shadowMap.enabled=true;ren.shadowMap.type=THREE.PCFSoftShadowMap;
+ren.setPixelRatio(Math.min(devicePixelRatio,3));const AN=ren.capabilities.getMaxAnisotropy();ren.shadowMap.enabled=true;ren.shadowMap.type=THREE.PCFSoftShadowMap;
 ren.outputEncoding=THREE.sRGBEncoding;document.body.prepend(cvEl);
 const scene=new THREE.Scene();scene.background=new THREE.Color(0x07100c);
 const camera=new THREE.PerspectiveCamera(45,1,.1,100);
@@ -146,102 +156,104 @@ const cache={};
 const PA=ys=>[...ys.map(y=>[.3,y]),...ys.map(y=>[.7,y])],P4=PA([.2,.8]),P6=PA([.2,.5,.8]),
 PIP={2:[[.5,.2],[.5,.8]],3:[[.5,.2],[.5,.5],[.5,.8]],4:P4,5:[...P4,[.5,.5]],6:P6,7:[...P6,[.5,.35]],8:[...P6,[.5,.35],[.5,.65]],9:[...PA([.2,.4,.6,.8]),[.5,.5]],10:[...PA([.2,.4,.6,.8]),[.5,.3],[.5,.7]]};
 function face(c){const key=c.r+'-'+c.s;if(cache[key])return cache[key];
- const k=mkc(360,504),x=k.getContext('2d');x.scale(2,2);x.textAlign='center';
- const pg=x.createLinearGradient(0,0,180,252);pg.addColorStop(0,'#fffefa');pg.addColorStop(1,'#f0e6cf');
- x.beginPath();x.roundRect(2,2,176,248,14);x.fillStyle=pg;x.fill();x.strokeStyle='#8f845f';x.lineWidth=2;x.stroke();
- x.strokeStyle='#d8cdb0';x.lineWidth=1;x.strokeRect(8,8,164,236);
- if(!c.r){const g=x.createLinearGradient(0,0,180,252);g.addColorStop(0,'#7a35a8');g.addColorStop(1,'#3d1559');x.fillStyle=g;x.fillRect(20,28,140,196);
+ const k=mkc(540,756),x=k.getContext('2d');x.scale(3,3);x.textAlign='center';
+ const pg=x.createLinearGradient(0,0,180,252);pg.addColorStop(0,'#ffffff');pg.addColorStop(1,'#f1e8d2');
+ x.beginPath();x.roundRect(2,2,176,248,14);x.fillStyle=pg;x.fill();
+ x.save();x.beginPath();x.roundRect(2,2,176,248,14);x.clip();for(let i=0;i<260;i++){x.fillStyle=`rgba(120,100,60,${Math.random()*.05})`;x.fillRect(Math.random()*180,Math.random()*252,1,1)}x.restore();
+ x.beginPath();x.roundRect(2,2,176,248,14);x.strokeStyle='#7d7250';x.lineWidth=2;x.stroke();
+ x.strokeStyle='#d2c7a8';x.lineWidth=1;x.strokeRect(8,8,164,236);
+ if(!c.r){const g=x.createLinearGradient(0,0,180,252);g.addColorStop(0,'#7a35a8');g.addColorStop(1,'#3d1559');x.fillStyle=g;x.fillRect(20,28,140,196);x.strokeStyle='#e6c47c';x.lineWidth=2;x.strokeRect(20,28,140,196);
   x.fillStyle='#ffe9a8';x.font='bold 22px Georgia';x.fillText('JOKER',90,58);x.fillText('JOKER',90,214);x.font='110px serif';x.fillStyle='#e6c47c';x.fillText('★',90,150);x.font='14px Georgia';x.fillText('WILD',90,176)}
  else{const col=c.s%2?'#c4202b':'#16161d',sy=S[c.s],lr=L[c.r];x.fillStyle=col;
-  const idx=()=>{x.font='bold 32px Georgia';x.fillText(lr,24,38);x.font='28px serif';x.fillText(sy,24,70)};
+  const idx=()=>{x.font=(lr.length>1?'bold 31px':'bold 37px')+' Georgia';x.fillText(lr,26,40);x.font='34px serif';x.fillText(sy,26,76)};
   idx();x.save();x.translate(180,252);x.rotate(Math.PI);idx();x.restore();
-  if(c.r==1){x.font='120px serif';x.fillText(sy,90,162);x.strokeStyle='#d9b265';x.lineWidth=2;x.beginPath();x.arc(90,126,50,0,7);x.stroke()}
-  else if(c.r>10){const g=x.createLinearGradient(0,52,0,200);g.addColorStop(0,'#fbefc6');g.addColorStop(1,'#e6c97e');x.fillStyle=g;x.fillRect(44,52,92,148);
-   x.strokeStyle='#b8893a';x.lineWidth=3;x.strokeRect(44,52,92,148);x.lineWidth=1;x.strokeRect(50,58,80,136);
-   x.fillStyle=col;x.font='62px serif';x.fillText(['♞','♛','♚'][c.r-11],90,118);x.font='bold 38px Georgia';x.fillText(lr,90,166);x.font='24px serif';x.fillText(sy,90,86);x.fillText(sy,90,190)}
-  else PIP[c.r].forEach(([px,py])=>{x.save();x.translate(px*180,py*252);if(py>.5)x.rotate(Math.PI);x.font='42px serif';x.fillText(sy,0,14);x.restore()})}
- const t=new THREE.CanvasTexture(k);t.anisotropy=8;t.encoding=THREE.sRGBEncoding;return cache[key]=t}
+  if(c.r==1){x.font='130px serif';x.fillText(sy,90,166);x.strokeStyle='#d9b265';x.lineWidth=2.5;x.beginPath();x.arc(90,126,56,0,7);x.stroke();x.lineWidth=1;x.beginPath();x.arc(90,126,62,0,7);x.stroke()}
+  else if(c.r>10){const g=x.createLinearGradient(0,50,0,202);g.addColorStop(0,'#fff3cf');g.addColorStop(1,'#e8c97a');x.fillStyle=g;x.fillRect(44,50,92,152);
+   x.strokeStyle='#b8893a';x.lineWidth=3;x.strokeRect(44,50,92,152);x.lineWidth=1;x.strokeRect(50,56,80,140);
+   x.beginPath();x.moveTo(50,196);x.lineTo(130,56);x.strokeStyle='#b8893a88';x.stroke();
+   const gl=['♞','♛','♚'][c.r-11],half=()=>{x.fillStyle=col;x.font='48px serif';x.fillText(gl,74,108);x.font='22px serif';x.fillText(sy,68,82)};
+   half();x.save();x.translate(90,126);x.rotate(Math.PI);x.translate(-90,-126);half();x.restore()}
+  else PIP[c.r].forEach(([px,py])=>{x.save();x.translate(px*180,py*252);if(py>.5)x.rotate(Math.PI);x.font='46px serif';x.fillText(sy,0,16);x.restore()})}
+ const t=new THREE.CanvasTexture(k);t.anisotropy=AN;t.encoding=THREE.sRGBEncoding;return cache[key]=t}
 // card back: lattice + gold medallion
-const bk=mkc(360,504),bx=bk.getContext('2d');bx.scale(2,2);bx.textAlign='center';
+const bk=mkc(540,756),bx=bk.getContext('2d');bx.scale(3,3);bx.textAlign='center';
 bx.beginPath();bx.roundRect(2,2,176,248,14);bx.fillStyle='#fffaf0';bx.fill();
 const bg=bx.createLinearGradient(0,0,180,252);bg.addColorStop(0,'#a3202f');bg.addColorStop(1,'#5e0f1b');
 bx.beginPath();bx.roundRect(10,10,160,232,8);bx.fillStyle=bg;bx.fill();bx.save();bx.clip();bx.strokeStyle='#e8c77c66';bx.lineWidth=1;
 for(let i=-14;i<26;i++){bx.beginPath();bx.moveTo(i*12,0);bx.lineTo(i*12+260,260);bx.moveTo(i*12+260,0);bx.lineTo(i*12,260);bx.stroke()}bx.restore();
 bx.strokeStyle='#d9b265';bx.lineWidth=2;bx.strokeRect(16,16,148,220);bx.beginPath();bx.arc(90,126,36,0,7);bx.fillStyle='#5e0f1b';bx.fill();bx.stroke();
 bx.beginPath();bx.arc(90,126,30,0,7);bx.stroke();bx.fillStyle='#d9b265';bx.font='42px serif';bx.fillText('♠',90,141);
-const backT=new THREE.CanvasTexture(bk);backT.encoding=THREE.sRGBEncoding;backT.anisotropy=8;
+const backT=new THREE.CanvasTexture(bk);backT.encoding=THREE.sRGBEncoding;backT.anisotropy=AN;
 const G=new THREE.BoxGeometry(1.25,1.75,.03),sideM=stW(new THREE.MeshStandardMaterial({color:0xe9e2d0})),backM=stW(new THREE.MeshStandardMaterial({map:backT,roughness:.45,alphaTest:.5}));
 function mk(c){const t=face(c),fm=stW(new THREE.MeshStandardMaterial({map:t,emissiveMap:t,emissive:0x888888,roughness:.4,alphaTest:.5}));
  c.m=new THREE.Mesh(G,[sideM,sideM,sideM,sideM,fm,backM]);c.m.castShadow=c.m.receiveShadow=true;c.m.userData.c=c;
  c.m.position.set(0,.03,.6);c.m.rotation.x=Math.PI/2;c.tp=[0,.03,.6];c.tr=[Math.PI/2,0];c.sc=1;scene.add(c.m)}
 const tgt=(c,x,y,z,rx,rz,sc)=>{c.tp=[x,y,z];c.tr=[rx,rz];c.sc=sc||1};
 
-/* ===== Animated group plates: glowing trays behind every group of cards ===== */
-// 1st Life = dark emerald (special: comets, twinkles, halo, rising sparkles), 2nd Life = light green, other groups = yellow, ungrouped = red
+/* ===== Animated group underlines: a glowing line under every group of cards ===== */
+// jewel colours: 1st Life = emerald (special: thicker rail, light pulses, twinkles), 2nd Life = light green, other groups = yellow, ungrouped = red
 const PAL={
- life1:{a:[.03,.75,.43],b:[.6,1,.85],f:[.01,.19,.11],s:1,ic:'♛'},
- life2:{a:[.55,.93,.4],b:[.92,1,.75],f:[.13,.3,.09],s:.55,ic:'✦'},
- other:{a:[1,.83,.16],b:[1,.97,.65],f:[.3,.24,.03],s:.45,ic:'◆'},
- loose:{a:[.96,.19,.28],b:[1,.58,.63],f:[.3,.04,.08],s:.3,ic:'!'}},
- MG=.34,TILT=-Math.PI/2+.8,plates=[],tv=new THREE.Vector3(),pv=new THREE.Vector3();
+ life1:{a:[.03,.75,.43],b:[.6,1,.85],f:[.01,.19,.11],s:1,d:0,ic:'♛'},
+ life2:{a:[.55,.93,.4],b:[.92,1,.75],f:[.13,.3,.09],s:.55,d:0,ic:'✦'},
+ other:{a:[1,.83,.16],b:[1,.97,.65],f:[.3,.24,.03],s:.45,d:0,ic:'◆'},
+ loose:{a:[.96,.19,.28],b:[1,.58,.63],f:[.3,.04,.08],s:.3,d:1,ic:'!'},
+ bad:{a:[.96,.19,.28],b:[1,.58,.63],f:[.3,.04,.08],s:.4,d:0,ic:'!'}},
+ HS=1.3,CW=1.25*HS,CH=1.75*HS,MG=.34,TILT=-Math.PI/2+.8,UY=Math.cos(TILT),UZ=Math.sin(TILT),plates=[],tv=new THREE.Vector3(),pv=new THREE.Vector3();
 const PVS='varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}',
 PFS=`varying vec2 vUv;
-uniform vec2 uSize;uniform vec3 uA;uniform vec3 uB;uniform vec3 uF;uniform float uT;uniform float uS;uniform float uO;
-float rbox(vec2 p,vec2 b,float r){vec2 q=abs(p)-b+r;return length(max(q,0.0))+min(max(q.x,q.y),0.0)-r;}
+uniform vec2 uSize;uniform vec3 uA;uniform vec3 uB;uniform float uT;uniform float uS;uniform float uD;uniform float uO;
 float hash(float n){return fract(sin(n*127.1)*43758.5453);}
-void over(inout vec3 c,inout float a,vec3 sc,float sa){float oa=sa+a*(1.0-sa);if(oa>0.0005){c=(sc*sa+c*a*(1.0-sa))/oa;}a=oa;}
 void main(){
  vec2 p=(vUv-0.5)*uSize;
  vec2 hb=uSize*0.5-vec2(0.34);
- float d=rbox(p,hb,0.3);
- vec3 c=uA;float a=0.0;
- float breathe=0.85+0.15*sin(uT*2.2);
- float aura=exp(-max(d,0.0)*(7.0-3.0*uS))*(1.0-smoothstep(0.12,0.32,d))*step(0.0,d)*(0.45+0.35*uS)*breathe;
- over(c,a,uA,aura);
- float inside=1.0-smoothstep(-0.012,0.012,d);
- vec3 fc=mix(uF,uA*0.55,clamp(exp(min(d,0.0)*5.0),0.0,1.0));
- float band=pow(max(0.0,sin(p.x*0.7-p.y*0.5-uT*1.8)),18.0);
- fc+=uB*band*(0.22+0.3*uS);
- over(c,a,fc,inside*0.88);
- float ang=atan(p.y/uSize.y,p.x/uSize.x);
- float spd=1.2+0.8*uS;
- float k1=pow(0.5+0.5*cos(ang-uT*spd),7.0);
- float k2=pow(0.5+0.5*cos(ang+3.14159-uT*spd),7.0)*uS;
- float tw=pow(0.5+0.5*sin(uT*3.0+hash(floor((ang+3.1416)*9.0))*6.28),10.0)*uS;
- float hot=clamp(k1*(0.5+0.5*uS)+k2+tw,0.0,1.0);
- float ring=1.0-smoothstep(0.0,0.04+0.03*uS,abs(d+0.03));
- over(c,a,mix(uA,uB,hot),clamp(ring*(0.6+0.8*hot),0.0,1.0)*breathe);
- float halo=(1.0-smoothstep(0.0,0.025,abs(d-0.1)))*uS*(0.25+0.25*sin(uT*2.0+1.0));
- over(c,a,uB,halo);
- float inner=exp(min(d,0.0)*9.0)*inside*(0.15+0.25*uS);
- over(c,a,uB,inner);
+ float r=hb.y;
+ vec2 q=abs(p)-hb+r;
+ float d=length(max(q,0.0))+min(max(q.x,q.y),0.0)-r;
+ float u=clamp(p.x/(2.0*hb.x)+0.5,0.0,1.0);
+ float v=clamp(p.y/hb.y*0.5+0.5,0.0,1.0);
+ float sg=fract(p.x*1.8-uT*0.4);
+ float dsh=mix(1.0,smoothstep(0.0,0.08,sg)*(1.0-smoothstep(0.55,0.63,sg)),uD);
+ vec3 gold=mix(vec3(0.50,0.33,0.08),vec3(1.0,0.90,0.58),pow(0.5+0.5*sin(v*5.2+1.1),1.5));
+ float sw=(fract(u*0.9-uT*0.12)-0.5)*5.0;
+ gold+=vec3(1.0,0.95,0.75)*exp(-sw*sw)*0.7;
+ float pt=(fract(u-uT*(0.2+0.15*uS))-0.5)*(8.0-2.0*uS);
+ float pulse=exp(-pt*pt);
+ vec3 gem=mix(uA,uB,clamp(0.5+0.5*sin(u*9.0-uT*2.2)+pulse*0.6,0.0,1.0));
+ float inlay=1.0-smoothstep(0.42,0.5,v);
+ vec3 rail=mix(mix(gold,gem,inlay),gem,uD);
+ float tw=pow(0.5+0.5*sin(uT*3.0+hash(floor(u*32.0))*6.28),12.0)*uS;
+ rail+=vec3(1.0)*tw*0.5;
+ float rad=0.11+0.04*uS;
+ float dm=min(abs(p.x+hb.x),abs(p.x-hb.x))+abs(p.y)-rad;
+ float dcore=(1.0-smoothstep(-0.004,0.012,dm))*(1.0-uD);
+ vec3 dcol=mix(vec3(1.0,0.90,0.55),gem,1.0-smoothstep(-0.012,0.01,dm+rad*0.55));
+ float core=(1.0-smoothstep(0.0,0.018,d))*dsh;
+ float a1=max(core,dcore);
+ vec3 c=mix(rail,dcol,dcore);
+ float dd=mix(min(d,dm),d,uD);
+ float glow=exp(-max(dd,0.0)*(8.0-3.0*uS))*(1.0-smoothstep(0.12,0.33,max(dd,0.0)))*(0.4+0.4*uS)*(0.85+0.15*sin(uT*2.0))*mix(1.0,0.45+0.55*dsh,uD);
+ float a=clamp(a1+glow*(1.0-a1),0.0,1.0);
+ c=mix(uA,c,a1);
  gl_FragColor=vec4(c,a*uO);
 }`;
 function plate(i){if(plates[i])return plates[i];
  const mat=new THREE.ShaderMaterial({transparent:true,depthWrite:false,depthTest:!ST,side:THREE.DoubleSide,vertexShader:PVS,fragmentShader:PFS,
-  uniforms:{uSize:{value:new THREE.Vector2(3,3)},uA:{value:new THREE.Color()},uB:{value:new THREE.Color()},uF:{value:new THREE.Color()},uT:{value:0},uS:{value:0},uO:{value:0}}});
+  uniforms:{uSize:{value:new THREE.Vector2(3,3)},uA:{value:new THREE.Color()},uB:{value:new THREE.Color()},uF:{value:new THREE.Color()},uT:{value:0},uS:{value:0},uO:{value:0},uD:{value:0}}});
  if(ST)Object.assign(mat,{stencilWrite:true,stencilFunc:THREE.NotEqualStencilFunc,stencilRef:1});   // never paint over a card
  const m=new THREE.Mesh(new THREE.PlaneGeometry(1,1),mat),el=document.createElement('div');
  m.visible=false;m.renderOrder=2;m.rotation.x=TILT;scene.add(m);
  el.className='chip';el.innerHTML='<span class="ic"></span><span class="tx"></span>';document.body.appendChild(el);
- return plates[i]={m,u:mat.uniforms,el,ic:el.children[0],tx:el.children[1],on:false,o:0,snap:true,role:'',ts:0,cw:3,ch:3,cA:new THREE.Color(),cB:new THREE.Color(),cF:new THREE.Color(),tg:{x:0,y:0,z:0,rz:0,w:3,h:3}}}
+ return plates[i]={m,u:mat.uniforms,el,ic:el.children[0],tx:el.children[1],on:false,o:0,snap:true,role:'',ts:0,td:0,cw:3,ch:3,cA:new THREE.Color(),cB:new THREE.Color(),cF:new THREE.Color(),tg:{x:0,y:0,z:0,rz:0,w:3,h:3}}}
 function setPlate(i,g,x0,x1,k0,k1,sp,gap){
- const P=plate(i),km=(k0+k1)/2,xm=(x0+x1)/2,big=g.role=='life1'?.07:0,pal=PAL[g.role],fresh=!P.on&&P.o<.03,
-  px=Math.min(.18,Math.max(.05,(sp+gap-1.53)/2-.02))+big;
- Object.assign(P.tg,{x:xm,y:.87+km*.026,z:5.57+km*.027,rz:-(xm-cx)/6.5*.08,w:x1-x0+1.53+2*px,h:2.7+2*big});
- if(P.role!=g.role||fresh){P.role=g.role;P.cA.setRGB(...pal.a);P.cB.setRGB(...pal.b);P.cF.setRGB(...pal.f);P.ts=pal.s;P.ic.textContent=pal.ic;P.el.className='chip '+g.role}
+ const P=plate(i),km=(k0+k1)/2,xm=(x0+x1)/2,pal=PAL[g.role],fresh=!P.on&&P.o<.03,
+  th=g.role=='life1'?.13:g.role=='loose'?.06:.09,dn=CH/2+.24+th/2,   // rail thickness / distance from card centre down to the rail
+  ins=Math.max(.1,(.4-(sp+gap-CW))/2);   // keeps neighbouring rails and their diamonds apart
+ Object.assign(P.tg,{x:xm,y:.9+km*.026-UY*dn,z:5.6+km*.027-UZ*dn,rz:-(xm-cx)/6.5*.08,w:Math.max(.7,x1-x0+CW-2*ins),h:th});
+ if(P.role!=g.role||fresh){P.role=g.role;P.cA.setRGB(...pal.a);P.cB.setRGB(...pal.b);P.cF.setRGB(...pal.f);P.ts=pal.s;P.td=pal.d;P.ic.textContent=pal.ic;P.el.className='chip '+g.role}
  if(P.tx.textContent!=g.t)P.tx.textContent=g.t;
  P.on=true;if(fresh)P.snap=true}
-// rising sparkles above the 1st Life group
-const SN=40,sPos=new Float32Array(SN*3),sCol=new Float32Array(SN*3),sPh=Array.from({length:SN},()=>({a:Math.random(),b:Math.random(),s:.3+Math.random()*.5})),
- sgeo=new THREE.BufferGeometry(),skc=mkc(64,64),skx=skc.getContext('2d'),skg=skx.createRadialGradient(32,32,0,32,32,32);
-skg.addColorStop(0,'#ffffff');skg.addColorStop(.3,'#ffffffaa');skg.addColorStop(1,'#ffffff00');skx.fillStyle=skg;skx.fillRect(0,0,64,64);
-sgeo.setAttribute('position',new THREE.BufferAttribute(sPos,3));sgeo.setAttribute('color',new THREE.BufferAttribute(sCol,3));
-const sparks=new THREE.Points(sgeo,new THREE.PointsMaterial({size:.22,map:new THREE.CanvasTexture(skc),vertexColors:true,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,depthTest:!ST}));
-sparks.frustumCulled=false;sparks.visible=false;sparks.renderOrder=3;scene.add(sparks);
-
 /* ===== Game state ===== */
-let stock=[],disc=[],cut,H=[[],[],[]],turn,phase='deal',sel,hov,all=[];
+let stock=[],disc=[],cut,H=[[],[],[]],turn,phase='deal',selS=new Set(),gseq=0,hov,all=[];
 const $=id=>document.getElementById(id),msg=t=>$('msg').textContent=t,sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const rnd=n=>crypto.getRandomValues(new Uint32Array(1))[0]%n;
 function shuf(a){for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a}
@@ -250,7 +262,7 @@ let drag=null,pd=null,maxW=12,cx=0;
 async function newGame(){
  all.forEach(c=>scene.remove(c.m));all=[];let id=0;
  for(let d=0;d<2;d++){for(let s=0;s<4;s++)for(let r=1;r<14;r++)all.push({r,s,id:id++});all.push({r:0,s:4,id:id++})}
- all.forEach(mk);stock=shuf(all.slice());H=[[],[],[]];cut=null;disc=[];W=-1;turn=0;phase='deal';sel=hov=null;
+ all.forEach(mk);stock=shuf(all.slice());H=[[],[],[]];cut=null;disc=[];W=-1;turn=0;phase='deal';selS.clear();hov=null;
  $('modal').style.display='none';$('intro').style.display='none';plates.forEach(P=>{P.on=false;P.o=0;P.m.visible=false;P.el.style.opacity=0});hand();
  stock.forEach((c,i)=>tgt(c,0,.03+i*.004,.6,Math.PI/2,0));
  msg('Shuffling the deck…');await sleep(700);
@@ -267,7 +279,7 @@ async function newGame(){
  msg('Dealing 13 cards to each player…');
  for(let i=0;i<39;i++){H[i%3].push(stock.pop());render();snd(700+(i%3)*120,.04);await sleep(130)}
  await sleep(500);cut=stock.pop();W=cut.r||1;disc=[stock.pop()];render();snd(900,.06);
- await sleep(600);phase='draw';render();msg('Wild joker: '+(cut.r?L[cut.r]+S[cut.s]:'A')+'. Your turn: tap the glowing deck or discard to draw.')}
+ await sleep(600);phase='draw';tidy();render();msg('Wild joker: '+(cut.r?L[cut.r]+S[cut.s]:'A')+'. Your turn: tap the glowing deck or discard to draw.')}
 
 function place(){
  stock.forEach((c,i)=>tgt(c,-1.8,.75+i*.007,.6+i*.004,Math.PI/2+.5,(c.id%7-3)*.01,1.4));
@@ -276,27 +288,32 @@ function place(){
  [1,2].forEach(b=>H[b].forEach((c,i)=>tgt(c,(b==1?-5:5)-(H[b].length-1)*.1+i*.2,.5+i*.004,-5.2,Math.PI/2+.5,0,.9)))}
 function hand(){
  const h=H[0],n=h.length,segs=segment(h);
- // 1st Life = first pure sequence, 2nd Life = next sequence (pure or impure; only counts once a pure exists)
- const sq=segs.filter(g=>g.k=='pure'||g.k=='imp'),f1=sq.find(g=>g.k=='pure'),f2=f1&&sq.find(g=>g!=f1),ty=g=>g.k=='pure'?'pure':'impure';
+ // 1st Life = first pure sequence, 2nd Life = the next sequence (impure or pure), even before a pure one exists
+ const sq=segs.filter(g=>g.k=='pure'||g.k=='imp'),f1=sq.find(g=>g.k=='pure'),f2=sq.find(g=>g!=f1),ty=g=>g.k=='pure'?'Pure':'Impure';
  segs.forEach(g=>{g.p=g.cards.reduce((a,c)=>a+pts(c),0);
-  g.role=g.k=='loose'?'loose':g==f1?'life1':g==f2?'life2':'other';
-  g.t=g.role=='life1'?'1st Life · Pure':g.role=='life2'?'2nd Life · '+ty(g):g.role=='loose'?'Ungrouped · '+g.p+' pts':g.k=='set'?'Set':'Series · '+ty(g)});
- const gs=Math.max(0,segs.length-1),sp=Math.min(1,Math.max(.3,(maxW-1.6-.25*gs)/(Math.max(1,n-1)+.9*gs))),gap=sp*.9+.25;
+  g.role=g.k=='loose'?'loose':g.k=='bad'?'bad':g==f1?'life1':g==f2?'life2':'other';
+  g.t=g.role=='life1'?'1st Life · Pure':g.role=='life2'?'2nd Life · '+ty(g):g.role=='loose'?'Ungrouped · '+g.p+' pts':g.role=='bad'?'Invalid · '+g.p+' pts':g.k=='set'?'Set':'Series · '+ty(g)});
+ const gs=Math.max(0,segs.length-1),sp=Math.min(1,Math.max(.3,(maxW-CW-.07-.32*gs)/(Math.max(1,n-1)+.9*gs))),gap=sp*.9+.32;
  let x=cx-((n-1)*sp+gs*gap)/2,k=0;
  segs.forEach((g,gi)=>{const x0=x,k0=k;
-  g.cards.forEach(c=>{const up=c===sel,t=(x-cx)/6.5,lf=(up?.9:0)+(c===hov&&!drag?.35:0);tgt(c,x,.9+k*.026+lf*.72,5.6+k*.027-lf*.7,-Math.PI/2+.8,-t*.08,1.22);x+=sp;k++});
+  g.cards.forEach(c=>{const up=selS.has(c),t=(x-cx)/6.5,lf=(up?.9:0)+(c===hov&&!drag?.35:0);tgt(c,x,.9+k*.026+lf*.72,5.6+k*.027-lf*.7,-Math.PI/2+.8,-t*.08,HS);x+=sp;k++});
   setPlate(gi,g,x0,x-sp,k0,k-1,sp,gap);x+=gap});
  for(let i=segs.length;i<plates.length;i++)plates[i].on=false;
- if(drag)tgt(drag.c,drag.x,1.9,4.9,-Math.PI/2+.8,0,1.35);
- const dead=segs.filter(g=>g.k=='loose').reduce((a,g)=>a+g.p,0);
- $('st').innerHTML=`Wild joker: <b>${cut?(cut.r?L[cut.r]+S[cut.s]:'A'):'…'}</b> (every ${L[W]||'?'} is a joker)<br>Deck ${stock.length} · Discards ${disc.length}<br>Turn: <b>${turn?'Bot '+turn:'You'}</b><br>1st Life (pure): ${f1?'✅':'❌'} · 2nd Life: ${f1&&f2?'✅':'❌'}<br>Points in hand: <b>${dead}</b><div class="lg"><i style="background:#19e68c"></i>1st<i style="background:#a5f07a"></i>2nd<i style="background:#ffd84a"></i>Other<i style="background:#ff4d5e"></i>Ungrouped</div>`;
+ if(drag)tgt(drag.c,drag.x,1.9,4.9,-Math.PI/2+.8,0,HS*1.1);
  [1,2].forEach(b=>{const t=$('t'+b);t.textContent='Bot '+b+' · '+H[b].length+' cards';t.classList.toggle('on',turn==b&&phase!='over')});
+$('bgp').textContent=selS.size>1?'Group ('+selS.size+')':'Group';
  posLabs()}
 function posLabs(){const P=(x,y,z)=>new THREE.Vector3(x,y,z).project(camera),set=(el,v)=>{el.style.left=(v.x+1)/2*innerWidth+'px';el.style.top=(1-v.y)/2*innerHeight+'px'};
  plates.forEach(q=>{const e=q.el;if(q.o<.03){e.style.opacity=0;return}
-  tv.set(0,-q.ch/2,0).applyEuler(q.m.rotation).add(q.m.position);pv.copy(tv).project(camera);set(e,pv);e.style.opacity=q.o.toFixed(2)});
+  tv.copy(q.m.position);pv.copy(tv).project(camera);set(e,pv);e.style.opacity=q.o.toFixed(2)});
  set($('t1'),P(-5,.5,-6.3));set($('t2'),P(5,.5,-6.3));
  [['p1',-4.9],['p2',-1.8],['p3',1.8]].forEach(([id,x])=>{const e=$(id);e.style.display=cut?'block':'none';set(e,P(x,.1,2.4))})}
+// a manual group survives only while its cards sit together; a card dragged away leaves the group
+function fixGroups(){const m={};H[0].forEach((c,i)=>{if(c.g)(m[c.g]=m[c.g]||[]).push(i)});Object.values(m).forEach(ix=>{if(ix.length<2||ix[ix.length-1]-ix[0]!=ix.length-1)ix.forEach(i=>delete H[0][i].g)})}
+function leave(c){if(!c.g)return;const ix=[];H[0].forEach((d,i)=>{if(d.g==c.g)ix.push(i)});if(ix[ix.length-1]-ix[0]!=ix.length-1)delete c.g}
+// valid groups stay on the left in their order, every ungrouped card moves to the right end (relative order kept)
+function tidy(){fixGroups();for(let i=0;i<3;i++){const sg=segment(H[0]),o=[...sg.filter(g=>g.k!='loose').flatMap(g=>g.cards),...sg.filter(g=>g.k=='loose').flatMap(g=>g.cards)];
+ if(o.every((c,j)=>c===H[0][j]))break;H[0]=o}}
 const render=()=>{place();hand()};
 function drawStock(){if(!stock.length){const t=disc.pop();stock=shuf(disc);disc=[t]}return stock.pop()}
 function next(){turn=(turn+1)%3;if(turn){bot(turn)}else{phase='draw';msg('Your turn: draw from the deck or the discard pile.');render()}}
@@ -310,18 +327,21 @@ function finish(w,bad){phase='over';
  if(bad)sc[w]=80;render();if(w==0&&!bad)confetti();
  $('modal').innerHTML=`<b style="font-size:20px">${bad?'Invalid declare!':(w?'Bot '+w+' wins':'You win! 🎉')}</b><br>${bad?'You need a pure sequence, a 2nd sequence, and every card grouped. 80 penalty points.<br>':''}You: ${sc[0]} · Bot 1: ${sc[1]} · Bot 2: ${sc[2]}<br><br><button onclick="newGame()">Play again</button>`;
  setTimeout(()=>$('modal').style.display='block',w==0&&!bad?1200:300)}
-const mine=()=>phase=='disc'&&sel;
-$('bd').onclick=()=>{if(!mine())return msg('Draw a card, then tap one to lift it and press Discard.');H[0].splice(H[0].indexOf(sel),1);disc.push(sel);sel=null;phase='wait';snd(380,.05);next()};
-$('bs').onclick=()=>{if(!mine())return msg('Draw, then lift the card you will finish with.');
- H[0].splice(H[0].indexOf(sel),1);disc.push(sel);sel=null;finish(0,!solve(H[0]).ok)};
+const mine=()=>phase=='disc'&&selS.size==1,one=()=>[...selS][0];
+$('bd').onclick=()=>{if(!mine())return msg('Draw a card, then select one card and press Discard.');const c=one();H[0].splice(H[0].indexOf(c),1);disc.push(c);selS.clear();tidy();phase='wait';snd(380,.05);next()};
+$('bs').onclick=()=>{if(!mine())return msg('Draw, then select the one card you will finish with.');
+ const c=one();H[0].splice(H[0].indexOf(c),1);disc.push(c);selS.clear();finish(0,!solve(H[0]).ok)};
+// Group: the selected cards become one group (pressing it again on a whole group removes that group)
+$('bgp').onclick=()=>{if(phase=='deal'||phase=='over')return;const h=H[0],cs=h.filter(c=>selS.has(c));
+ if(cs.length<2)return msg('Select 2 or more cards, then press Group.');
+ const g0=cs[0].g;
+ if(g0&&cs.every(c=>c.g==g0)&&h.filter(c=>c.g==g0).length==cs.length){cs.forEach(c=>delete c.g);selS.clear();snd(420,.04);tidy();hand();return msg('Group removed.')}
+ const rest=h.filter(c=>!selS.has(c)),id=++gseq;rest.splice(h.indexOf(cs[0]),0,...cs);H[0]=rest;cs.forEach(c=>c.g=id);
+ selS.clear();snd(560,.04);tidy();hand();msg('Cards grouped.')};
 $('bh').onclick=()=>{if(phase=='draw'){const base=solve(H[0]).c,w=best(H[0].concat(disc[disc.length-1])).r.c;
   msg(w<base?'Hint: take the open discard. It improves your hand.':'Hint: draw from the deck.')}
- else if(phase=='disc'){const b=best(H[0]);sel=H[0][b.i];hand();msg(b.r.ok?'Hint: you can declare! Lift this card and press Declare.':'Hint: discard the lifted card.')}};
-$('bo').onclick=()=>{if(phase=='deal'||phase=='over')return;H[0].sort((a,b)=>a.s-b.s||a.r-b.r);snd(500,.04);hand()};
-$('bg').onclick=()=>{if(phase=='deal'||phase=='over')return;const A=solve(H[0]);H[0]=[...A.groups.flatMap(g=>g.cards),...A.loose];snd(560,.04);hand()};
-$('bf').onclick=()=>{if(phase=='deal'||phase=='over')return;shuf(H[0]);H[0].forEach((c,i)=>setTimeout(()=>snd(300+i*25,.02),i*30));hand()};
-const mvSel=d=>{if(!sel)return msg('Tap a card to lift it, then use the arrows to move it.');const h=H[0],i=h.indexOf(sel),j=i+d;if(j<0||j>=h.length)return;h.splice(i,1);h.splice(j,0,sel);snd(440,.03);hand()};
-$('bl').onclick=()=>mvSel(-1);$('br').onclick=()=>mvSel(1);
+ else if(phase=='disc'){const b=best(H[0]);selS.clear();selS.add(H[0][b.i]);hand();msg(b.r.ok?'Hint: you can declare! Lift this card and press Declare.':'Hint: discard the lifted card.')}};
+$('bg').onclick=()=>{if(phase=='deal'||phase=='over')return;const A=solve(H[0]);H[0].forEach(c=>delete c.g);selS.clear();H[0]=[...A.groups.flatMap(g=>g.cards),...A.loose];snd(560,.04);hand()};
 $('go').onclick=()=>newGame();
 
 /* ===== Input: tap to lift, drag to rearrange ===== */
@@ -332,14 +352,14 @@ cvEl.addEventListener('pointerdown',e=>{if(phase=='deal'||phase=='over')return;r
  const hc=hitHand();if(hc){pd={c:hc,x:e.clientX};return}
  if(phase=='draw'){const t=disc[disc.length-1],q=stock[stock.length-1],hit=m=>rc.intersectObject(m).length;
   if(t&&hit(t.m))H[0].push(disc.pop());else if(q&&hit(q.m))H[0].push(drawStock());else return;
-  snd(520,.05);phase='disc';msg('Tap a card to lift it, then Discard or Declare. Drag cards to rearrange.');place();hand()}});
+  snd(520,.05);phase='disc';msg('Tap cards to select: 1 to Discard or Declare, 2+ to Group. Drag to rearrange.');tidy();place();hand()}});
 addEventListener('pointermove',e=>{
  if(!pd){if(phase=='deal'||phase=='over')return;ray(e);const h=hitHand();if(h!==hov){hov=h;cvEl.style.cursor=h?'grab':'default';hand()}return}
  if(!drag&&Math.abs(e.clientX-pd.x)<8)return;ray(e);if(!rc.ray.intersectPlane(pl,pt))return;
  if(!drag){drag={c:pd.c,x:pt.x};cvEl.style.cursor='grabbing';snd(420,.03)}drag.x=pt.x;
  const h=H[0],cur=h.indexOf(drag.c);let ni=0;h.forEach(c=>{if(c!==drag.c&&c.tp[0]<pt.x)ni++});
  if(ni!=cur){h.splice(cur,1);h.splice(ni,0,drag.c)}hand()});
-addEventListener('pointerup',()=>{if(!pd)return;if(!drag){sel=sel===pd.c?null:pd.c;snd(600,.03)}else snd(360,.04);pd=null;drag=null;hov=null;hand()});
+addEventListener('pointerup',()=>{if(!pd)return;if(!drag){selS.has(pd.c)?selS.delete(pd.c):selS.add(pd.c);snd(600,.03)}else{snd(360,.04);leave(drag.c);tidy()}pd=null;drag=null;hov=null;hand()});
 
 /* ===== Win confetti ===== */
 let cf=null;
@@ -359,17 +379,12 @@ let T=0;
  for(let i=1;i<360;i+=3){dp[i]+=.004;if(dp[i]>10)dp[i]=1}dg.attributes.position.needsUpdate=true;
  // group plates: glide to their group, fade in/out, blend colours when a group changes role
  plates.forEach(P=>{const tg=P.tg,m=P.m,u=P.u,live=P.on&&phase!='deal';
-  if(P.snap||(live&&P.o<.02)){m.position.set(tg.x,tg.y,tg.z);m.rotation.z=tg.rz;P.cw=tg.w;P.ch=tg.h;u.uA.value.copy(P.cA);u.uB.value.copy(P.cB);u.uF.value.copy(P.cF);u.uS.value=P.ts;P.snap=false}
+  if(P.snap||(live&&P.o<.02)){m.position.set(tg.x,tg.y,tg.z);m.rotation.z=tg.rz;P.cw=tg.w;P.ch=tg.h;u.uA.value.copy(P.cA);u.uB.value.copy(P.cB);u.uF.value.copy(P.cF);u.uS.value=P.ts;u.uD.value=P.td;P.snap=false}
   P.o+=((live?1:0)-P.o)*.1;m.visible=P.o>.01;if(!m.visible)return;
   m.position.x+=(tg.x-m.position.x)*q;m.position.y+=(tg.y-m.position.y)*q;m.position.z+=(tg.z-m.position.z)*q;m.rotation.z+=(tg.rz-m.rotation.z)*q;
   P.cw+=(tg.w-P.cw)*q;P.ch+=(tg.h-P.ch)*q;m.scale.set(P.cw+MG*2,P.ch+MG*2,1);u.uSize.value.set(P.cw+MG*2,P.ch+MG*2);
-  u.uA.value.lerp(P.cA,.12);u.uB.value.lerp(P.cB,.12);u.uF.value.lerp(P.cF,.12);u.uS.value+=(P.ts-u.uS.value)*.1;u.uT.value=T;u.uO.value=P.o});
- const P1=plates.find(p=>p.role=='life1'&&p.on&&p.o>.3);sparks.visible=!!P1;
- if(P1){for(let i=0;i<SN;i++){const s=sPh[i],life=(T*s.s*.6+s.a)%1,f=Math.sin(life*Math.PI)*P1.o;
-   tv.set((s.b-.5)*P1.cw+Math.sin(T*2+i)*.1,P1.ch/2-.15+life*1.25,.2).applyEuler(P1.m.rotation).add(P1.m.position);
-   sPos[i*3]=tv.x;sPos[i*3+1]=tv.y;sPos[i*3+2]=tv.z;sCol[i*3]=.35*f;sCol[i*3+1]=f;sCol[i*3+2]=.65*f}
-  sgeo.attributes.position.needsUpdate=true;sgeo.attributes.color.needsUpdate=true}
+  u.uA.value.lerp(P.cA,.12);u.uB.value.lerp(P.cB,.12);u.uF.value.lerp(P.cF,.12);u.uS.value+=(P.ts-u.uS.value)*.1;u.uD.value+=(P.td-u.uD.value)*.1;u.uT.value=T;u.uO.value=P.o});
  if(cf){const P=cf.pos;for(let i=0;i<cf.vel.length;i++){const v=cf.vel[i];v[1]-=.008;P[i*3]+=v[0];P[i*3+1]=Math.max(.05,P[i*3+1]+v[1]);P[i*3+2]+=v[2];if(P[i*3+1]<=.05){v[0]=v[1]=v[2]=0}}
   cf.m.geometry.attributes.position.needsUpdate=true;if(++cf.t>420){scene.remove(cf.m);cf=null}}
- camera.position.x=Math.sin(T*.25)*.4;camera.lookAt(0,0,2.4);posLabs();ren.render(scene,camera)})();
+ posLabs();ren.render(scene,camera)})();
 </script></body></html>
