@@ -14,14 +14,29 @@ canvas{display:block;touch-action:none}
 button{font:inherit;background:linear-gradient(#e6c47c,#c39a4c);color:#1b1206;border:0;border-radius:8px;padding:8px 13px;cursor:pointer;box-shadow:0 2px 0 #7a5a22;transition:transform .12s}
 button:hover{transform:translateY(-1px);filter:brightness(1.08)}button:active{transform:translateY(1px)}
 .lab{position:fixed;transform:translate(-50%,0);font-size:13px;white-space:nowrap;padding:2px 10px;border-radius:9px;background:#0b1410dd;border:1px solid var(--gold);pointer-events:none}
-.lab.pure{border-color:#4fd18b;color:#9af0c2;box-shadow:0 0 10px #4fd18b66}.lab.imp{border-color:#7fb6ff;color:#b9d7ff}.lab.set{border-color:#ffa86a;color:#ffd2ad}
 .tag{position:fixed;transform:translate(-50%,-100%);padding:3px 12px;border-radius:14px;background:#0b1410dd;border:1px solid #6f6446;font-size:13px;pointer-events:none;transition:.3s}
 .tag.on{border-color:var(--gold);box-shadow:0 0 16px #d9b265cc;color:#ffe9b0}
 .mid{inset:0;margin:auto;width:300px;height:fit-content;text-align:center;font-size:16px}
 #modal{display:none}
 h1{margin:0 0 4px;font-size:38px;letter-spacing:2px;color:var(--gold)}
 p{margin:6px 0 14px;font-size:14px;opacity:.9}
-@media(max-width:600px){#msg{max-width:48vw;font-size:12px;padding:6px 8px}#st{font-size:11px;padding:6px 8px}button{padding:6px 9px;font-size:13px}.box{padding:8px}}
+/* group chips (1st Life = emerald, 2nd Life = light green, other groups = yellow, ungrouped = red) */
+.chip{position:fixed;left:0;top:0;z-index:2;transform:translate(-50%,-32%);display:flex;align-items:center;gap:6px;padding:3px 12px 3px 8px;border-radius:999px;font-size:12.5px;letter-spacing:.4px;white-space:nowrap;pointer-events:none;overflow:hidden;opacity:0;
+ color:var(--tx);border:1px solid var(--bd);background-color:var(--bg2);background-image:linear-gradient(180deg,#ffffff26,#0000 60%);
+ box-shadow:0 0 14px var(--gl),inset 0 0 9px var(--gl2),0 3px 8px #0008;backdrop-filter:blur(6px);
+ transition:color .45s,border-color .45s,background-color .45s,box-shadow .45s}
+.chip .ic{font-size:1.15em;line-height:1;filter:drop-shadow(0 0 4px var(--bd))}
+.chip.life1{--tx:#d8fff0;--bd:#2fe79b;--gl:#19e68c99;--gl2:#19e68c40;--bg2:#05432a;font-weight:bold;font-size:13.5px;padding:4px 15px 4px 10px;animation:pulse1 2.2s ease-in-out infinite}
+.chip.life1::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 35%,#ffffff66 50%,transparent 65%);background-size:260% 100%;animation:shine 2.6s linear infinite}
+.chip.life2{--tx:#f3ffe2;--bd:#b5f58a;--gl:#a5f07a80;--gl2:#a5f07a33;--bg2:#2d4d14}
+.chip.other{--tx:#fff6c2;--bd:#ffd84a;--gl:#ffd84a80;--gl2:#ffd84a33;--bg2:#4b3b08}
+.chip.loose{--tx:#ffd6da;--bd:#ff5f6e;--gl:#ff4d5e80;--gl2:#ff4d5e33;--bg2:#4a0b14}
+.chip.loose .ic{animation:blink 1.4s ease-in-out infinite}
+@keyframes shine{from{background-position:160% 0}to{background-position:-60% 0}}
+@keyframes pulse1{50%{box-shadow:0 0 26px #19e68ccc,inset 0 0 12px #19e68c66,0 3px 8px #0008}}
+@keyframes blink{50%{opacity:.35}}
+.lg{font-size:11px;opacity:.9;margin-top:2px}.lg i{display:inline-block;width:9px;height:9px;border-radius:3px;margin:0 3px 0 8px}.lg i:first-child{margin-left:0}
+@media(max-width:600px){#msg{max-width:48vw;font-size:12px;padding:6px 8px}#st{font-size:11px;padding:6px 8px}button{padding:6px 9px;font-size:13px}.box{padding:8px}.chip{font-size:11px;padding:2px 9px 2px 6px}.chip.life1{font-size:12px;padding:3px 11px 3px 7px}}
 </style></head><body>
 <div id="st" class="box"></div><div id="msg" class="box"></div>
 <div id="t1" class="tag"></div><div id="t2" class="tag"></div><div id="p1" class="lab" style="display:none">Wild joker</div><div id="p2" class="lab" style="display:none">Deck</div><div id="p3" class="lab" style="display:none">Open discard</div>
@@ -35,13 +50,27 @@ const L=['','A','2','3','4','5','6','7','8','9','10','J','Q','K'],S=['♠','♥'
 let W=1;
 const pts=c=>!c.r?0:(c.r==1||c.r>10)?10:c.r;
 const isJ=c=>!c.r||c.r==W;
+// ranks form a run (Ace low or high); slack = number of jokers that may fill holes
+const run=(rs,slack)=>new Set(rs).size==rs.length&&[0,1].some(hi=>{const q=rs.map(r=>hi&&r==1?14:r);return Math.max(...q)-Math.min(...q)+1-rs.length<=slack});
 function kinds(cs){
- const js=cs.filter(isJ).length,R=cs.filter(c=>!isJ(c)),o=[];if(!R.length)return o;
+ const R=cs.filter(c=>!isJ(c)),js=cs.length-R.length,o=[];if(!R.length)return o;
  if(cs.length<5&&R.every(c=>c.r==R[0].r)&&new Set(R.map(c=>c.s)).size==R.length)o.push('set');
- if(cs.length<14&&R.every(c=>c.s==R[0].s)){const rs=R.map(c=>c.r);
-  if(new Set(rs).size==rs.length)for(const hi of[0,1]){const q=rs.map(r=>hi&&r==1?14:r);
-   if(Math.max(...q)-Math.min(...q)+1-R.length<=js){o.push(js?'imp':'pure');break}}}
+ if(cs.length<14){
+  // PURE: every card is used as itself. A wild-rank card in its own suit and place (e.g. 4♠ 5♠ 6♠ when 6 is wild) is natural, so it is still pure.
+  if(cs.every(c=>c.r&&c.s==cs[0].s)&&run(cs.map(c=>c.r),0))o.push('pure');
+  // IMPURE: printed jokers or wild cards stand in for missing cards
+  else if(js&&R.every(c=>c.s==R[0].s)&&run(R.map(c=>c.r),js))o.push('imp')}
  return o}
+// nice display order inside a group (jokers sit in the holes of an impure run)
+function arrange(cs,k){
+ const R=cs.filter(c=>!isJ(c)),J=cs.filter(isJ);
+ if(k=='set')return R.concat(J);
+ if(k=='pure'){const a=cs.slice().sort((x,y)=>x.r-y.r);return a.every((c,i)=>!i||c.r==a[i-1].r+1)?a:cs.slice().sort((x,y)=>(x.r==1?14:x.r)-(y.r==1?14:y.r))}
+ const rs=R.map(c=>c.r);let hi=0;
+ for(const t of[0,1]){const q=rs.map(r=>t&&r==1?14:r);if(Math.max(...q)-Math.min(...q)+1-rs.length<=J.length){hi=t;break}}
+ const key=c=>hi&&c.r==1?14:c.r,s=R.slice().sort((a,b)=>key(a)-key(b)),out=[],js=J.slice();
+ s.forEach((c,i)=>{if(i)for(let g=key(c)-key(s[i-1])-1;g>0&&js.length;g--)out.push(js.shift());out.push(c)});
+ return out.concat(js)}
 function solve(h){
  const n=h.length,N=1<<n,by=[...Array(n)].map(()=>[]);
  for(let m=7;m<N;m++){const cs=[];for(let i=0;i<n;i++)if(m>>i&1)cs.push(h[i]);
@@ -55,20 +84,37 @@ function solve(h){
   memo.set(key,b);return b};
  let r=f(N-1,0,0);const o={c:r.c,groups:[],loose:[]};
  while(r.nx){if(r.m)o.groups.push({k:r.k,cards:h.filter((_,i)=>r.m>>i&1)});else o.loose.push(h[r.d]);r=r.nx}
- const ord={pure:0,imp:1,set:2};let q=0;
- o.groups.sort((a,b)=>ord[a.k]-ord[b.k]).forEach(g=>{
-  g.cards.sort((a,b)=>isJ(a)-isJ(b)||a.r-b.r);
-  if(g.k=='set')g.t='Set';else{q++;g.t=q==1?(g.k=='pure'?'1st Life · pure':'Series · impure'):q==2?'2nd Life · '+(g.k=='pure'?'pure':'impure'):'Series'}});
+ const ord={pure:0,imp:1,set:2};
+ o.groups.sort((a,b)=>ord[a.k]-ord[b.k]).forEach(g=>g.cards=arrange(g.cards,g.k));
  o.loose.sort((a,b)=>a.s-b.s||a.r-b.r);
  o.pure=o.groups.some(g=>g.k=='pure');o.seq=o.groups.filter(g=>g.k!='set').length;
  o.dead=o.loose.reduce((a,c)=>a+pts(c),0);o.ok=o.pure&&o.seq>1&&!o.loose.length;return o}
 function best(h){let b=null;h.forEach((c,i)=>{const r=solve(h.filter((_,j)=>j!=i)),k=r.c-pts(c)/100;if(!b||k<b.k)b={i,r,k}});return b}
+// Split the hand (in its current order) into runs of neighbouring cards: valid groups or loose cards.
+// Picks the best reading of the arrangement: fewest dead points, a pure sequence first, a 2nd sequence next, then the longest groups.
+function segment(h){
+ const n=h.length,memo=new Map(),f=(i,p,s)=>{
+  if(i>=n)return{c:(p?0:200)+(s>1?0:100)};
+  const key=i*6+p*3+s;if(memo.has(key))return memo.get(key);
+  const r0=f(i+1,p,s);let b={c:r0.c+pts(h[i]),len:1,nx:r0};
+  for(let j=Math.min(n,i+13);j>=i+3;j--){const ks=kinds(h.slice(i,j));if(!ks.length)continue;
+   const k=ks.includes('pure')?'pure':ks.includes('imp')?'imp':'set',r=f(j,(p||k=='pure')?1:0,Math.min(2,s+(k=='set'?0:1))),c=r.c+.01;
+   if(c<b.c-1e-9)b={c,len:j-i,k,nx:r}}
+  memo.set(key,b);return b};
+ const segs=[];let r=f(0,0,0),i=0;
+ while(i<n){
+  if(r.k)segs.push({cards:h.slice(i,i+r.len),k:r.k});
+  else{let lo=segs[segs.length-1];if(!lo||lo.k!='loose'){lo={cards:[],k:'loose'};segs.push(lo)}lo.cards.push(h[i])}
+  i+=r.len;r=r.nx}
+ return segs}
 
 /* ===== Sound ===== */
 let ac;const snd=(f=400,v=.05)=>{try{ac=ac||new AudioContext();const o=ac.createOscillator(),g=ac.createGain(),t=ac.currentTime;o.type='triangle';o.frequency.value=f;g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.001,t+.08);o.connect(g);g.connect(ac.destination);o.start();o.stop(t+.09)}catch(e){}};
 
 /* ===== 3D scene ===== */
-const cvEl=document.createElement('canvas'),ren=new THREE.WebGLRenderer({antialias:true,canvas:cvEl});
+const cvEl=document.createElement('canvas'),ren=new THREE.WebGLRenderer({antialias:true,canvas:cvEl,stencil:true}),
+ ST=!!(ren.getContext().getContextAttributes()||{}).stencil,   // stencil lets the group glow draw only where no card is
+ stW=m=>{if(ST)Object.assign(m,{stencilWrite:true,stencilFunc:THREE.AlwaysStencilFunc,stencilRef:1,stencilZPass:THREE.ReplaceStencilOp});return m};
 ren.setPixelRatio(Math.min(devicePixelRatio,2));ren.shadowMap.enabled=true;ren.shadowMap.type=THREE.PCFSoftShadowMap;
 ren.outputEncoding=THREE.sRGBEncoding;document.body.prepend(cvEl);
 const scene=new THREE.Scene();scene.background=new THREE.Color(0x07100c);
@@ -124,14 +170,78 @@ for(let i=-14;i<26;i++){bx.beginPath();bx.moveTo(i*12,0);bx.lineTo(i*12+260,260)
 bx.strokeStyle='#d9b265';bx.lineWidth=2;bx.strokeRect(16,16,148,220);bx.beginPath();bx.arc(90,126,36,0,7);bx.fillStyle='#5e0f1b';bx.fill();bx.stroke();
 bx.beginPath();bx.arc(90,126,30,0,7);bx.stroke();bx.fillStyle='#d9b265';bx.font='42px serif';bx.fillText('♠',90,141);
 const backT=new THREE.CanvasTexture(bk);backT.encoding=THREE.sRGBEncoding;backT.anisotropy=8;
-const G=new THREE.BoxGeometry(1.25,1.75,.03),sideM=new THREE.MeshStandardMaterial({color:0xe9e2d0}),backM=new THREE.MeshStandardMaterial({map:backT,roughness:.45,alphaTest:.5});
-function mk(c){const t=face(c),fm=new THREE.MeshStandardMaterial({map:t,emissiveMap:t,emissive:0x888888,roughness:.4,alphaTest:.5});
+const G=new THREE.BoxGeometry(1.25,1.75,.03),sideM=stW(new THREE.MeshStandardMaterial({color:0xe9e2d0})),backM=stW(new THREE.MeshStandardMaterial({map:backT,roughness:.45,alphaTest:.5}));
+function mk(c){const t=face(c),fm=stW(new THREE.MeshStandardMaterial({map:t,emissiveMap:t,emissive:0x888888,roughness:.4,alphaTest:.5}));
  c.m=new THREE.Mesh(G,[sideM,sideM,sideM,sideM,fm,backM]);c.m.castShadow=c.m.receiveShadow=true;c.m.userData.c=c;
  c.m.position.set(0,.03,.6);c.m.rotation.x=Math.PI/2;c.tp=[0,.03,.6];c.tr=[Math.PI/2,0];c.sc=1;scene.add(c.m)}
 const tgt=(c,x,y,z,rx,rz,sc)=>{c.tp=[x,y,z];c.tr=[rx,rz];c.sc=sc||1};
 
+/* ===== Animated group plates: glowing trays behind every group of cards ===== */
+// 1st Life = dark emerald (special: comets, twinkles, halo, rising sparkles), 2nd Life = light green, other groups = yellow, ungrouped = red
+const PAL={
+ life1:{a:[.03,.75,.43],b:[.6,1,.85],f:[.01,.19,.11],s:1,ic:'♛'},
+ life2:{a:[.55,.93,.4],b:[.92,1,.75],f:[.13,.3,.09],s:.55,ic:'✦'},
+ other:{a:[1,.83,.16],b:[1,.97,.65],f:[.3,.24,.03],s:.45,ic:'◆'},
+ loose:{a:[.96,.19,.28],b:[1,.58,.63],f:[.3,.04,.08],s:.3,ic:'!'}},
+ MG=.34,TILT=-Math.PI/2+.8,plates=[],tv=new THREE.Vector3(),pv=new THREE.Vector3();
+const PVS='varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}',
+PFS=`varying vec2 vUv;
+uniform vec2 uSize;uniform vec3 uA;uniform vec3 uB;uniform vec3 uF;uniform float uT;uniform float uS;uniform float uO;
+float rbox(vec2 p,vec2 b,float r){vec2 q=abs(p)-b+r;return length(max(q,0.0))+min(max(q.x,q.y),0.0)-r;}
+float hash(float n){return fract(sin(n*127.1)*43758.5453);}
+void over(inout vec3 c,inout float a,vec3 sc,float sa){float oa=sa+a*(1.0-sa);if(oa>0.0005){c=(sc*sa+c*a*(1.0-sa))/oa;}a=oa;}
+void main(){
+ vec2 p=(vUv-0.5)*uSize;
+ vec2 hb=uSize*0.5-vec2(0.34);
+ float d=rbox(p,hb,0.3);
+ vec3 c=uA;float a=0.0;
+ float breathe=0.85+0.15*sin(uT*2.2);
+ float aura=exp(-max(d,0.0)*(7.0-3.0*uS))*(1.0-smoothstep(0.12,0.32,d))*step(0.0,d)*(0.45+0.35*uS)*breathe;
+ over(c,a,uA,aura);
+ float inside=1.0-smoothstep(-0.012,0.012,d);
+ vec3 fc=mix(uF,uA*0.55,clamp(exp(min(d,0.0)*5.0),0.0,1.0));
+ float band=pow(max(0.0,sin(p.x*0.7-p.y*0.5-uT*1.8)),18.0);
+ fc+=uB*band*(0.22+0.3*uS);
+ over(c,a,fc,inside*0.88);
+ float ang=atan(p.y/uSize.y,p.x/uSize.x);
+ float spd=1.2+0.8*uS;
+ float k1=pow(0.5+0.5*cos(ang-uT*spd),7.0);
+ float k2=pow(0.5+0.5*cos(ang+3.14159-uT*spd),7.0)*uS;
+ float tw=pow(0.5+0.5*sin(uT*3.0+hash(floor((ang+3.1416)*9.0))*6.28),10.0)*uS;
+ float hot=clamp(k1*(0.5+0.5*uS)+k2+tw,0.0,1.0);
+ float ring=1.0-smoothstep(0.0,0.04+0.03*uS,abs(d+0.03));
+ over(c,a,mix(uA,uB,hot),clamp(ring*(0.6+0.8*hot),0.0,1.0)*breathe);
+ float halo=(1.0-smoothstep(0.0,0.025,abs(d-0.1)))*uS*(0.25+0.25*sin(uT*2.0+1.0));
+ over(c,a,uB,halo);
+ float inner=exp(min(d,0.0)*9.0)*inside*(0.15+0.25*uS);
+ over(c,a,uB,inner);
+ gl_FragColor=vec4(c,a*uO);
+}`;
+function plate(i){if(plates[i])return plates[i];
+ const mat=new THREE.ShaderMaterial({transparent:true,depthWrite:false,depthTest:!ST,side:THREE.DoubleSide,vertexShader:PVS,fragmentShader:PFS,
+  uniforms:{uSize:{value:new THREE.Vector2(3,3)},uA:{value:new THREE.Color()},uB:{value:new THREE.Color()},uF:{value:new THREE.Color()},uT:{value:0},uS:{value:0},uO:{value:0}}});
+ if(ST)Object.assign(mat,{stencilWrite:true,stencilFunc:THREE.NotEqualStencilFunc,stencilRef:1});   // never paint over a card
+ const m=new THREE.Mesh(new THREE.PlaneGeometry(1,1),mat),el=document.createElement('div');
+ m.visible=false;m.renderOrder=2;m.rotation.x=TILT;scene.add(m);
+ el.className='chip';el.innerHTML='<span class="ic"></span><span class="tx"></span>';document.body.appendChild(el);
+ return plates[i]={m,u:mat.uniforms,el,ic:el.children[0],tx:el.children[1],on:false,o:0,snap:true,role:'',ts:0,cw:3,ch:3,cA:new THREE.Color(),cB:new THREE.Color(),cF:new THREE.Color(),tg:{x:0,y:0,z:0,rz:0,w:3,h:3}}}
+function setPlate(i,g,x0,x1,k0,k1,sp,gap){
+ const P=plate(i),km=(k0+k1)/2,xm=(x0+x1)/2,big=g.role=='life1'?.07:0,pal=PAL[g.role],fresh=!P.on&&P.o<.03,
+  px=Math.min(.18,Math.max(.05,(sp+gap-1.53)/2-.02))+big;
+ Object.assign(P.tg,{x:xm,y:.87+km*.026,z:5.57+km*.027,rz:-(xm-cx)/6.5*.08,w:x1-x0+1.53+2*px,h:2.7+2*big});
+ if(P.role!=g.role||fresh){P.role=g.role;P.cA.setRGB(...pal.a);P.cB.setRGB(...pal.b);P.cF.setRGB(...pal.f);P.ts=pal.s;P.ic.textContent=pal.ic;P.el.className='chip '+g.role}
+ if(P.tx.textContent!=g.t)P.tx.textContent=g.t;
+ P.on=true;if(fresh)P.snap=true}
+// rising sparkles above the 1st Life group
+const SN=40,sPos=new Float32Array(SN*3),sCol=new Float32Array(SN*3),sPh=Array.from({length:SN},()=>({a:Math.random(),b:Math.random(),s:.3+Math.random()*.5})),
+ sgeo=new THREE.BufferGeometry(),skc=mkc(64,64),skx=skc.getContext('2d'),skg=skx.createRadialGradient(32,32,0,32,32,32);
+skg.addColorStop(0,'#ffffff');skg.addColorStop(.3,'#ffffffaa');skg.addColorStop(1,'#ffffff00');skx.fillStyle=skg;skx.fillRect(0,0,64,64);
+sgeo.setAttribute('position',new THREE.BufferAttribute(sPos,3));sgeo.setAttribute('color',new THREE.BufferAttribute(sCol,3));
+const sparks=new THREE.Points(sgeo,new THREE.PointsMaterial({size:.22,map:new THREE.CanvasTexture(skc),vertexColors:true,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,depthTest:!ST}));
+sparks.frustumCulled=false;sparks.visible=false;sparks.renderOrder=3;scene.add(sparks);
+
 /* ===== Game state ===== */
-let stock=[],disc=[],cut,H=[[],[],[]],turn,phase='deal',sel,hov,labs=[],all=[];
+let stock=[],disc=[],cut,H=[[],[],[]],turn,phase='deal',sel,hov,all=[];
 const $=id=>document.getElementById(id),msg=t=>$('msg').textContent=t,sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const rnd=n=>crypto.getRandomValues(new Uint32Array(1))[0]%n;
 function shuf(a){for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a}
@@ -141,7 +251,7 @@ async function newGame(){
  all.forEach(c=>scene.remove(c.m));all=[];let id=0;
  for(let d=0;d<2;d++){for(let s=0;s<4;s++)for(let r=1;r<14;r++)all.push({r,s,id:id++});all.push({r:0,s:4,id:id++})}
  all.forEach(mk);stock=shuf(all.slice());H=[[],[],[]];cut=null;disc=[];W=-1;turn=0;phase='deal';sel=hov=null;
- $('modal').style.display='none';$('intro').style.display='none';labs.forEach(l=>l.el.remove());labs=[];hand();
+ $('modal').style.display='none';$('intro').style.display='none';plates.forEach(P=>{P.on=false;P.o=0;P.m.visible=false;P.el.style.opacity=0});hand();
  stock.forEach((c,i)=>tgt(c,0,.03+i*.004,.6,Math.PI/2,0));
  msg('Shuffling the deck…');await sleep(700);
  const A=stock.slice(0,53),B=stock.slice(53);
@@ -165,25 +275,27 @@ function place(){
  if(cut)tgt(cut,-4.9,.75,.6,-Math.PI/2+.5,0,1.25);
  [1,2].forEach(b=>H[b].forEach((c,i)=>tgt(c,(b==1?-5:5)-(H[b].length-1)*.1+i*.2,.5+i*.004,-5.2,Math.PI/2+.5,0,.9)))}
 function hand(){
- const h=H[0],n=h.length,segs=[];let i=0,lo=null;
- while(i<n){let g=null;
-  for(let j=Math.min(n,i+13);j>=i+3;j--){const ks=kinds(h.slice(i,j));if(ks.length){g={cards:h.slice(i,j),k:ks.includes('pure')?'pure':ks.includes('imp')?'imp':'set'};break}}
-  if(g){segs.push(g);lo=null;i+=g.cards.length}else{if(!lo){lo={cards:[],k:'loose'};segs.push(lo)}lo.cards.push(h[i++])}}
- const sq=segs.filter(g=>g.k=='pure'||g.k=='imp'),f1=sq.find(g=>g.k=='pure'),f2=sq.find(g=>g!=f1),ty=g=>g.k=='pure'?'pure':'impure';
- segs.forEach(g=>g.t=g.k=='set'?'Set':g.k=='loose'?'':g==f1?'1st Life · pure':f1&&g==f2?'2nd Life · '+ty(g):'Series · '+ty(g));
- const sp=Math.min(1,Math.max(.3,(maxW-1.6)/(n-1+.9*Math.max(0,segs.length-1)))),gap=sp*.9;
- let x=cx-((n-1)*sp+(segs.length-1)*gap)/2,k=0;labs.forEach(l=>l.el.remove());labs=[];
- segs.forEach(g=>{const x0=x;
+ const h=H[0],n=h.length,segs=segment(h);
+ // 1st Life = first pure sequence, 2nd Life = next sequence (pure or impure; only counts once a pure exists)
+ const sq=segs.filter(g=>g.k=='pure'||g.k=='imp'),f1=sq.find(g=>g.k=='pure'),f2=f1&&sq.find(g=>g!=f1),ty=g=>g.k=='pure'?'pure':'impure';
+ segs.forEach(g=>{g.p=g.cards.reduce((a,c)=>a+pts(c),0);
+  g.role=g.k=='loose'?'loose':g==f1?'life1':g==f2?'life2':'other';
+  g.t=g.role=='life1'?'1st Life · Pure':g.role=='life2'?'2nd Life · '+ty(g):g.role=='loose'?'Ungrouped · '+g.p+' pts':g.k=='set'?'Set':'Series · '+ty(g)});
+ const gs=Math.max(0,segs.length-1),sp=Math.min(1,Math.max(.3,(maxW-1.6-.25*gs)/(Math.max(1,n-1)+.9*gs))),gap=sp*.9+.25;
+ let x=cx-((n-1)*sp+gs*gap)/2,k=0;
+ segs.forEach((g,gi)=>{const x0=x,k0=k;
   g.cards.forEach(c=>{const up=c===sel,t=(x-cx)/6.5,lf=(up?.9:0)+(c===hov&&!drag?.35:0);tgt(c,x,.9+k*.026+lf*.72,5.6+k*.027-lf*.7,-Math.PI/2+.8,-t*.08,1.22);x+=sp;k++});
-  if(g.t){const el=document.createElement('div');el.className='lab '+g.k;el.textContent=g.t;document.body.appendChild(el);labs.push({el,x:(x0+x-sp)/2})}
-  x+=gap});
+  setPlate(gi,g,x0,x-sp,k0,k-1,sp,gap);x+=gap});
+ for(let i=segs.length;i<plates.length;i++)plates[i].on=false;
  if(drag)tgt(drag.c,drag.x,1.9,4.9,-Math.PI/2+.8,0,1.35);
- const dead=segs.filter(g=>g.k=='loose').reduce((a,g)=>a+g.cards.reduce((b,c)=>b+pts(c),0),0);
- $('st').innerHTML=`Wild joker: <b>${cut?(cut.r?L[cut.r]+S[cut.s]:'A'):'…'}</b> (every ${L[W]||'?'} is a joker)<br>Deck ${stock.length} · Discards ${disc.length}<br>Turn: <b>${turn?'Bot '+turn:'You'}</b><br>1st Life (pure): ${f1?'✅':'❌'} · 2nd Life: ${f1&&f2?'✅':'❌'}<br>Points in hand: <b>${dead}</b>`;
+ const dead=segs.filter(g=>g.k=='loose').reduce((a,g)=>a+g.p,0);
+ $('st').innerHTML=`Wild joker: <b>${cut?(cut.r?L[cut.r]+S[cut.s]:'A'):'…'}</b> (every ${L[W]||'?'} is a joker)<br>Deck ${stock.length} · Discards ${disc.length}<br>Turn: <b>${turn?'Bot '+turn:'You'}</b><br>1st Life (pure): ${f1?'✅':'❌'} · 2nd Life: ${f1&&f2?'✅':'❌'}<br>Points in hand: <b>${dead}</b><div class="lg"><i style="background:#19e68c"></i>1st<i style="background:#a5f07a"></i>2nd<i style="background:#ffd84a"></i>Other<i style="background:#ff4d5e"></i>Ungrouped</div>`;
  [1,2].forEach(b=>{const t=$('t'+b);t.textContent='Bot '+b+' · '+H[b].length+' cards';t.classList.toggle('on',turn==b&&phase!='over')});
  posLabs()}
 function posLabs(){const P=(x,y,z)=>new THREE.Vector3(x,y,z).project(camera),set=(el,v)=>{el.style.left=(v.x+1)/2*innerWidth+'px';el.style.top=(1-v.y)/2*innerHeight+'px'};
- labs.forEach(l=>set(l.el,P(l.x,.1,7.1)));set($('t1'),P(-5,.5,-6.3));set($('t2'),P(5,.5,-6.3));
+ plates.forEach(q=>{const e=q.el;if(q.o<.03){e.style.opacity=0;return}
+  tv.set(0,-q.ch/2,0).applyEuler(q.m.rotation).add(q.m.position);pv.copy(tv).project(camera);set(e,pv);e.style.opacity=q.o.toFixed(2)});
+ set($('t1'),P(-5,.5,-6.3));set($('t2'),P(5,.5,-6.3));
  [['p1',-4.9],['p2',-1.8],['p3',1.8]].forEach(([id,x])=>{const e=$(id);e.style.display=cut?'block':'none';set(e,P(x,.1,2.4))})}
 const render=()=>{place();hand()};
 function drawStock(){if(!stock.length){const t=disc.pop();stock=shuf(disc);disc=[t]}return stock.pop()}
@@ -245,6 +357,18 @@ let T=0;
   p.x+=(c.tp[0]-p.x)*q;p.y+=(ty-p.y)*q;p.z+=(c.tp[2]-p.z)*q;r.x+=(c.tr[0]-r.x)*q;r.z+=(c.tr[1]-r.z)*q;c.m.scale.setScalar(c.m.scale.x+(c.sc-c.m.scale.x)*q)});
  const gl=phase=='draw'?.4+.35*Math.sin(T*5):0;glow.forEach(m=>m.material.opacity=gl);
  for(let i=1;i<360;i+=3){dp[i]+=.004;if(dp[i]>10)dp[i]=1}dg.attributes.position.needsUpdate=true;
+ // group plates: glide to their group, fade in/out, blend colours when a group changes role
+ plates.forEach(P=>{const tg=P.tg,m=P.m,u=P.u,live=P.on&&phase!='deal';
+  if(P.snap||(live&&P.o<.02)){m.position.set(tg.x,tg.y,tg.z);m.rotation.z=tg.rz;P.cw=tg.w;P.ch=tg.h;u.uA.value.copy(P.cA);u.uB.value.copy(P.cB);u.uF.value.copy(P.cF);u.uS.value=P.ts;P.snap=false}
+  P.o+=((live?1:0)-P.o)*.1;m.visible=P.o>.01;if(!m.visible)return;
+  m.position.x+=(tg.x-m.position.x)*q;m.position.y+=(tg.y-m.position.y)*q;m.position.z+=(tg.z-m.position.z)*q;m.rotation.z+=(tg.rz-m.rotation.z)*q;
+  P.cw+=(tg.w-P.cw)*q;P.ch+=(tg.h-P.ch)*q;m.scale.set(P.cw+MG*2,P.ch+MG*2,1);u.uSize.value.set(P.cw+MG*2,P.ch+MG*2);
+  u.uA.value.lerp(P.cA,.12);u.uB.value.lerp(P.cB,.12);u.uF.value.lerp(P.cF,.12);u.uS.value+=(P.ts-u.uS.value)*.1;u.uT.value=T;u.uO.value=P.o});
+ const P1=plates.find(p=>p.role=='life1'&&p.on&&p.o>.3);sparks.visible=!!P1;
+ if(P1){for(let i=0;i<SN;i++){const s=sPh[i],life=(T*s.s*.6+s.a)%1,f=Math.sin(life*Math.PI)*P1.o;
+   tv.set((s.b-.5)*P1.cw+Math.sin(T*2+i)*.1,P1.ch/2-.15+life*1.25,.2).applyEuler(P1.m.rotation).add(P1.m.position);
+   sPos[i*3]=tv.x;sPos[i*3+1]=tv.y;sPos[i*3+2]=tv.z;sCol[i*3]=.35*f;sCol[i*3+1]=f;sCol[i*3+2]=.65*f}
+  sgeo.attributes.position.needsUpdate=true;sgeo.attributes.color.needsUpdate=true}
  if(cf){const P=cf.pos;for(let i=0;i<cf.vel.length;i++){const v=cf.vel[i];v[1]-=.008;P[i*3]+=v[0];P[i*3+1]=Math.max(.05,P[i*3+1]+v[1]);P[i*3+2]+=v[2];if(P[i*3+1]<=.05){v[0]=v[1]=v[2]=0}}
   cf.m.geometry.attributes.position.needsUpdate=true;if(++cf.t>420){scene.remove(cf.m);cf=null}}
  camera.position.x=Math.sin(T*.25)*.4;camera.lookAt(0,0,2.4);posLabs();ren.render(scene,camera)})();
