@@ -130,11 +130,11 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
 @keyframes pulse1{50%{box-shadow:0 4px 12px #000b,0 0 28px #19e68ccc,inset 0 0 14px #19e68c66,inset 0 1px 0 #ffffff30}}
 @keyframes blink{50%{opacity:.35}}
 #home-screen{position:fixed;inset:0;z-index:100;display:flex;justify-content:center;align-items:center;background:radial-gradient(ellipse at 50% 35%,#092618 0%,#04140b 65%,#010603 100%);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:calc(10px + env(safe-area-inset-top,0px)) calc(16px + env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) calc(16px + env(safe-area-inset-left,0px));overflow:hidden;box-sizing:border-box}
-.home-container{width:100%;max-width:960px;height:auto;max-height:310px;display:flex;flex-direction:row;align-items:center;justify-content:center;gap:18px;margin:auto;box-sizing:border-box}
+.home-container{width:100%;max-width:960px;height:auto;max-height:335px;display:flex;flex-direction:row;align-items:center;justify-content:center;gap:18px;margin:auto;box-sizing:border-box}
 
 /* LEFT & RIGHT COMPACT "CUTE" LUXURY CARDS (STYLE 2B - FREELY PLACED & NO DEAD SPACE) */
 .mode-card{
- flex:0 0 195px;width:195px;height:285px;max-height:290px;
+ flex:0 0 195px;width:195px;height:305px;max-height:310px;
  background:linear-gradient(180deg,#132e20 0%,#08160e 100%);
  border:1.8px solid #ffd700;border-radius:18px;padding:14px 12px 12px;
  box-shadow:0 12px 28px rgba(0,0,0,0.85),0 0 20px rgba(255,215,0,0.25),inset 0 0 14px rgba(255,215,0,0.15);
@@ -169,7 +169,7 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
 
 /* CENTER COLUMN */
 .home-center-col{
- flex:1 1 480px;max-width:500px;height:285px;max-height:290px;
+ flex:1 1 480px;max-width:500px;height:305px;max-height:310px;
  display:flex;flex-direction:column;align-items:center;justify-content:space-between;text-align:center;padding:2px 4px;box-sizing:border-box;
 }
 .home-header{display:flex;flex-direction:column;align-items:center;gap:0;text-align:center}
@@ -195,39 +195,50 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
 }
 .btn-home-free-coins:hover{transform:scale(1.03)}
 
-/* EXTRA-WIDE BET SLIDER STATION (STYLE 2B) */
+/* EXTRA-WIDE BET SLIDER STATION (STYLE 2B - HEIGHT OPTIMIZED & HIGH FINGER VISIBILITY) */
 .home-bet-section{
- width:100%;background:linear-gradient(180deg,rgba(14,34,23,0.95) 0%,rgba(6,16,11,0.98) 100%);
- border:1.8px solid #ffd700;border-radius:18px;padding:8px 14px 7px;
- box-shadow:0 10px 28px rgba(0,0,0,0.9),0 0 22px rgba(255,215,0,0.2);box-sizing:border-box;
- display:flex;flex-direction:column;gap:5px;
+ width:100%;background:linear-gradient(180deg,rgba(14,34,23,0.96) 0%,rgba(6,16,11,0.99) 100%);
+ border:1.8px solid #ffd700;border-radius:20px;padding:11px 16px 10px;
+ box-shadow:0 10px 28px rgba(0,0,0,0.9),0 0 22px rgba(255,215,0,0.22);box-sizing:border-box;
+ display:flex;flex-direction:column;gap:8px;
 }
 .bet-section-top{display:flex;align-items:center;justify-content:space-between;width:100%}
-.bet-section-label{font-size:11.5px;font-weight:900;letter-spacing:.8px;color:#ffd700;text-transform:uppercase}
-.bet-active-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(0,0,0,0.7);border:1.5px solid #ffd700;padding:2px 10px;border-radius:14px;box-shadow:0 0 12px rgba(255,215,0,0.5)}
-.bet-badge-num{font-size:14.5px;font-weight:900;color:#ffd700}
-.bet-badge-unit{font-size:9.5px;font-weight:700;color:#cbd5e1}
-.bet-tiers-list{display:flex;gap:4px;justify-content:space-between;width:100%;padding:1px 0}
+.bet-section-label{font-size:12px;font-weight:900;letter-spacing:.8px;color:#ffd700;text-transform:uppercase}
+.bet-active-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(0,0,0,0.75);border:1.8px solid #ffd700;padding:3px 12px;border-radius:16px;box-shadow:0 0 14px rgba(255,215,0,0.55)}
+.bet-badge-num{font-size:16px;font-weight:950;color:#ffd700;text-shadow:0 0 10px rgba(255,215,0,0.6)}
+.bet-badge-unit{font-size:10px;font-weight:700;color:#cbd5e1}
+.bet-tiers-list{display:flex;gap:4px;justify-content:space-between;width:100%;padding:2px 0}
 .tier-pill{
- flex:1;min-width:24px;background:rgba(18,42,30,0.95);border:1.5px solid rgba(255,215,0,0.4);
- color:#ffd700;border-radius:8px;padding:4px 1px;font-size:10px;font-weight:900;
+ flex:1;min-width:24px;min-height:28px;background:rgba(18,42,30,0.95);border:1.5px solid rgba(255,215,0,0.45);
+ color:#ffd700;border-radius:8px;padding:5.5px 1px;font-size:10.5px;font-weight:950;
  text-align:center;cursor:pointer;transition:all .15s;box-sizing:border-box;
+ display:flex;align-items:center;justify-content:center;
+}
+.tier-pill:hover:not(.tier-locked){
+ background:rgba(255,215,0,0.2);border-color:#ffd700;color:#fff;transform:translateY(-2px);
 }
 .tier-pill.tier-active{
- background:linear-gradient(180deg,#fff176,#f59e0b) !important;color:#120a01 !important;
- border:1.8px solid #fff !important;box-shadow:0 0 16px rgba(255,215,0,1) !important;transform:scale(1.08);
+ background:linear-gradient(180deg,#ffffff 0%,#fff176 35%,#f59e0b 100%) !important;color:#0b0701 !important;
+ border:2px solid #fff !important;box-shadow:0 4px 18px rgba(255,215,0,1),0 0 10px #ffd700 !important;
+ transform:translateY(-4px) scale(1.12);z-index:5;
 }
 .tier-pill.tier-locked{filter:grayscale(1) opacity(0.3);border:1px dashed #64748b;color:#94a3b8;cursor:not-allowed}
-.bet-slider-container{width:100%;padding:2px 0}
+.tier-pill.tier-locked:hover{transform:none}
+.bet-slider-container{width:100%;padding:6px 0 2px;margin-top:3px}
 .bet-slider{
- width:100%;height:7px;-webkit-appearance:none;appearance:none;
+ width:100%;height:11px;-webkit-appearance:none;appearance:none;
  background:linear-gradient(90deg,#f59e0b 0%,#ffd700 25%,#183324 25%,#08140e 100%);
- border:1px solid rgba(255,215,0,0.6);border-radius:7px;outline:none;cursor:pointer;
+ border:1.5px solid rgba(255,215,0,0.7);border-radius:10px;outline:none;cursor:pointer;
 }
 .bet-slider::-webkit-slider-thumb{
- -webkit-appearance:none;appearance:none;width:20px;height:20px;border-radius:50%;
+ -webkit-appearance:none;appearance:none;width:26px;height:26px;border-radius:50%;
  background:radial-gradient(circle at 35% 35%,#fff 0%,#ffd700 45%,#b45309 100%);
- border:2px solid #fff;box-shadow:0 0 16px rgba(255,215,0,1),0 2px 8px rgba(0,0,0,0.9);cursor:pointer;
+ border:2.5px solid #fff;box-shadow:0 0 20px rgba(255,215,0,1),0 4px 10px rgba(0,0,0,0.9);cursor:pointer;
+}
+.bet-slider::-moz-range-thumb{
+ width:26px;height:26px;border-radius:50%;
+ background:radial-gradient(circle at 35% 35%,#fff 0%,#ffd700 45%,#b45309 100%);
+ border:2.5px solid #fff;box-shadow:0 0 20px rgba(255,215,0,1),0 4px 10px rgba(0,0,0,0.9);cursor:pointer;
 }
 
 #modal-leave{display:none;position:fixed;inset:0;margin:auto;width:min(90vw,360px);height:fit-content;max-height:92vh;z-index:110;background:linear-gradient(180deg,rgba(15,29,21,0.98) 0%,rgba(8,17,12,0.99) 100%);border:2px solid #d9b265;border-radius:20px;padding:22px 20px;text-align:center;box-shadow:0 16px 50px rgba(0,0,0,0.9),0 0 24px rgba(217,178,101,0.25),inset 0 0 20px rgba(217,178,101,0.12);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);color:#f3ead2;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;box-sizing:border-box}
@@ -328,9 +339,11 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
  .home-subtitle{font-size:9.5px !important}
  .home-wallet-pill{padding:3px 10px 3px 6px !important;font-size:11px !important}
  .btn-home-free-coins{padding:4px 12px !important;font-size:10.5px !important}
- .home-bet-section{padding:7px 10px 6px !important;border-radius:14px !important}
- .tier-pill{font-size:8.5px !important;padding:3px 1px !important;min-width:18px !important}
- .bet-slider::-webkit-slider-thumb{width:17px !important;height:17px !important}
+ .home-bet-section{padding:9px 12px 8px !important;border-radius:16px !important;gap:7px !important}
+ .tier-pill{font-size:9.5px !important;padding:5px 1px !important;min-width:18px !important;min-height:26px !important}
+ .bet-slider-container{padding:5px 0 2px !important;margin-top:3px !important}
+ .bet-slider{height:10px !important}
+ .bet-slider::-webkit-slider-thumb{width:22px !important;height:22px !important}
  .mode-icon{font-size:32px !important}
  .mode-title{font-size:13.5px !important}
  .mode-play-btn{width:100% !important;padding:6px 10px !important;font-size:12px !important;font-weight:900 !important;border-radius:14px !important;margin-top:0 !important}
@@ -348,13 +361,18 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
 /* Landscape on short viewports (mobile phones with Chrome/browser bars, height <= 520px - Style 2B Flank Layout) */
 @media (max-height: 520px) and (orientation: landscape) {
  #home-screen{padding:calc(6px + env(safe-area-inset-top,0px)) calc(14px + env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) calc(14px + env(safe-area-inset-left,0px)) !important;overflow:hidden !important;align-items:center !important;justify-content:center !important}
- .home-container{display:flex !important;flex-direction:row !important;align-items:center !important;justify-content:center !important;gap:12px !important;width:100% !important;max-width:920px !important;height:auto !important;max-height:290px !important;margin:auto !important}
- .mode-card{flex:0 0 180px !important;width:180px !important;height:260px !important;max-height:270px !important;padding:10px 10px 10px !important;border-radius:18px !important;justify-content:space-between !important}
+ .home-container{display:flex !important;flex-direction:row !important;align-items:center !important;justify-content:center !important;gap:12px !important;width:100% !important;max-width:920px !important;height:auto !important;max-height:310px !important;margin:auto !important}
+ .mode-card{flex:0 0 180px !important;width:180px !important;height:280px !important;max-height:290px !important;padding:10px 10px 10px !important;border-radius:18px !important;justify-content:space-between !important}
  .mode-icon{font-size:34px !important}
  .mode-title{font-size:14.5px !important}
  .mode-sub{font-size:9px !important}
  .mode-play-btn{padding:6.5px 10px !important;font-size:12px !important}
- .home-center-col{flex:1 1 450px !important;max-width:480px !important;height:260px !important;max-height:270px !important;display:flex !important;flex-direction:column !important;justify-content:space-between !important}
+ .home-center-col{flex:1 1 450px !important;max-width:480px !important;height:280px !important;max-height:290px !important;display:flex !important;flex-direction:column !important;justify-content:space-between !important}
+ .home-bet-section{padding:9px 12px 8px !important;gap:6px !important}
+ .tier-pill{font-size:9.5px !important;padding:4.5px 0 !important;min-height:25px !important}
+ .bet-slider-container{padding:4px 0 2px !important;margin-top:3px !important}
+ .bet-slider{height:10px !important}
+ .bet-slider::-webkit-slider-thumb{width:24px !important;height:24px !important}
 
  #bg{padding:5px 14px !important;font-size:11px !important;border-radius:18px !important}
  #btn-home{top:calc(6px + env(safe-area-inset-top,0px)) !important;left:calc(8px + env(safe-area-inset-left,0px)) !important;padding:5px 12px !important;font-size:12px !important;border-radius:18px !important}
@@ -403,8 +421,8 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
 /* Very short landscape screens (height <= 380px) */
 @media (max-height: 380px) and (orientation: landscape) {
  #home-screen{padding:calc(4px + env(safe-area-inset-top,0px)) calc(12px + env(safe-area-inset-right,0px)) calc(4px + env(safe-area-inset-bottom,0px)) calc(12px + env(safe-area-inset-left,0px)) !important}
- .home-container{max-height:260px !important;gap:10px !important}
- .mode-card{flex:0 0 160px !important;width:160px !important;height:235px !important;max-height:245px !important;padding:8px 8px !important;justify-content:space-between !important}
+ .home-container{max-height:275px !important;gap:10px !important}
+ .mode-card{flex:0 0 160px !important;width:160px !important;height:248px !important;max-height:255px !important;padding:8px 8px !important;justify-content:space-between !important}
  .mode-icon{font-size:28px !important}
  .mode-title{font-size:13px !important}
  .mode-sub{font-size:8px !important}
@@ -412,9 +430,12 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
  .home-crown{font-size:18px !important}
  .home-title{font-size:18px !important}
  .home-subtitle{font-size:8px !important}
- .home-center-col{height:235px !important;max-height:245px !important;justify-content:space-between !important}
- .home-bet-section{padding:4px 8px 4px !important;gap:3px !important}
- .tier-pill{font-size:8px !important;padding:2px 0 !important}
+ .home-center-col{height:248px !important;max-height:255px !important;justify-content:space-between !important}
+ .home-bet-section{padding:6px 10px 5px !important;gap:4px !important}
+ .tier-pill{font-size:8.5px !important;padding:3px 0 !important;min-height:22px !important}
+ .bet-slider-container{padding:3px 0 1px !important;margin-top:2px !important}
+ .bet-slider{height:8.5px !important}
+ .bet-slider::-webkit-slider-thumb{width:20px !important;height:20px !important}
 
  #bg{padding:3px 10px !important;font-size:9.5px !important}
  #btn-home{padding:4px 10px !important;font-size:11px !important}
@@ -431,22 +452,25 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
  /* Laptop & Desktop High-Res View (Style 2B Premium Fitting with Corner Padding) */
 @media (min-width: 900px) and (min-height: 550px) {
  #home-screen{padding:calc(16px + env(safe-area-inset-top,0px)) calc(24px + env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) calc(24px + env(safe-area-inset-left,0px)) !important}
- .home-container{max-width:960px !important;height:auto !important;max-height:320px !important;gap:20px !important}
- .mode-card{flex:0 0 200px !important;width:200px !important;height:290px !important;max-height:295px !important;padding:14px 12px 12px !important;border-radius:20px !important;justify-content:space-between !important}
+ .home-container{max-width:960px !important;height:auto !important;max-height:345px !important;gap:20px !important}
+ .mode-card{flex:0 0 200px !important;width:200px !important;height:315px !important;max-height:320px !important;padding:14px 12px 12px !important;border-radius:20px !important;justify-content:space-between !important}
  .mode-icon{font-size:42px !important}
  .mode-title{font-size:17px !important}
  .mode-sub{font-size:10px !important}
  .mode-tags{gap:6px !important}
  .mode-tag{font-size:9px !important;padding:3px 8px !important}
  .mode-play-btn{padding:8px 14px !important;font-size:13.5px !important}
- .home-center-col{max-width:510px !important;height:290px !important;max-height:295px !important;justify-content:space-between !important}
+ .home-center-col{max-width:510px !important;height:315px !important;max-height:320px !important;justify-content:space-between !important}
  .home-crown{font-size:26px !important}
  .home-title{font-size:24px !important}
  .home-subtitle{font-size:9.5px !important}
  .home-wallet-pill{padding:4px 14px !important;font-size:11px !important}
  .btn-home-free-coins{padding:5px 16px !important;font-size:11.5px !important}
- .home-bet-section{padding:8px 14px 7px !important;gap:5px !important}
- .tier-pill{font-size:10px !important;padding:4px 1px !important}
+ .home-bet-section{padding:12px 16px 11px !important;gap:9px !important}
+ .tier-pill{font-size:11px !important;padding:6px 1px !important;min-height:28px !important}
+ .bet-slider-container{padding:6px 0 2px !important;margin-top:4px !important}
+ .bet-slider{height:12px !important}
+ .bet-slider::-webkit-slider-thumb{width:28px !important;height:28px !important}
 }
 
 @media(max-width:600px) and (min-height:501px){
