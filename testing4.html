@@ -154,13 +154,26 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
 .mode-play-btn:hover{filter:brightness(1.12);transform:translateY(-1px)}
 .mode-play-btn.locked{background:linear-gradient(180deg,#3a423d,#222724);color:#88928b;border:1px solid #4a544e;box-shadow:none;cursor:not-allowed}
 
-#modal-leave{display:none;position:fixed;inset:0;margin:auto;width:320px;height:fit-content;z-index:110;background:rgba(10,22,16,0.97);border:1.5px solid var(--gold);border-radius:16px;padding:22px 20px;text-align:center;box-shadow:0 12px 48px #000f,inset 0 0 20px rgba(217,178,101,0.2);backdrop-filter:blur(12px)}
-.leave-icon{font-size:32px;margin-bottom:8px}
-#modal-leave h2{margin:0 0 8px;font-size:21px;color:var(--gold)}
-#modal-leave p{margin:0 0 20px;font-size:13.5px;line-height:1.5;color:#dcd0b8}
-.leave-actions{display:flex;gap:10px;justify-content:center}
-.btn-leave-red{background:linear-gradient(180deg,#dc2626,#991b1b) !important;color:#fff !important;border:1px solid #ff7b7b !important;border-radius:18px !important;padding:8px 16px !important;font-size:13.5px !important;font-weight:600 !important;box-shadow:0 3px 12px rgba(220,38,38,0.4) !important}
-.btn-leave-green{background:linear-gradient(180deg,#1b8744,#0e5629) !important;color:#fff !important;border:1px solid #4ade80 !important;border-radius:18px !important;padding:8px 16px !important;font-size:13.5px !important;font-weight:600 !important;box-shadow:0 3px 12px rgba(27,135,68,0.4) !important}
+#modal-leave{display:none;position:fixed;inset:0;margin:auto;width:min(90vw,360px);height:fit-content;max-height:92vh;z-index:110;background:linear-gradient(180deg,rgba(15,29,21,0.98) 0%,rgba(8,17,12,0.99) 100%);border:2px solid #d9b265;border-radius:20px;padding:22px 20px;text-align:center;box-shadow:0 16px 50px rgba(0,0,0,0.9),0 0 24px rgba(217,178,101,0.25),inset 0 0 20px rgba(217,178,101,0.12);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);color:#f3ead2;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;box-sizing:border-box}
+.leave-icon{font-size:34px;margin-bottom:8px;line-height:1}
+#modal-leave h2{margin:0 0 10px;font-size:20px;font-weight:900;letter-spacing:.5px;color:#fce8b8;text-shadow:0 2px 10px rgba(217,178,101,0.4);text-transform:uppercase}
+.leave-forfeit-box{display:flex;flex-direction:column;gap:8px;background:rgba(0,0,0,0.4);border:1.5px solid rgba(217,178,101,0.3);border-radius:14px;padding:12px 14px;margin-bottom:12px;box-sizing:border-box}
+.leave-stat-row{display:flex;justify-content:space-between;align-items:center;font-size:13.5px}
+.leave-stat-label{color:#cbd5e1;font-weight:600}
+.leave-stat-val{color:#f8fafc;font-weight:800}
+.leave-stat-val.val-pts{color:#f87171}
+.leave-stat-val.val-coins{color:#fbbf24;font-size:15px;font-weight:900;text-shadow:0 1px 4px rgba(0,0,0,0.5)}
+.leave-stat-divider{height:1px;background:rgba(217,178,101,0.25);margin:2px 0}
+.leave-stat-row.total-row .leave-stat-label{color:#fde047;font-weight:800;font-size:14px}
+.leave-warning-note{margin:0 0 18px;font-size:13px;line-height:1.5;color:#e2e8f0;text-align:center}
+.leave-warning-note strong{color:#fca5a5}
+.leave-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn-leave-red{background:linear-gradient(180deg,#dc2626,#991b1b) !important;color:#fff !important;border:1.5px solid #fca5a5 !important;border-radius:20px !important;padding:9px 18px !important;font-size:13.5px !important;font-weight:800 !important;letter-spacing:.4px !important;cursor:pointer;white-space:nowrap;box-shadow:0 4px 14px rgba(220,38,38,0.4),inset 0 1px 0 rgba(255,255,255,0.35) !important;transition:transform .12s,filter .12s}
+.btn-leave-red:hover{filter:brightness(1.15);transform:translateY(-1px)}
+.btn-leave-red:active{transform:translateY(1px)}
+.btn-leave-green{background:linear-gradient(180deg,#16a34a,#0d5e2a) !important;color:#fff !important;border:1.5px solid #86efac !important;border-radius:20px !important;padding:9px 18px !important;font-size:13.5px !important;font-weight:800 !important;letter-spacing:.4px !important;cursor:pointer;white-space:nowrap;box-shadow:0 4px 14px rgba(34,197,94,0.35),inset 0 1px 0 rgba(255,255,255,0.35) !important;transition:transform .12s,filter .12s}
+.btn-leave-green:hover{filter:brightness(1.15);transform:translateY(-1px)}
+.btn-leave-green:active{transform:translateY(1px)}
 
 #timer-box{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));left:50% !important;transform:translateX(-50%) !important;right:auto !important;z-index:95;display:none;align-items:center;gap:10px;background:linear-gradient(180deg,#2b4537,#13241b);color:#f3ead2;border:1.5px solid var(--gold);border-radius:28px;padding:4px 14px 4px 6px;box-shadow:0 4px 18px #000c,inset 0 0 12px #d9b26540;white-space:nowrap;pointer-events:none;transition:border-color .25s ease,box-shadow .25s ease}
 #timer-box.urgent{border-color:#ef4444;box-shadow:0 0 24px rgba(239,68,68,0.75),inset 0 0 14px rgba(239,68,68,0.35);animation:timer-pulse .7s ease-in-out infinite alternate}
@@ -217,29 +230,47 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
 @keyframes shake-warn{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
 
 @media (max-width: 680px), (orientation: portrait) {
- .game-modes{flex-direction:column;align-items:center;gap:16px}
- .mode-card{max-width:320px;padding:18px 16px}
- .home-title{font-size:30px}
- .mode-title{font-size:17px}
- .mode-desc{font-size:12px;margin-bottom:12px}
- .mode-icon{font-size:36px;margin:2px 0 6px}
- .home-wallet-bar{gap:8px;margin:6px 0 2px}
- .home-wallet-pill{padding:5px 12px 5px 8px}
- .home-wallet-num{font-size:14.5px}
- .btn-home-free-coins{padding:6px 14px;font-size:12px}
- .home-bet-section{padding:10px 12px;max-width:340px;gap:8px}
- .tier-pill{font-size:9px;padding:3px 1px;min-width:22px}
- .bet-active-badge{padding:2px 8px}
- .bet-badge-num{font-size:14px}
- .bet-section-label{font-size:11px}
+ #home-screen{padding:calc(8px + env(safe-area-inset-top,0px)) 10px calc(8px + env(safe-area-inset-bottom,0px)) !important;overflow:hidden !important;align-items:center !important;justify-content:center !important}
+ .home-container{gap:7px !important;width:100% !important;max-width:440px !important;margin:auto !important}
+ .home-crown{font-size:22px !important;margin:0 !important}
+ .home-title{font-size:22px !important;letter-spacing:1.5px !important;margin:0 !important}
+ .home-subtitle{font-size:9.5px !important;letter-spacing:1.5px !important;margin:1px 0 0 !important}
+ .home-wallet-bar{gap:6px !important;margin:3px 0 1px !important;display:flex !important;flex-wrap:wrap !important;justify-content:center !important}
+ .home-wallet-pill{padding:3px 10px 3px 6px !important;font-size:11px !important;border-radius:14px !important}
+ .home-wallet-num{font-size:13.5px !important}
+ .btn-home-free-coins{padding:4px 11px !important;font-size:10.5px !important;border-radius:14px !important}
+ .home-bet-section{width:100% !important;max-width:440px !important;padding:7px 10px 6px !important;gap:4px !important;margin-top:0 !important;border-radius:14px !important}
+ .bet-section-top{gap:6px !important}
+ .bet-section-label{font-size:10px !important}
+ .bet-active-badge{padding:2px 7px !important}
+ .bet-badge-num{font-size:13px !important}
+ .bet-slider-container{padding:2px 0 !important}
+ .bet-slider{height:5px !important}
+ .bet-slider::-webkit-slider-thumb{width:18px !important;height:18px !important}
+ .bet-slider::-moz-range-thumb{width:18px !important;height:18px !important}
+ .tier-pill{font-size:8px !important;padding:2px 1px !important;min-width:18px !important;border-radius:6px !important}
+ .game-modes{display:flex !important;flex-direction:row !important;gap:8px !important;width:100% !important;max-width:440px !important;justify-content:center !important;align-items:stretch !important}
+ .mode-card{flex:1 1 0 !important;min-width:0 !important;max-width:calc(50% - 4px) !important;padding:8px 6px 7px !important;border-radius:14px !important;gap:2px !important}
+ .mode-badge{font-size:8px !important;padding:2px 5px !important;margin-bottom:2px !important;border-radius:6px !important;letter-spacing:.3px !important}
+ .badge-dot{width:5px !important;height:5px !important}
+ .mode-icon{font-size:24px !important;margin:1px 0 2px !important}
+ .mode-title{font-size:11px !important;line-height:1.2 !important;margin:0 0 2px !important;font-weight:800 !important}
+ .mode-desc{font-size:9px !important;line-height:1.25 !important;margin:0 0 4px !important;color:#cbd5e1 !important;display:-webkit-box !important;-webkit-line-clamp:2 !important;-webkit-box-orient:vertical !important;overflow:hidden !important;text-overflow:ellipsis !important;flex:0 0 auto !important}
+ .mode-tags{display:none !important}
+ .mode-play-btn{width:100% !important;padding:5px 6px !important;font-size:11px !important;font-weight:800 !important;border-radius:12px !important;margin-top:auto !important}
 }
 
-/* Landscape on short viewports (mobile phones with Chrome/browser bars, height <= 500px) */
-@media (max-height: 500px) {
- .home-wallet-bar{gap:8px;margin:4px 0 0}
- .home-wallet-pill{padding:3px 10px 3px 6px}
- .home-wallet-num{font-size:13.5px}
- .btn-home-free-coins{padding:4px 12px;font-size:11px}
+/* Landscape on short viewports (mobile phones with Chrome/browser bars, height <= 520px) */
+@media (max-height: 520px) {
+ #home-screen{padding:calc(4px + env(safe-area-inset-top,0px)) calc(10px + env(safe-area-inset-right,0px)) calc(4px + env(safe-area-inset-bottom,0px)) calc(10px + env(safe-area-inset-left,0px)) !important;overflow:hidden !important;align-items:center !important;justify-content:center !important}
+ .home-container{width:100% !important;max-width:640px !important;gap:3px !important;margin:auto !important}
+ .home-crown{font-size:16px !important;margin:0 !important;display:inline-block !important}
+ .home-title{font-size:17px !important;letter-spacing:1.5px !important;margin:0 !important;display:inline-block !important;margin-left:5px !important}
+ .home-subtitle{font-size:8px !important;letter-spacing:1px !important;margin:0 !important}
+ .home-wallet-bar{gap:6px !important;margin:1px 0 0 !important;display:flex !important;justify-content:center !important}
+ .home-wallet-pill{padding:2px 7px 2px 5px !important;font-size:10px !important;border-radius:12px !important}
+ .home-wallet-num{font-size:12px !important}
+ .btn-home-free-coins{padding:2px 8px !important;font-size:9px !important;border-radius:12px !important}
  #bg{padding:5px 14px !important;font-size:11px !important;border-radius:18px !important}
  #btn-home{top:calc(6px + env(safe-area-inset-top,0px)) !important;left:calc(8px + env(safe-area-inset-left,0px)) !important;padding:5px 12px !important;font-size:12px !important;border-radius:18px !important}
  #timer-box{top:calc(6px + env(safe-area-inset-top,0px)) !important;left:50% !important;transform:translateX(-50%) !important;right:auto !important;padding:2px 10px 2px 4px !important;gap:6px !important}
@@ -251,11 +282,25 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
  #game-stake-val{font-size:10px !important}
  .stake-unit{font-size:8px !important}
  .coin-float-pill{top:calc(38px + env(safe-area-inset-top,0px)) !important;right:calc(8px + env(safe-area-inset-right,0px)) !important;padding:3px 8px !important;font-size:11px !important}
- .home-bet-section{padding:5px 10px;gap:4px;max-width:440px;margin-top:0}
- .tier-pill{font-size:8.5px;padding:2px 1px;min-width:20px}
- .bet-active-badge{padding:1px 6px}
- .bet-badge-num{font-size:12.5px}
- .bet-section-label{font-size:10px}
+ .home-bet-section{padding:3px 8px 2px !important;gap:2px !important;max-width:440px !important;margin:0 auto !important;border-radius:10px !important}
+ .tier-pill{font-size:7.5px !important;padding:1px 0 !important;min-width:17px !important;border-radius:5px !important}
+ .bet-active-badge{padding:1px 5px !important}
+ .bet-badge-num{font-size:11.5px !important}
+ .bet-badge-coin{font-size:11px !important}
+ .bet-badge-unit{font-size:8px !important}
+ .bet-section-label{font-size:8.5px !important}
+ .bet-slider-container{padding:1px 0 !important}
+ .bet-slider{height:4px !important}
+ .bet-slider::-webkit-slider-thumb{width:14px !important;height:14px !important}
+ .bet-slider::-moz-range-thumb{width:14px !important;height:14px !important}
+ .game-modes{display:flex !important;flex-direction:row !important;gap:10px !important;width:100% !important;max-width:520px !important;align-items:stretch !important;justify-content:center !important}
+ .mode-card{flex:1 1 0 !important;min-width:0 !important;max-width:250px !important;padding:5px 8px !important;border-radius:10px !important;gap:1px !important}
+ .mode-badge{font-size:7.5px !important;padding:1px 5px !important;margin-bottom:1px !important;border-radius:5px !important}
+ .mode-icon{font-size:17px !important;margin:0 0 1px !important}
+ .mode-title{font-size:10.5px !important;line-height:1.15 !important;margin:0 0 1px !important;font-weight:800 !important}
+ .mode-desc{display:none !important}
+ .mode-tags{display:none !important}
+ .mode-play-btn{width:100% !important;padding:3px 6px !important;font-size:10px !important;font-weight:800 !important;border-radius:10px !important;margin-top:auto !important}
  .sb-payout-box{padding:6px 10px !important;gap:8px !important}
  .sb-payout-icon{font-size:18px !important}
  .sb-payout-title{font-size:12.5px !important}
@@ -290,6 +335,16 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
 
 /* Very short landscape screens (height <= 380px) */
 @media (max-height: 380px) {
+ .home-crown{font-size:13px !important}
+ .home-title{font-size:15px !important}
+ .home-subtitle{display:none !important}
+ .home-container{gap:2px !important}
+ .home-bet-section{padding:2px 6px 1px !important;gap:1px !important}
+ .tier-pill{font-size:7px !important;padding:0 !important;min-width:15px !important}
+ .mode-card{padding:4px 6px !important}
+ .mode-icon{font-size:14px !important}
+ .mode-title{font-size:9.5px !important}
+ .mode-play-btn{padding:2px 5px !important;font-size:9.5px !important}
  #bg{padding:3px 10px !important;font-size:9.5px !important}
  #btn-home{padding:4px 10px !important;font-size:11px !important}
  #coins-box{padding:2px 8px 2px 4px !important}
@@ -534,9 +589,11 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
 </div>
 
 <div id="modal-leave">
-  <div class="leave-icon">⚠️</div>
-  <h2>Leave Game?</h2>
-  <p>Are you sure you want to return to the home menu? Your current game progress will end.</p>
+  <div class="leave-icon" id="leave-modal-icon">⚠️</div>
+  <h2 id="leave-modal-title">Leave Game?</h2>
+  <div id="leave-modal-body">
+    <p class="leave-warning-note">Are you sure you want to return to the home menu? Your current game progress will end.</p>
+  </div>
   <div class="leave-actions">
     <button id="btn-confirm-leave" class="btn-leave-red">Leave Game</button>
     <button id="btn-cancel-leave" class="btn-leave-green">Continue Playing</button>
@@ -757,6 +814,37 @@ function autoGroupWinningRemainder(cards){
   return true;
  }
  return false;
+}
+
+function getUserHandPoints(cards){
+ if(!cards||!cards.length)return 0;
+ const segs=segment(cards);
+ const pure=segs.find(g=>g.k=='pure');
+ let manualPts=80;
+ if(!pure){
+  manualPts=Math.min(80,cards.reduce((a,c)=>a+pts(c),0));
+ }else{
+  const secondSeq=segs.find(g=>g!==pure&&(g.k=='pure'||g.k=='imp'));
+  if(!secondSeq){
+   const dead=segs.filter(g=>g!==pure).reduce((sum,g)=>sum+g.cards.reduce((a,c)=>a+pts(c),0),0);
+   manualPts=Math.min(80,dead);
+  }else{
+   const dead=segs.filter(g=>g.k=='loose'||g.k=='bad').reduce((sum,g)=>sum+g.cards.reduce((a,c)=>a+pts(c),0),0);
+   manualPts=Math.min(80,dead);
+  }
+ }
+ const sol=solve(cards);
+ let solvePts=80;
+ if(!sol.pure){
+  solvePts=Math.min(80,cards.reduce((a,c)=>a+pts(c),0));
+ }else if(sol.seq<2){
+  const pureGrp=sol.groups.find(g=>g.k=='pure');
+  const dead=cards.filter(c=>!pureGrp||!pureGrp.cards.includes(c)).reduce((sum,c)=>sum+pts(c),0);
+  solvePts=Math.min(80,dead);
+ }else{
+  solvePts=Math.min(80,sol.dead);
+ }
+ return Math.min(manualPts,solvePts);
 }
 
 let ac;const snd=(f=400,v=.05)=>{try{ac=ac||new AudioContext();const o=ac.createOscillator(),g=ac.createGain(),t=ac.currentTime;o.type='triangle';o.frequency.value=f;g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.001,t+.08);o.connect(g);g.connect(ac.destination);o.start();o.stop(t+.09)}catch(e){}};
@@ -1821,9 +1909,89 @@ $('btn-close-coins').onclick=()=>{
  if(freeCoinsTimer){clearInterval(freeCoinsTimer);freeCoinsTimer=null}
  $('modal-coins').style.display='none';
 };
-$('btn-home').onclick=()=>{if(phase=='home')return;timerPaused=true;$('modal-leave').style.display='block'};
-$('btn-cancel-leave').onclick=()=>{timerPaused=false;$('modal-leave').style.display='none'};
-$('btn-confirm-leave').onclick=()=>{goHome()};
+let pendingLeaveLoss=0;
+
+function showLeaveConfirmation(){
+ if(phase=='home')return;
+ timerPaused=true;
+ const isGameActive=(phase!='over'&&phase!='deal'&&H[0]&&H[0].length>0);
+ const modal=$('modal-leave');
+ if(!modal)return;
+ 
+ const title=$('leave-modal-title');
+ const body=$('leave-modal-body');
+ const btnConfirm=$('btn-confirm-leave');
+ const btnCancel=$('btn-cancel-leave');
+ 
+ if(!isGameActive){
+  pendingLeaveLoss=0;
+  if(title)title.textContent='Return to Home?';
+  if(body)body.innerHTML='<p class="leave-warning-note">Return to the home menu?</p>';
+  if(btnConfirm){btnConfirm.textContent='Go to Home';btnConfirm.className='btn-leave-red'}
+  if(btnCancel){btnCancel.textContent='Cancel';btnCancel.style.display='inline-block'}
+ }else{
+  const pts=getUserHandPoints(H[0]);
+  const stake=selectedBet||100;
+  const rawCost=pts*stake;
+  pendingLeaveLoss=Math.min(coins,rawCost);
+  
+  if(title)title.textContent='Quit & Forfeit Game?';
+  if(body){
+   body.innerHTML=`
+    <div class="leave-forfeit-box">
+      <div class="leave-stat-row">
+        <span class="leave-stat-label">Hand Penalty:</span>
+        <span class="leave-stat-val val-pts">${pts} pts</span>
+      </div>
+      <div class="leave-stat-row">
+        <span class="leave-stat-label">Bet Stake:</span>
+        <span class="leave-stat-val">${stake.toLocaleString()} 🪙 / pt</span>
+      </div>
+      <div class="leave-stat-divider"></div>
+      <div class="leave-stat-row total-row">
+        <span class="leave-stat-label">Coins to Deduct:</span>
+        <span class="leave-stat-val val-coins">-${pendingLeaveLoss.toLocaleString()} 🪙</span>
+      </div>
+    </div>
+    <p class="leave-warning-note">
+      Leaving will forfeit this round. <strong>${pendingLeaveLoss.toLocaleString()} coins</strong> (${pts} pts × ${stake.toLocaleString()} 🪙) will be deducted from your wallet balance.
+    </p>
+   `;
+  }
+  if(btnConfirm){
+   btnConfirm.textContent=pendingLeaveLoss>0?`Quit & Pay ${pendingLeaveLoss.toLocaleString()} 🪙`:'Leave Game';
+   btnConfirm.className='btn-leave-red';
+  }
+  if(btnCancel){
+   btnCancel.textContent='Continue Playing';
+   btnCancel.style.display='inline-block';
+  }
+ }
+ modal.style.display='block';
+}
+
+$('btn-home').onclick=()=>showLeaveConfirmation();
+$('btn-cancel-leave').onclick=()=>{
+ pendingLeaveLoss=0;
+ timerPaused=false;
+ $('modal-leave').style.display='none';
+};
+$('btn-confirm-leave').onclick=()=>{
+ const loss=pendingLeaveLoss;
+ pendingLeaveLoss=0;
+ timerPaused=false;
+ $('modal-leave').style.display='none';
+ if(loss>0){
+  const oldCoins=coins;
+  coins=Math.max(0,coins-loss);
+  try{localStorage.setItem('rummy_coins',coins)}catch(_){}
+  animateCoinsChange(oldCoins,coins,-loss);
+  updateCoinsUI(true);
+  snd(260,.08);
+  msg('Forfeited game: -'+loss.toLocaleString()+' coins deducted.');
+ }
+ goHome();
+};
 $('mode-open-joker').onclick=()=>{
  if(coins<1){showNoCoinsModal('You need coins to place a bet! Claim 2,000 free coins to continue.');return}
  newGame();
