@@ -129,31 +129,106 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
 @keyframes shine{from{background-position:160% 0}to{background-position:-60% 0}}
 @keyframes pulse1{50%{box-shadow:0 4px 12px #000b,0 0 28px #19e68ccc,inset 0 0 14px #19e68c66,inset 0 1px 0 #ffffff30}}
 @keyframes blink{50%{opacity:.35}}
-#home-screen{position:fixed;inset:0;z-index:100;display:flex;justify-content:center;align-items:center;background:radial-gradient(circle at center,rgba(11,26,19,0.92) 0%,rgba(5,11,8,0.98) 85%);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:20px;overflow-y:auto;box-sizing:border-box}
-.home-container{width:100%;max-width:840px;display:flex;flex-direction:column;align-items:center;gap:22px;margin:auto}
-.home-header{text-align:center}
-.home-crown{font-size:36px;margin-bottom:2px;filter:drop-shadow(0 2px 10px rgba(217,178,101,0.6))}
-.home-title{margin:0;font-size:38px;letter-spacing:3px;color:var(--gold);text-shadow:0 2px 14px rgba(217,178,101,0.4),0 0 30px rgba(217,178,101,0.2)}
-.home-subtitle{margin:5px 0 0;font-size:12.5px;letter-spacing:3px;color:#c9b98e;text-transform:uppercase}
-.game-modes{display:flex;flex-direction:row;gap:22px;width:100%;justify-content:center;align-items:stretch}
-.mode-card{flex:1 1 0;max-width:380px;background:linear-gradient(180deg,rgba(20,38,28,0.85) 0%,rgba(9,18,13,0.92) 100%);border:1.5px solid var(--gold);border-radius:18px;padding:22px 20px;box-shadow:0 10px 30px #000b,inset 0 0 20px rgba(217,178,101,0.12);display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;transition:transform .22s cubic-bezier(0.2,0.8,0.2,1),box-shadow .22s ease,border-color .22s ease;box-sizing:border-box}
-.mode-card.active{cursor:pointer;border-color:#ffd88a;box-shadow:0 12px 36px #000c,0 0 20px rgba(217,178,101,0.25),inset 0 0 24px rgba(217,178,101,0.15)}
-.mode-card.active:hover{transform:translateY(-5px);border-color:#fff1b8;box-shadow:0 16px 44px #000e,0 0 30px rgba(217,178,101,0.45),inset 0 0 28px rgba(217,178,101,0.25)}
-.mode-card.disabled{opacity:.65;filter:grayscale(0.2);border:1.5px dashed rgba(217,178,101,0.5);background:linear-gradient(180deg,rgba(16,25,20,0.75) 0%,rgba(7,12,9,0.85) 100%);cursor:not-allowed}
-.mode-badge{font-size:11px;letter-spacing:1.2px;padding:4px 12px;border-radius:12px;font-weight:700;text-transform:uppercase;margin-bottom:10px;display:inline-flex;align-items:center;gap:6px}
-.mode-badge.live{background:rgba(34,197,94,0.18);color:#4ade80;border:1px solid rgba(74,222,128,0.4)}
-.badge-dot{width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e;animation:pulse-dot 1.8s infinite}
+#home-screen{position:fixed;inset:0;z-index:100;display:flex;justify-content:center;align-items:center;background:radial-gradient(ellipse at 50% 35%,#092618 0%,#04140b 65%,#010603 100%);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:calc(10px + env(safe-area-inset-top,0px)) calc(16px + env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) calc(16px + env(safe-area-inset-left,0px));overflow:hidden;box-sizing:border-box}
+.home-container{width:100%;max-width:960px;height:auto;max-height:310px;display:flex;flex-direction:row;align-items:center;justify-content:center;gap:18px;margin:auto;box-sizing:border-box}
+
+/* LEFT & RIGHT COMPACT "CUTE" LUXURY CARDS (STYLE 2B - FREELY PLACED & NO DEAD SPACE) */
+.mode-card{
+ flex:0 0 195px;width:195px;height:285px;max-height:290px;
+ background:linear-gradient(180deg,#132e20 0%,#08160e 100%);
+ border:1.8px solid #ffd700;border-radius:18px;padding:14px 12px 12px;
+ box-shadow:0 12px 28px rgba(0,0,0,0.85),0 0 20px rgba(255,215,0,0.25),inset 0 0 14px rgba(255,215,0,0.15);
+ display:flex;flex-direction:column;align-items:center;justify-content:space-between;text-align:center;position:relative;box-sizing:border-box;
+ transition:transform .2s,box-shadow .2s;
+}
+.mode-card#mode-open-joker{order:1}
+.home-center-col{order:2}
+.mode-card#mode-closed-joker{order:3}
+
+.mode-card.active{border-color:#ffd700;box-shadow:0 12px 32px rgba(0,0,0,0.9),0 0 24px rgba(255,215,0,0.4),inset 0 0 16px rgba(255,215,0,0.2);cursor:pointer}
+.mode-card.active:hover{transform:translateY(-2px);box-shadow:0 16px 36px rgba(0,0,0,0.95),0 0 30px rgba(255,215,0,0.6)}
+.mode-card.disabled{opacity:.7;filter:grayscale(0.2);border:1.5px dashed rgba(255,215,0,0.4);background:linear-gradient(180deg,#102017 0%,#060e09 100%);cursor:not-allowed}
+.mode-badge{font-size:8.5px;letter-spacing:1.2px;padding:3px 10px;border-radius:10px;font-weight:900;text-transform:uppercase;display:inline-flex;align-items:center;gap:5px}
+.mode-badge.live{background:rgba(34,197,94,0.25);color:#4ade80;border:1px solid #22c55e;box-shadow:0 0 8px rgba(34,197,94,0.4)}
+.badge-dot{width:5px;height:5px;border-radius:50%;background:#22c55e;box-shadow:0 0 6px #22c55e;animation:pulse-dot 1.8s infinite}
 @keyframes pulse-dot{50%{opacity:.3;transform:scale(0.85)}}
-.mode-badge.soon{background:rgba(234,179,8,0.15);color:#facc15;border:1px solid rgba(250,204,21,0.3)}
-.mode-icon{font-size:42px;margin:2px 0 6px;filter:drop-shadow(0 4px 10px rgba(0,0,0,0.5))}
-.mode-title{font-size:20px;color:#fce8b8;margin:0 0 3px;line-height:1.25;font-weight:900}
-.mode-sub{font-size:12px;color:#c9b98e;letter-spacing:.6px;margin:0 0 10px;font-weight:600;display:block}
-.mode-desc{display:none}
-.mode-tags{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:14px}
-.mode-tag{font-size:11px;padding:3px 9px;border-radius:8px;background:rgba(217,178,101,0.12);color:#e8d7ad;border:1px solid rgba(217,178,101,0.25)}
-.mode-play-btn{width:100%;padding:11px 20px;font-size:14.5px;font-weight:bold;letter-spacing:.5px;border-radius:22px;cursor:pointer;background:linear-gradient(180deg,#f0c978,#b88a38);color:#1a1205;border:1px solid #ffe8aa;box-shadow:0 4px 16px rgba(0,0,0,0.5),inset 0 1px 0 #fff8;transition:transform .12s,filter .12s}
-.mode-play-btn:hover{filter:brightness(1.12);transform:translateY(-1px)}
-.mode-play-btn.locked{background:linear-gradient(180deg,#3a423d,#222724);color:#88928b;border:1px solid #4a544e;box-shadow:none;cursor:not-allowed}
+.mode-badge.soon{background:rgba(234,179,8,0.2);color:#fde047;border:1px solid #ca8a04}
+.mode-icon{font-size:40px;line-height:1;margin:2px 0;filter:drop-shadow(0 4px 10px rgba(0,0,0,0.7))}
+.mode-title-block{display:flex;flex-direction:column;gap:3.5px}
+.mode-title{font-size:16px;font-weight:900;color:#fff2cc;margin:0;line-height:1.2;text-shadow:0 0 10px rgba(255,215,0,0.4);letter-spacing:.5px}
+.mode-sub{font-size:9.5px;color:#fde047;font-weight:700;display:block}
+.mode-tags{display:flex;gap:6px;justify-content:center}
+.mode-tag{font-size:8.5px;font-weight:800;padding:2.5px 8px;border-radius:6px;background:rgba(255,215,0,0.15);color:#fef08a;border:1px solid rgba(255,215,0,0.35)}
+.mode-play-btn{
+ width:100%;padding:8px 12px;font-size:13px;font-weight:900;border-radius:14px;cursor:pointer;
+ background:linear-gradient(180deg,#fff176 0%,#ffd700 45%,#b45309 100%);color:#120a01;border:1.5px solid #fff;
+ box-shadow:0 0 16px rgba(255,215,0,0.6),inset 0 1px 0 #fff;transition:all .15s;
+}
+.mode-play-btn:hover{transform:scale(1.02);box-shadow:0 0 24px rgba(255,215,0,0.85)}
+.mode-play-btn.locked{background:#232e26;color:#728277;border:1px solid #37473b;box-shadow:none;cursor:not-allowed}
+
+/* CENTER COLUMN */
+.home-center-col{
+ flex:1 1 480px;max-width:500px;height:285px;max-height:290px;
+ display:flex;flex-direction:column;align-items:center;justify-content:space-between;text-align:center;padding:2px 4px;box-sizing:border-box;
+}
+.home-header{display:flex;flex-direction:column;align-items:center;gap:0;text-align:center}
+.home-crown{font-size:25px;line-height:1;margin-bottom:1px;filter:drop-shadow(0 0 12px rgba(255,215,0,0.7))}
+.home-title{
+ margin:0;font-size:23px;font-weight:900;letter-spacing:3px;
+ background:linear-gradient(180deg,#ffffff 0%,#ffd700 50%,#d97706 100%);
+ -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+ filter:drop-shadow(0 0 12px rgba(245,158,11,0.5));line-height:1.1;
+}
+.home-subtitle{font-size:9px;letter-spacing:2px;color:#fef08a;font-weight:800;text-transform:uppercase;margin:2px 0 0}
+.home-wallet-bar{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;margin:2px 0}
+.home-wallet-pill{
+ display:inline-flex;align-items:center;gap:6px;background:rgba(0,0,0,0.75);
+ border:1.5px solid #ffd700;border-radius:20px;padding:3.5px 14px;box-shadow:0 0 14px rgba(255,215,0,0.35);
+}
+.home-wallet-lbl{font-size:9.5px;font-weight:800;color:#cbd5e1;letter-spacing:.5px}
+.home-wallet-num{font-size:14px;font-weight:900;color:#ffd700;text-shadow:0 0 8px rgba(255,215,0,0.5)}
+.btn-home-free-coins{
+ display:inline-flex;align-items:center;gap:5px;padding:4.5px 16px;border-radius:18px;font-size:11px;font-weight:900;
+ cursor:pointer;background:linear-gradient(180deg,#f59e0b 0%,#d97706 100%);color:#000;border:1.5px solid #fff;
+ box-shadow:0 0 14px rgba(245,158,11,0.5);transition:transform .15s;
+}
+.btn-home-free-coins:hover{transform:scale(1.03)}
+
+/* EXTRA-WIDE BET SLIDER STATION (STYLE 2B) */
+.home-bet-section{
+ width:100%;background:linear-gradient(180deg,rgba(14,34,23,0.95) 0%,rgba(6,16,11,0.98) 100%);
+ border:1.8px solid #ffd700;border-radius:18px;padding:8px 14px 7px;
+ box-shadow:0 10px 28px rgba(0,0,0,0.9),0 0 22px rgba(255,215,0,0.2);box-sizing:border-box;
+ display:flex;flex-direction:column;gap:5px;
+}
+.bet-section-top{display:flex;align-items:center;justify-content:space-between;width:100%}
+.bet-section-label{font-size:11.5px;font-weight:900;letter-spacing:.8px;color:#ffd700;text-transform:uppercase}
+.bet-active-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(0,0,0,0.7);border:1.5px solid #ffd700;padding:2px 10px;border-radius:14px;box-shadow:0 0 12px rgba(255,215,0,0.5)}
+.bet-badge-num{font-size:14.5px;font-weight:900;color:#ffd700}
+.bet-badge-unit{font-size:9.5px;font-weight:700;color:#cbd5e1}
+.bet-tiers-list{display:flex;gap:4px;justify-content:space-between;width:100%;padding:1px 0}
+.tier-pill{
+ flex:1;min-width:24px;background:rgba(18,42,30,0.95);border:1.5px solid rgba(255,215,0,0.4);
+ color:#ffd700;border-radius:8px;padding:4px 1px;font-size:10px;font-weight:900;
+ text-align:center;cursor:pointer;transition:all .15s;box-sizing:border-box;
+}
+.tier-pill.tier-active{
+ background:linear-gradient(180deg,#fff176,#f59e0b) !important;color:#120a01 !important;
+ border:1.8px solid #fff !important;box-shadow:0 0 16px rgba(255,215,0,1) !important;transform:scale(1.08);
+}
+.tier-pill.tier-locked{filter:grayscale(1) opacity(0.3);border:1px dashed #64748b;color:#94a3b8;cursor:not-allowed}
+.bet-slider-container{width:100%;padding:2px 0}
+.bet-slider{
+ width:100%;height:7px;-webkit-appearance:none;appearance:none;
+ background:linear-gradient(90deg,#f59e0b 0%,#ffd700 25%,#183324 25%,#08140e 100%);
+ border:1px solid rgba(255,215,0,0.6);border-radius:7px;outline:none;cursor:pointer;
+}
+.bet-slider::-webkit-slider-thumb{
+ -webkit-appearance:none;appearance:none;width:20px;height:20px;border-radius:50%;
+ background:radial-gradient(circle at 35% 35%,#fff 0%,#ffd700 45%,#b45309 100%);
+ border:2px solid #fff;box-shadow:0 0 16px rgba(255,215,0,1),0 2px 8px rgba(0,0,0,0.9);cursor:pointer;
+}
 
 #modal-leave{display:none;position:fixed;inset:0;margin:auto;width:min(90vw,360px);height:fit-content;max-height:92vh;z-index:110;background:linear-gradient(180deg,rgba(15,29,21,0.98) 0%,rgba(8,17,12,0.99) 100%);border:2px solid #d9b265;border-radius:20px;padding:22px 20px;text-align:center;box-shadow:0 16px 50px rgba(0,0,0,0.9),0 0 24px rgba(217,178,101,0.25),inset 0 0 20px rgba(217,178,101,0.12);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);color:#f3ead2;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;box-sizing:border-box}
 .leave-icon{font-size:34px;margin-bottom:8px;line-height:1}
@@ -206,62 +281,59 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
 .coins-reward-timer-dial svg{position:absolute;inset:0}
 #coins-timer-sec{font-size:23px;font-weight:900;color:#ffd88a;text-shadow:0 0 12px rgba(245,158,11,0.6);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
 .coins-timer-status{font-size:13.5px;font-weight:700;color:#fef08a;letter-spacing:.4px}
-.home-bet-section{width:100%;max-width:540px;background:linear-gradient(180deg,rgba(18,34,26,0.92) 0%,rgba(9,18,13,0.96) 100%);border:1.5px solid var(--gold);border-radius:20px;padding:12px 16px 12px;box-shadow:0 8px 24px rgba(0,0,0,0.65),inset 0 0 16px rgba(217,178,101,0.12);box-sizing:border-box;display:flex;flex-direction:column;gap:8px;margin-top:2px}
-.bet-section-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
-.bet-section-label{font-size:12px;font-weight:800;letter-spacing:1px;color:#c9b98e;text-transform:uppercase}
-.bet-active-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(0,0,0,0.4);border:1.5px solid #fde047;padding:3px 12px;border-radius:16px;box-shadow:0 0 12px rgba(245,158,11,0.3)}
-.bet-badge-coin{font-size:14px}
-.bet-badge-num{font-size:16px;font-weight:900;color:#fde047;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
-.bet-badge-unit{font-size:11px;font-weight:700;color:#cbd5e1}
-.bet-tiers-list{display:flex;justify-content:space-between;gap:4px;width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:2px 0}
-.bet-tiers-list::-webkit-scrollbar{display:none}
-.tier-pill{flex:1 1 0;min-width:25px;background:linear-gradient(180deg,rgba(24,48,34,0.95),rgba(12,24,18,0.95));border:1.5px solid rgba(217,178,101,0.35);color:#fef08a;border-radius:8px;padding:5px 2px;font-size:10.5px;font-weight:900;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;cursor:pointer;text-align:center;transition:all .15s ease;user-select:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;box-sizing:border-box;box-shadow:0 2px 6px rgba(0,0,0,0.4)}
-.tier-pill:hover:not(.tier-locked){background:rgba(217,178,101,0.25);border-color:#fde047;color:#fff;transform:translateY(-1px);box-shadow:0 3px 10px rgba(245,158,11,0.35)}
-.tier-pill.tier-active{background:linear-gradient(180deg,#fde047,#d97706) !important;border:1.5px solid #fff !important;color:#1a1003 !important;box-shadow:0 3px 14px rgba(245,158,11,0.7),inset 0 1px 0 #fff !important;transform:scale(1.06);text-shadow:0 1px 0 rgba(255,255,255,0.4);z-index:2}
-.tier-pill.tier-locked{filter:grayscale(1) opacity(0.32);border:1px dashed #64748b;color:#94a3b8;cursor:not-allowed;background:rgba(15,23,42,0.65);box-shadow:none}
-.tier-pill.tier-locked:hover{transform:none}
 .tier-lock-icon{font-size:7.5px;display:none;line-height:1}
 .tier-pill.tier-locked .tier-lock-icon{display:inline-block}
-.bet-slider-container{position:relative;width:100%;padding:4px 2px 2px;box-sizing:border-box}
-.bet-slider{width:100%;height:8px;-webkit-appearance:none;appearance:none;background:linear-gradient(90deg,#f59e0b,#2d523e);border:1.5px solid rgba(217,178,101,0.45);border-radius:6px;outline:none;cursor:pointer;margin:0;box-shadow:inset 0 2px 4px rgba(0,0,0,0.6)}
-.bet-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:22px;height:22px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff 0%,#fde047 30%,#b45309 100%);border:2px solid #fff;box-shadow:0 2px 10px rgba(0,0,0,0.8),0 0 12px rgba(245,158,11,0.85);cursor:pointer;transition:transform .12s,box-shadow .12s}
-.bet-slider::-webkit-slider-thumb:hover,.bet-slider::-webkit-slider-thumb:active{transform:scale(1.18);box-shadow:0 3px 16px rgba(0,0,0,0.9),0 0 18px rgba(245,158,11,1)}
-.bet-slider::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff 0%,#fde047 30%,#b45309 100%);border:2px solid #fff;box-shadow:0 2px 10px rgba(0,0,0,0.8),0 0 12px rgba(245,158,11,0.85);cursor:pointer}
 .bet-locked-warn{font-size:11.5px;font-weight:700;color:#fca5a5;background:rgba(185,28,28,0.25);border:1px solid rgba(239,68,68,0.4);border-radius:10px;padding:5px 10px;text-align:center;animation:shake-warn .35s ease}
 @keyframes shake-warn{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
 
-@media (max-width: 680px), (orientation: portrait) {
+/* Mobile Portrait View (Stack: Center Col on Top, Two Cards Side-by-Side below with 3:3.5 aspect ratio) */
+@media (max-width: 680px) and (orientation: portrait), (orientation: portrait) {
  #home-screen{padding:calc(8px + env(safe-area-inset-top,0px)) 12px calc(8px + env(safe-area-inset-bottom,0px)) 12px !important;overflow:hidden !important;align-items:center !important;justify-content:center !important}
- .home-container{gap:8px !important;width:100% !important;max-width:440px !important;margin:auto !important}
- .home-crown{font-size:24px !important;margin:0 !important;line-height:1 !important}
- .home-title{font-size:24px !important;letter-spacing:2px !important;margin:0 !important;line-height:1.1 !important}
- .home-subtitle{font-size:10px !important;letter-spacing:1.5px !important;margin:0 !important}
- .home-wallet-bar{gap:8px !important;margin:2px 0 0 !important;display:flex !important;flex-direction:row !important;align-items:center !important;justify-content:center !important;width:100% !important}
- .home-wallet-pill{padding:3px 10px 3px 6px !important;font-size:11.5px !important;border-radius:16px !important}
- .home-wallet-num{font-size:14px !important}
- .btn-home-free-coins{padding:4px 12px !important;font-size:11px !important;border-radius:16px !important}
- .home-bet-section{width:100% !important;max-width:420px !important;padding:8px 12px 6px !important;gap:5px !important;margin-top:0 !important;border-radius:16px !important}
- .bet-section-top{gap:6px !important}
- .bet-section-label{font-size:10.5px !important}
- .bet-active-badge{padding:2px 8px !important}
- .bet-badge-num{font-size:14px !important}
- .bet-tiers-list{gap:3px !important;padding:1px 0 !important;margin-bottom:2px !important}
- .tier-pill{font-size:8.5px !important;padding:3px 1px !important;min-width:20px !important;border-radius:6px !important}
- .bet-slider-container{padding:2px 0 !important}
- .bet-slider{height:6px !important}
- .bet-slider::-webkit-slider-thumb{width:18px !important;height:18px !important}
- .bet-slider::-moz-range-thumb{width:18px !important;height:18px !important}
- .game-modes{display:flex !important;flex-direction:row !important;gap:12px !important;width:100% !important;max-width:420px !important;justify-content:center !important;align-items:stretch !important}
- .mode-card{flex:1 1 0 !important;min-width:0 !important;max-width:calc(50% - 6px) !important;aspect-ratio:3/3.5 !important;padding:10px 8px !important;border-radius:16px !important;gap:2px !important;display:flex !important;flex-direction:column !important;align-items:center !important;text-align:center !important;box-sizing:border-box !important}
- .mode-badge{font-size:8.5px !important;padding:2px 7px !important;margin-bottom:2px !important;border-radius:6px !important;letter-spacing:.4px !important}
- .badge-dot{width:5px !important;height:5px !important}
- .mode-icon{font-size:32px !important;margin:2px 0 2px !important;line-height:1 !important}
- .mode-title{font-size:13.5px !important;line-height:1.2 !important;margin:0 0 1px !important;font-weight:900 !important;color:#fce8b8 !important}
- .mode-sub{font-size:9.5px !important;line-height:1.2 !important;margin:0 0 3px !important;color:#c9b98e !important;display:block !important}
- .mode-desc{display:none !important}
- .mode-tags{display:flex !important;flex-wrap:wrap !important;gap:3px !important;justify-content:center !important;margin-bottom:4px !important}
- .mode-tag{font-size:8px !important;padding:1.5px 6px !important;border-radius:5px !important}
- .mode-play-btn{width:100% !important;padding:6px 10px !important;font-size:12px !important;font-weight:900 !important;border-radius:14px !important;margin-top:auto !important}
+ .home-container{
+  display:grid !important;
+  grid-template-columns:1fr 1fr !important;
+  grid-template-rows:auto auto !important;
+  gap:8px !important;
+  width:100% !important;max-width:430px !important;
+  height:auto !important;max-height:none !important;
+  margin:auto !important;
+ }
+ .home-center-col{
+  grid-column:1 / span 2 !important;
+  grid-row:1 !important;
+  width:100% !important;max-width:100% !important;
+  height:auto !important;max-height:none !important;
+  gap:5px !important;
+ }
+ .mode-card#mode-open-joker{
+  grid-column:1 !important;
+  grid-row:2 !important;
+  width:100% !important;max-width:none !important;
+  aspect-ratio:3/3.5 !important;
+  height:auto !important;max-height:none !important;
+  padding:10px 8px 8px !important;
+  justify-content:space-between !important;
+ }
+ .mode-card#mode-closed-joker{
+  grid-column:2 !important;
+  grid-row:2 !important;
+  width:100% !important;max-width:none !important;
+  aspect-ratio:3/3.5 !important;
+  height:auto !important;max-height:none !important;
+  padding:10px 8px 8px !important;
+  justify-content:space-between !important;
+ }
+ .home-crown{font-size:22px !important}
+ .home-title{font-size:22px !important}
+ .home-subtitle{font-size:9.5px !important}
+ .home-wallet-pill{padding:3px 10px 3px 6px !important;font-size:11px !important}
+ .btn-home-free-coins{padding:4px 12px !important;font-size:10.5px !important}
+ .home-bet-section{padding:7px 10px 6px !important;border-radius:14px !important}
+ .tier-pill{font-size:8.5px !important;padding:3px 1px !important;min-width:18px !important}
+ .bet-slider::-webkit-slider-thumb{width:17px !important;height:17px !important}
+ .mode-icon{font-size:32px !important}
+ .mode-title{font-size:13.5px !important}
+ .mode-play-btn{width:100% !important;padding:6px 10px !important;font-size:12px !important;font-weight:900 !important;border-radius:14px !important;margin-top:0 !important}
 }
 
 @media (orientation: portrait) and (max-height: 580px) {
@@ -269,23 +341,21 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
  .home-title{font-size:18px !important}
  .home-subtitle{font-size:8.5px !important}
  .mode-icon{font-size:24px !important}
- .mode-card{padding:6px 6px !important}
  .mode-tags{display:none !important}
  .home-bet-section{padding:5px 10px !important}
 }
 
-/* Landscape on short viewports (mobile phones with Chrome/browser bars, height <= 520px - Website / Laptop style) */
-@media (max-height: 520px) {
- #home-screen{padding:calc(4px + env(safe-area-inset-top,0px)) calc(12px + env(safe-area-inset-right,0px)) calc(4px + env(safe-area-inset-bottom,0px)) calc(12px + env(safe-area-inset-left,0px)) !important;overflow:hidden !important;align-items:center !important;justify-content:center !important}
- .home-container{width:100% !important;max-width:740px !important;gap:4px !important;margin:auto !important;display:flex !important;flex-direction:column !important;align-items:center !important}
- .home-header{display:flex !important;flex-direction:column !important;align-items:center !important;gap:1px !important;text-align:center !important}
- .home-crown{font-size:20px !important;margin:0 !important;display:block !important;line-height:1 !important}
- .home-title{font-size:20px !important;letter-spacing:2px !important;margin:0 !important;display:block !important;line-height:1.1 !important}
- .home-subtitle{font-size:9px !important;letter-spacing:1.5px !important;margin:0 !important;display:block !important}
- .home-wallet-bar{gap:8px !important;margin:1px 0 !important;display:flex !important;flex-direction:row !important;align-items:center !important;justify-content:center !important}
- .home-wallet-pill{padding:3px 9px 3px 6px !important;font-size:10.5px !important;border-radius:14px !important}
- .home-wallet-num{font-size:12.5px !important}
- .btn-home-free-coins{padding:3px 12px !important;font-size:10px !important;border-radius:14px !important}
+/* Landscape on short viewports (mobile phones with Chrome/browser bars, height <= 520px - Style 2B Flank Layout) */
+@media (max-height: 520px) and (orientation: landscape) {
+ #home-screen{padding:calc(6px + env(safe-area-inset-top,0px)) calc(14px + env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) calc(14px + env(safe-area-inset-left,0px)) !important;overflow:hidden !important;align-items:center !important;justify-content:center !important}
+ .home-container{display:flex !important;flex-direction:row !important;align-items:center !important;justify-content:center !important;gap:12px !important;width:100% !important;max-width:920px !important;height:auto !important;max-height:290px !important;margin:auto !important}
+ .mode-card{flex:0 0 180px !important;width:180px !important;height:260px !important;max-height:270px !important;padding:10px 10px 10px !important;border-radius:18px !important;justify-content:space-between !important}
+ .mode-icon{font-size:34px !important}
+ .mode-title{font-size:14.5px !important}
+ .mode-sub{font-size:9px !important}
+ .mode-play-btn{padding:6.5px 10px !important;font-size:12px !important}
+ .home-center-col{flex:1 1 450px !important;max-width:480px !important;height:260px !important;max-height:270px !important;display:flex !important;flex-direction:column !important;justify-content:space-between !important}
+
  #bg{padding:5px 14px !important;font-size:11px !important;border-radius:18px !important}
  #btn-home{top:calc(6px + env(safe-area-inset-top,0px)) !important;left:calc(8px + env(safe-area-inset-left,0px)) !important;padding:5px 12px !important;font-size:12px !important;border-radius:18px !important}
  #timer-box{top:calc(6px + env(safe-area-inset-top,0px)) !important;left:50% !important;transform:translateX(-50%) !important;right:auto !important;padding:2px 10px 2px 4px !important;gap:6px !important}
@@ -297,30 +367,7 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
  #game-stake-val{font-size:10px !important}
  .stake-unit{font-size:8px !important}
  .coin-float-pill{top:calc(38px + env(safe-area-inset-top,0px)) !important;right:calc(8px + env(safe-area-inset-right,0px)) !important;padding:3px 8px !important;font-size:11px !important}
- .home-bet-section{padding:4px 12px 3px !important;gap:3px !important;width:100% !important;max-width:520px !important;margin:0 auto !important;border-radius:12px !important}
- .bet-section-top{gap:4px !important}
- .bet-section-label{font-size:9.5px !important}
- .bet-active-badge{padding:1px 6px !important}
- .bet-badge-num{font-size:12px !important}
- .bet-badge-coin{font-size:11px !important}
- .bet-badge-unit{font-size:8.5px !important}
- .bet-slider-container{padding:1px 0 !important}
- .bet-slider{height:4px !important}
- .bet-slider::-webkit-slider-thumb{width:14px !important;height:14px !important}
- .bet-slider::-moz-range-thumb{width:14px !important;height:14px !important}
- .bet-tiers-list{gap:2px !important}
- .tier-pill{font-size:7.5px !important;padding:1px 0 !important;min-width:18px !important;border-radius:5px !important}
- .game-modes{display:flex !important;flex-direction:row !important;gap:16px !important;width:100% !important;max-width:600px !important;align-items:stretch !important;justify-content:center !important}
- .mode-card{flex:0 1 190px !important;width:165px !important;max-width:200px !important;aspect-ratio:3/3.5 !important;padding:8px 10px !important;border-radius:14px !important;gap:2px !important;display:flex !important;flex-direction:column !important;align-items:center !important;text-align:center !important;box-sizing:border-box !important}
- .mode-badge{font-size:8px !important;padding:2px 7px !important;margin-bottom:2px !important;border-radius:6px !important;letter-spacing:.4px !important}
- .badge-dot{width:5px !important;height:5px !important}
- .mode-icon{font-size:26px !important;margin:0 0 1px !important;line-height:1 !important}
- .mode-title{font-size:12.5px !important;line-height:1.2 !important;margin:0 0 1px !important;font-weight:900 !important}
- .mode-sub{font-size:8.5px !important;line-height:1.2 !important;margin:0 0 2px !important;color:#c9b98e !important;display:block !important}
- .mode-desc{display:none !important}
- .mode-tags{display:flex !important;flex-wrap:wrap !important;gap:3px !important;justify-content:center !important;margin-bottom:3px !important}
- .mode-tag{font-size:8px !important;padding:1px 5px !important;border-radius:5px !important}
- .mode-play-btn{width:100% !important;padding:4px 10px !important;font-size:11px !important;font-weight:800 !important;border-radius:12px !important;margin-top:auto !important}
+ 
  .sb-payout-box{padding:6px 10px !important;gap:8px !important}
  .sb-payout-icon{font-size:18px !important}
  .sb-payout-title{font-size:12.5px !important}
@@ -354,20 +401,21 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
 }
 
 /* Very short landscape screens (height <= 380px) */
-@media (max-height: 380px) {
- .home-crown{font-size:15px !important}
- .home-title{font-size:16px !important}
- .home-subtitle{display:none !important}
- .home-container{gap:2px !important}
- .home-bet-section{padding:2px 8px 1px !important;gap:2px !important}
- .tier-pill{font-size:7px !important;padding:0 !important;min-width:16px !important}
- .mode-card{flex:0 1 160px !important;width:140px !important;aspect-ratio:3/3.5 !important;padding:5px 8px !important}
- .mode-icon{font-size:20px !important}
- .mode-title{font-size:11px !important}
+@media (max-height: 380px) and (orientation: landscape) {
+ #home-screen{padding:calc(4px + env(safe-area-inset-top,0px)) calc(12px + env(safe-area-inset-right,0px)) calc(4px + env(safe-area-inset-bottom,0px)) calc(12px + env(safe-area-inset-left,0px)) !important}
+ .home-container{max-height:260px !important;gap:10px !important}
+ .mode-card{flex:0 0 160px !important;width:160px !important;height:235px !important;max-height:245px !important;padding:8px 8px !important;justify-content:space-between !important}
+ .mode-icon{font-size:28px !important}
+ .mode-title{font-size:13px !important}
  .mode-sub{font-size:8px !important}
- .mode-desc{display:none !important}
- .mode-tags{display:none !important}
- .mode-play-btn{padding:3px 6px !important;font-size:10px !important}
+ .mode-play-btn{padding:5px 8px !important;font-size:11px !important}
+ .home-crown{font-size:18px !important}
+ .home-title{font-size:18px !important}
+ .home-subtitle{font-size:8px !important}
+ .home-center-col{height:235px !important;max-height:245px !important;justify-content:space-between !important}
+ .home-bet-section{padding:4px 8px 4px !important;gap:3px !important}
+ .tier-pill{font-size:8px !important;padding:2px 0 !important}
+
  #bg{padding:3px 10px !important;font-size:9.5px !important}
  #btn-home{padding:4px 10px !important;font-size:11px !important}
  #coins-box{padding:2px 8px 2px 4px !important}
@@ -378,6 +426,27 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
  #declare-banner{top:calc(40px + env(safe-area-inset-top,0px)) !important;padding:3px 10px !important;border-radius:12px !important}
  .dec-title{font-size:11px !important}
  .dec-sub{font-size:9.5px !important}
+}
+
+ /* Laptop & Desktop High-Res View (Style 2B Premium Fitting with Corner Padding) */
+@media (min-width: 900px) and (min-height: 550px) {
+ #home-screen{padding:calc(16px + env(safe-area-inset-top,0px)) calc(24px + env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) calc(24px + env(safe-area-inset-left,0px)) !important}
+ .home-container{max-width:960px !important;height:auto !important;max-height:320px !important;gap:20px !important}
+ .mode-card{flex:0 0 200px !important;width:200px !important;height:290px !important;max-height:295px !important;padding:14px 12px 12px !important;border-radius:20px !important;justify-content:space-between !important}
+ .mode-icon{font-size:42px !important}
+ .mode-title{font-size:17px !important}
+ .mode-sub{font-size:10px !important}
+ .mode-tags{gap:6px !important}
+ .mode-tag{font-size:9px !important;padding:3px 8px !important}
+ .mode-play-btn{padding:8px 14px !important;font-size:13.5px !important}
+ .home-center-col{max-width:510px !important;height:290px !important;max-height:295px !important;justify-content:space-between !important}
+ .home-crown{font-size:26px !important}
+ .home-title{font-size:24px !important}
+ .home-subtitle{font-size:9.5px !important}
+ .home-wallet-pill{padding:4px 14px !important;font-size:11px !important}
+ .btn-home-free-coins{padding:5px 16px !important;font-size:11.5px !important}
+ .home-bet-section{padding:8px 14px 7px !important;gap:5px !important}
+ .tier-pill{font-size:10px !important;padding:4px 1px !important}
 }
 
 @media(max-width:600px) and (min-height:501px){
@@ -542,10 +611,28 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
 
 <div id="home-screen">
   <div class="home-container">
-    <div class="home-header">
-      <div class="home-crown">👑</div>
-      <h1 class="home-title">RUMMY 13</h1>
-      <p class="home-subtitle">SELECT GAME MODE</p>
+    <!-- LEFT: CUTE COMPACT OPEN JOKER CARD -->
+    <div class="mode-card active" id="mode-open-joker">
+      <div class="mode-badge live"><span class="badge-dot"></span> LIVE</div>
+      <div class="mode-icon">🃏</div>
+      <div class="mode-title-block">
+        <h2 class="mode-title">Open Joker</h2>
+        <span class="mode-sub">13 Cards Points</span>
+      </div>
+      <div class="mode-tags">
+        <span class="mode-tag">3P</span>
+        <span class="mode-tag">2 Decks</span>
+      </div>
+      <button class="mode-play-btn" id="btn-play-open">Play Now ▶</button>
+    </div>
+
+    <!-- CENTER COLUMN: TITLE -> WALLET -> FREE COINS -> WIDE BET STATION -->
+    <div class="home-center-col">
+      <div class="home-header">
+        <div class="home-crown">👑</div>
+        <h1 class="home-title">RUMMY 13</h1>
+        <p class="home-subtitle">SELECT GAME MODE</p>
+      </div>
       <div class="home-wallet-bar">
         <div class="home-wallet-pill" title="Current Wallet Coins">
           <div class="coin-icon-wrap">
@@ -561,7 +648,7 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
         </div>
         <button id="btn-home-free-coins" class="btn-home-free-coins" title="Claim 2,000 Free Coins">
           <span>🎁</span>
-          <span>Claim Free Coins (+2,000 🪙)</span>
+          <span>Claim Free Coins</span>
         </button>
       </div>
       <div class="home-bet-section">
@@ -580,32 +667,20 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
         <div id="bet-locked-warn" class="bet-locked-warn" style="display:none"></div>
       </div>
     </div>
-    <div class="game-modes">
-      <div class="mode-card active" id="mode-open-joker">
-        <div class="mode-badge live"><span class="badge-dot"></span> LIVE MODE</div>
-        <div class="mode-icon">🃏</div>
-        <h2 class="mode-title">Open Joker</h2>
-        <span class="mode-sub">13 Cards Points Rummy</span>
-        <div class="mode-tags">
-          <span class="mode-tag">Open Joker</span>
-          <span class="mode-tag">3 Players</span>
-          <span class="mode-tag">2 Decks</span>
-        </div>
-        <button class="mode-play-btn" id="btn-play-open">Play Now ▶</button>
-      </div>
 
-      <div class="mode-card disabled" id="mode-closed-joker">
-        <div class="mode-badge soon">🔒 COMING SOON</div>
-        <div class="mode-icon">🎴</div>
+    <!-- RIGHT: CUTE COMPACT CLOSED JOKER CARD -->
+    <div class="mode-card disabled" id="mode-closed-joker">
+      <div class="mode-badge soon">🔒 SOON</div>
+      <div class="mode-icon">🎴</div>
+      <div class="mode-title-block">
         <h2 class="mode-title">Closed Joker</h2>
-        <span class="mode-sub">13 Cards Mystery Play</span>
-        <div class="mode-tags">
-          <span class="mode-tag">Closed Joker</span>
-          <span class="mode-tag">3 Players</span>
-          <span class="mode-tag">Mystery</span>
-        </div>
-        <button class="mode-play-btn locked" disabled>Coming Soon</button>
+        <span class="mode-sub">13 Cards Mystery</span>
       </div>
+      <div class="mode-tags">
+        <span class="mode-tag">3P</span>
+        <span class="mode-tag">Mystery</span>
+      </div>
+      <button class="mode-play-btn locked" disabled>Coming Soon</button>
     </div>
   </div>
 </div>
