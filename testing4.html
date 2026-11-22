@@ -8,9 +8,35 @@ html,body{margin:0;width:100%;height:100%;width:100dvw;height:100dvh;overflow:hi
 canvas{display:block;touch-action:none}
 .box{position:fixed;background:var(--panel);border:1px solid var(--gold);border-radius:12px;padding:10px 14px;font-size:14px;line-height:1.6;backdrop-filter:blur(6px);box-shadow:0 6px 24px #000a,inset 0 0 18px #d9b26522}
 #msg{display:none !important}
-#bg{position:fixed;top:calc(14px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);z-index:30;background:linear-gradient(180deg,#f59e0b,#b45309);color:#fff;border:1.5px solid #fde047;border-radius:24px;padding:8px 24px;font-size:13.5px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;box-shadow:0 6px 18px rgba(0,0,0,0.7),0 0 14px rgba(245,158,11,0.4),inset 0 1px 0 rgba(255,255,255,0.4);cursor:pointer;white-space:nowrap;display:none;transition:transform .12s,filter .12s,box-shadow .12s}
-#bg:hover{background:linear-gradient(180deg,#fbbf24,#d97706);box-shadow:0 8px 24px rgba(0,0,0,0.8),0 0 18px rgba(245,158,11,0.6);filter:brightness(1.1);transform:translateX(-50%) translateY(-2px)}
-#bg:active{transform:translateX(-50%) translateY(1px)}
+#bg{position:fixed;z-index:30;background:linear-gradient(180deg,#f59e0b,#b45309);color:#fff;border:1.5px solid #fde047;border-radius:24px;padding:8px 18px;font-size:13px;font-weight:800;letter-spacing:.5px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;box-shadow:0 6px 18px rgba(0,0,0,0.7),0 0 14px rgba(245,158,11,0.4),inset 0 1px 0 rgba(255,255,255,0.4);cursor:pointer;white-space:nowrap;display:none;align-items:center;gap:6px;transition:filter .12s,box-shadow .12s,background .12s}
+#bg:hover{background:linear-gradient(180deg,#fbbf24,#d97706);box-shadow:0 8px 24px rgba(0,0,0,0.8),0 0 18px rgba(245,158,11,0.6);filter:brightness(1.12)}
+#bg:active{filter:brightness(0.92)}
+#bg.no-coins{background:linear-gradient(180deg,#475569,#334155) !important;color:#94a3b8 !important;border:1.5px solid #64748b !important;box-shadow:0 4px 12px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.1) !important;filter:grayscale(1) opacity(0.7) !important;cursor:not-allowed !important}
+#bg.no-coins:hover{background:linear-gradient(180deg,#475569,#334155) !important;filter:grayscale(1) opacity(0.7) !important;box-shadow:0 4px 12px rgba(0,0,0,0.5) !important}
+#coins-box{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));right:calc(12px + env(safe-area-inset-right,0px));z-index:30;display:none;align-items:center;gap:8px;background:linear-gradient(180deg,#2b4537,#13241b);color:#f3ead2;border:1.5px solid var(--gold);border-radius:28px;padding:4px 14px 4px 7px;box-shadow:0 4px 18px rgba(0,0,0,0.75),inset 0 0 12px rgba(217,178,101,0.25);white-space:nowrap;cursor:default}
+.coin-icon-wrap{display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5))}
+.coins-info{display:flex;align-items:center;line-height:1}
+.coins-stake-divider{width:1px;height:16px;background:rgba(217,178,101,0.4);margin:0 2px}
+.coins-stake-badge{display:inline-flex;align-items:center;gap:3px;background:rgba(0,0,0,0.35);padding:2px 7px;border-radius:12px;border:1px solid rgba(217,178,101,0.35);font-size:11px;font-weight:800;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+.stake-tag{color:#c9b98e;font-size:9.5px;letter-spacing:.6px}
+#game-stake-val{color:#ffd88a;font-weight:900}
+.stake-unit{color:#94a3b8;font-size:9.5px}
+.coin-float-pill{position:fixed;top:calc(52px + env(safe-area-inset-top,0px));right:calc(12px + env(safe-area-inset-right,0px));z-index:96;display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;font-size:14px;font-weight:900;letter-spacing:.5px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,0.85);opacity:0;transform:translateY(0);transition:none}
+.coin-float-pill.float-win{background:linear-gradient(180deg,#16a34a,#0d5e2a);color:#fef08a;border:1.5px solid #86efac;box-shadow:0 8px 28px rgba(0,0,0,0.85),0 0 20px rgba(74,222,128,0.6);animation:float-win-anim 2.4s cubic-bezier(0.16,1,0.3,1) forwards}
+.coin-float-pill.float-loss{background:linear-gradient(180deg,#dc2626,#991b1b);color:#fee2e2;border:1.5px solid #fca5a5;box-shadow:0 8px 28px rgba(0,0,0,0.85),0 0 20px rgba(239,68,68,0.6);animation:float-loss-anim 2.4s cubic-bezier(0.16,1,0.3,1) forwards}
+@keyframes float-win-anim{0%{opacity:0;transform:translateY(12px) scale(0.85)}16%{opacity:1;transform:translateY(-4px) scale(1.08)}28%{opacity:1;transform:translateY(0) scale(1)}75%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-22px) scale(0.92)}}
+@keyframes float-loss-anim{0%{opacity:0;transform:translateY(-12px) scale(0.85)}16%{opacity:1;transform:translateY(4px) scale(1.08)}28%{opacity:1;transform:translateY(0) scale(1)}75%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(22px) scale(0.92)}}
+#coins-val{font-size:15px;font-weight:900;color:#ffd88a;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;letter-spacing:.4px;text-shadow:0 1px 3px rgba(0,0,0,0.7)}
+.home-wallet-bar{display:flex;align-items:center;justify-content:center;gap:12px;margin:8px 0 2px;flex-wrap:wrap}
+.home-wallet-pill{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(180deg,#2b4537,#13241b);border:1.5px solid var(--gold);padding:6px 16px 6px 10px;border-radius:24px;box-shadow:0 6px 20px rgba(0,0,0,0.7),inset 0 0 12px rgba(217,178,101,0.25);color:#f3ead2;white-space:nowrap}
+.home-wallet-lbl{font-size:11px;letter-spacing:1px;font-weight:800;color:#c9b98e;text-transform:uppercase}
+.home-wallet-num{font-size:16px;font-weight:900;color:#ffd88a;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;letter-spacing:.4px;text-shadow:0 1px 3px rgba(0,0,0,0.7)}
+.home-wallet-coin{font-size:14px}
+.btn-home-free-coins{display:inline-flex;align-items:center;gap:7px;background:linear-gradient(180deg,#f59e0b,#b45309);color:#fff;border:1.5px solid #fde047;border-radius:24px;padding:7px 18px;font-size:13px;font-weight:800;letter-spacing:.4px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;box-shadow:0 6px 18px rgba(0,0,0,0.7),0 0 14px rgba(245,158,11,0.4),inset 0 1px 0 rgba(255,255,255,0.4);cursor:pointer;white-space:nowrap;transition:transform .12s,filter .12s,box-shadow .12s}
+.btn-home-free-coins:hover{background:linear-gradient(180deg,#fbbf24,#d97706);box-shadow:0 8px 24px rgba(0,0,0,0.8),0 0 20px rgba(245,158,11,0.6);filter:brightness(1.12);transform:translateY(-2px)}
+.btn-home-free-coins:active{transform:translateY(1px)}
+@keyframes coin-pulse-anim{0%{transform:scale(1)}40%{transform:scale(1.22);border-color:#fde047;box-shadow:0 0 24px #f59e0b}100%{transform:scale(1)}}
+.coin-pulse{animation:coin-pulse-anim .45s ease-out}
 #btn-home{position:fixed;top:calc(14px + env(safe-area-inset-top,0px));left:calc(14px + env(safe-area-inset-left,0px));z-index:30;display:none;align-items:center;gap:7px;background:linear-gradient(180deg,#1e293b,#0f172a);color:#f1f5f9;border:1.5px solid #64748b;border-radius:22px;padding:8px 18px;font-size:13.5px;font-weight:700;letter-spacing:.5px;box-shadow:0 4px 16px rgba(0,0,0,0.7),inset 0 1px 0 rgba(255,255,255,0.2);cursor:pointer;white-space:nowrap;transition:transform .12s,filter .12s,box-shadow .12s}
 #btn-home:hover{background:linear-gradient(180deg,#334155,#1e293b);box-shadow:0 6px 20px rgba(0,0,0,0.8),0 0 10px rgba(100,116,139,0.4);filter:brightness(1.1);transform:translateY(-2px)}
 #btn-home:active{transform:translateY(1px)}
@@ -22,9 +48,9 @@ canvas{display:block;touch-action:none}
 #bd:hover{background:linear-gradient(180deg,#ef4444,#b91c1c)}
 #bs,#bsubmit{background:linear-gradient(180deg,#16a34a,#0d5e2a);color:#fff;border:1.5px solid #86efac !important;box-shadow:0 6px 20px rgba(0,0,0,0.7),0 0 16px rgba(34,197,94,0.45),inset 0 1px 0 rgba(255,255,255,0.4)!important;text-shadow:0 1px 2px rgba(0,0,0,0.6)}
 #bs:hover,#bsubmit:hover{background:linear-gradient(180deg,#22c55e,#15803d)}
-#declare-banner{position:fixed;top:calc(16px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%) translateY(-120px);z-index:85;display:none;flex-direction:column;align-items:center;text-align:center;gap:3px;background:linear-gradient(180deg,#7f1d1d 0%,#450a0a 100%);border:2px solid #fde047;border-radius:20px;padding:10px 24px;box-shadow:0 12px 40px rgba(0,0,0,0.85),0 0 24px rgba(220,38,38,0.5),inset 0 1px 0 rgba(255,255,255,0.4);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:#fff;pointer-events:none;transition:transform .35s cubic-bezier(0.16,1,0.3,1),opacity .35s ease;opacity:0}
+#declare-banner{position:fixed;top:calc(66px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%) translateY(-140px);z-index:85;display:none;flex-direction:column;align-items:center;text-align:center;gap:3px;background:linear-gradient(180deg,#7f1d1d 0%,#450a0a 100%);border:2px solid #fde047;border-radius:20px;padding:8px 22px;box-shadow:0 12px 40px rgba(0,0,0,0.85),0 0 24px rgba(220,38,38,0.5),inset 0 1px 0 rgba(255,255,255,0.4);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:#fff;pointer-events:none;transition:transform .35s cubic-bezier(0.16,1,0.3,1),opacity .35s ease;opacity:0}
 #declare-banner.show{display:flex;transform:translateX(-50%) translateY(0);opacity:1}
-.dec-title{font-size:16px;font-weight:900;letter-spacing:1px;color:#fef08a;text-shadow:0 2px 8px rgba(0,0,0,0.7);text-transform:uppercase}
+.dec-title{font-size:15px;font-weight:900;letter-spacing:1px;color:#fef08a;text-shadow:0 2px 8px rgba(0,0,0,0.7);text-transform:uppercase}
 .dec-sub{font-size:12px;font-weight:700;color:#fecaca;letter-spacing:.3px}
 
 .scoreboard-modal{position:fixed;inset:0;margin:auto;width:min(94vw,490px);height:fit-content;max-height:92vh;z-index:90;background:linear-gradient(180deg,rgba(11,26,19,0.97) 0%,rgba(6,14,10,0.98) 100%);border:2px solid #d9b265;border-radius:24px;padding:24px 20px;box-shadow:0 16px 50px rgba(0,0,0,0.9),0 0 30px rgba(217,178,101,0.25),inset 0 0 24px rgba(217,178,101,0.12);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);color:#f3ead2;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;box-sizing:border-box;display:none;overflow-y:auto}
@@ -32,6 +58,18 @@ canvas{display:block;touch-action:none}
 .sb-header{display:flex;flex-direction:column;gap:5px;align-items:center}
 .sb-title{font-size:22px;font-weight:900;letter-spacing:1px;color:#fce8b8;text-shadow:0 2px 10px rgba(217,178,101,0.5);text-transform:uppercase}
 .sb-subtitle{font-size:13.5px;color:#86efac;font-weight:700;line-height:1.4;max-width:400px}
+.sb-payout-box{width:100%;display:flex;align-items:center;gap:12px;padding:10px 16px;border-radius:14px;box-sizing:border-box;text-align:left;animation:modal-pop .3s ease}
+.sb-payout-box.win{background:linear-gradient(90deg,rgba(22,101,52,0.85) 0%,rgba(16,44,28,0.92) 100%);border:1.5px solid #4ade80;box-shadow:0 4px 20px rgba(34,197,94,0.35)}
+.sb-payout-box.loss{background:linear-gradient(90deg,rgba(153,27,27,0.85) 0%,rgba(45,10,10,0.92) 100%);border:1.5px solid #f87171;box-shadow:0 4px 20px rgba(239,68,68,0.35)}
+.sb-payout-icon{font-size:26px;flex:0 0 auto}
+.sb-payout-text{display:flex;flex-direction:column;gap:2px}
+.sb-payout-title{font-size:15px;font-weight:900;letter-spacing:.5px}
+.sb-payout-box.win .sb-payout-title{color:#fde047}
+.sb-payout-box.loss .sb-payout-title{color:#fecaca}
+.sb-payout-desc{font-size:11.5px;color:#d1d5db;font-weight:600}
+.sb-coins{font-weight:900;font-variant-numeric:tabular-nums;font-size:13px}
+.sb-coin-win{color:#4ade80}
+.sb-coin-loss{color:#f87171}
 .sb-table-wrap{width:100%;overflow-x:auto;border-radius:14px;border:1px solid rgba(217,178,101,0.3);background:rgba(8,16,12,0.6);box-shadow:inset 0 2px 8px rgba(0,0,0,0.5)}
 .sb-table{width:100%;border-collapse:collapse;font-size:13.5px}
 .sb-table th{background:linear-gradient(180deg,#1e3629,#12241b);color:#d9b265;font-weight:800;font-size:11.5px;letter-spacing:.8px;padding:10px 8px;border-bottom:1px solid rgba(217,178,101,0.4);text-align:center}
@@ -124,7 +162,7 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
 .btn-leave-red{background:linear-gradient(180deg,#dc2626,#991b1b) !important;color:#fff !important;border:1px solid #ff7b7b !important;border-radius:18px !important;padding:8px 16px !important;font-size:13.5px !important;font-weight:600 !important;box-shadow:0 3px 12px rgba(220,38,38,0.4) !important}
 .btn-leave-green{background:linear-gradient(180deg,#1b8744,#0e5629) !important;color:#fff !important;border:1px solid #4ade80 !important;border-radius:18px !important;padding:8px 16px !important;font-size:13.5px !important;font-weight:600 !important;box-shadow:0 3px 12px rgba(27,135,68,0.4) !important}
 
-#timer-box{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));right:calc(12px + env(safe-area-inset-right,0px));z-index:30;display:none;align-items:center;gap:10px;background:linear-gradient(180deg,#2b4537,#13241b);color:#f3ead2;border:1.5px solid var(--gold);border-radius:28px;padding:4px 14px 4px 6px;box-shadow:0 4px 18px #000c,inset 0 0 12px #d9b26540;white-space:nowrap;pointer-events:none;transition:border-color .25s ease,box-shadow .25s ease}
+#timer-box{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));left:50% !important;transform:translateX(-50%) !important;right:auto !important;z-index:95;display:none;align-items:center;gap:10px;background:linear-gradient(180deg,#2b4537,#13241b);color:#f3ead2;border:1.5px solid var(--gold);border-radius:28px;padding:4px 14px 4px 6px;box-shadow:0 4px 18px #000c,inset 0 0 12px #d9b26540;white-space:nowrap;pointer-events:none;transition:border-color .25s ease,box-shadow .25s ease}
 #timer-box.urgent{border-color:#ef4444;box-shadow:0 0 24px rgba(239,68,68,0.75),inset 0 0 14px rgba(239,68,68,0.35);animation:timer-pulse .7s ease-in-out infinite alternate}
 @keyframes timer-pulse{from{transform:scale(1)}to{transform:scale(1.06);filter:brightness(1.2)}}
 .timer-dial{position:relative;width:42px;height:42px;display:flex;align-items:center;justify-content:center}
@@ -134,6 +172,50 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
 .timer-info{display:flex;flex-direction:column;line-height:1.1}
 .timer-title{font-size:11.5px;letter-spacing:1.2px;color:#ffd88a;text-transform:uppercase;font-weight:700}
 
+/* Free Coins Modal Styles */
+.coins-modal-backdrop{position:fixed;inset:0;z-index:120;display:flex;align-items:center;justify-content:center;background:rgba(5,12,8,0.85);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:20px;box-sizing:border-box}
+.coins-modal-box{position:relative;width:100%;max-width:350px;background:linear-gradient(180deg,rgba(22,44,32,0.98) 0%,rgba(10,22,16,0.99) 100%);border:1.5px solid var(--gold);border-radius:24px;padding:26px 22px 20px;box-shadow:0 16px 48px rgba(0,0,0,0.85),0 0 32px rgba(245,158,11,0.2),inset 0 0 20px rgba(217,178,101,0.15);display:flex;flex-direction:column;align-items:center;text-align:center;box-sizing:border-box;animation:modal-pop .24s cubic-bezier(0.2,0.8,0.2,1)}
+@keyframes modal-pop{from{transform:scale(0.88);opacity:0}to{transform:scale(1);opacity:1}}
+.coins-modal-icon{width:64px;height:64px;border-radius:50%;background:radial-gradient(circle,rgba(245,158,11,0.25) 0%,rgba(180,83,9,0.05) 70%);display:flex;align-items:center;justify-content:center;margin-bottom:12px;box-shadow:0 0 24px rgba(245,158,11,0.35)}
+.coins-modal-box h2{margin:0 0 8px;font-size:22px;color:var(--gold);letter-spacing:.8px;font-weight:800;text-shadow:0 2px 10px rgba(0,0,0,0.6)}
+.coins-modal-box p{margin:0 0 16px;font-size:13.5px;line-height:1.5;color:#dcd0b8}
+.coins-modal-balance{display:inline-flex;align-items:center;gap:8px;background:rgba(0,0,0,0.4);border:1px solid rgba(217,178,101,0.3);padding:6px 16px;border-radius:20px;font-size:13px;color:#cbd5e1;margin-bottom:20px}
+.coins-modal-balance span:nth-child(2){font-weight:900;color:#fde047;font-size:15px}
+.coins-modal-actions{display:flex;flex-direction:column;gap:10px;width:100%}
+.btn-claim-coins{width:100%;padding:12px 20px;font-size:14px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;border-radius:24px;cursor:pointer;background:linear-gradient(180deg,#f59e0b,#b45309);color:#fff;border:1.5px solid #fde047;box-shadow:0 6px 20px rgba(0,0,0,0.7),0 0 18px rgba(245,158,11,0.4),inset 0 1px 0 rgba(255,255,255,0.4);transition:transform .12s,filter .12s}
+.btn-claim-coins:hover{filter:brightness(1.12);transform:translateY(-2px)}
+.btn-claim-coins:active{transform:translateY(1px)}
+.btn-cancel-coins{width:100%;padding:10px 18px;font-size:13px;font-weight:700;border-radius:22px;cursor:pointer;background:linear-gradient(180deg,#334155,#1e293b);color:#cbd5e1;border:1.5px solid #64748b;box-shadow:0 4px 14px rgba(0,0,0,0.6);transition:transform .12s,filter .12s}
+.btn-cancel-coins:hover{filter:brightness(1.15);transform:translateY(-1px)}
+#coins-timer-section{display:flex;flex-direction:column;align-items:center;gap:12px;margin:8px 0 16px}
+.coins-reward-timer-dial{position:relative;width:60px;height:60px;display:flex;align-items:center;justify-content:center}
+.coins-reward-timer-dial svg{position:absolute;inset:0}
+#coins-timer-sec{font-size:23px;font-weight:900;color:#ffd88a;text-shadow:0 0 12px rgba(245,158,11,0.6);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+.coins-timer-status{font-size:13.5px;font-weight:700;color:#fef08a;letter-spacing:.4px}
+.home-bet-section{width:100%;max-width:540px;background:linear-gradient(180deg,rgba(18,34,26,0.92) 0%,rgba(9,18,13,0.96) 100%);border:1.5px solid var(--gold);border-radius:20px;padding:14px 18px 12px;box-shadow:0 8px 24px rgba(0,0,0,0.65),inset 0 0 16px rgba(217,178,101,0.12);box-sizing:border-box;display:flex;flex-direction:column;gap:10px;margin-top:2px}
+.bet-section-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.bet-section-label{font-size:12px;font-weight:800;letter-spacing:1px;color:#c9b98e;text-transform:uppercase}
+.bet-active-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(0,0,0,0.4);border:1.5px solid #fde047;padding:3px 12px;border-radius:16px;box-shadow:0 0 12px rgba(245,158,11,0.3)}
+.bet-badge-coin{font-size:14px}
+.bet-badge-num{font-size:16px;font-weight:900;color:#fde047;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+.bet-badge-unit{font-size:11px;font-weight:700;color:#cbd5e1}
+.bet-slider-container{position:relative;width:100%;padding:4px 2px;box-sizing:border-box}
+.bet-slider{width:100%;height:8px;-webkit-appearance:none;appearance:none;background:linear-gradient(90deg,#f59e0b,#2d523e);border:1px solid rgba(217,178,101,0.4);border-radius:6px;outline:none;cursor:pointer;margin:0}
+.bet-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:22px;height:22px;border-radius:50%;background:radial-gradient(circle,#fde047 30%,#d97706 100%);border:2px solid #fff;box-shadow:0 2px 10px rgba(0,0,0,0.8),0 0 10px rgba(245,158,11,0.8);cursor:pointer;transition:transform .12s,box-shadow .12s}
+.bet-slider::-webkit-slider-thumb:hover{transform:scale(1.15);box-shadow:0 3px 14px rgba(0,0,0,0.9),0 0 16px rgba(245,158,11,1)}
+.bet-slider::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:radial-gradient(circle,#fde047 30%,#d97706 100%);border:2px solid #fff;box-shadow:0 2px 10px rgba(0,0,0,0.8),0 0 10px rgba(245,158,11,0.8);cursor:pointer}
+.bet-tiers-list{display:flex;justify-content:space-between;gap:3px;width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.bet-tiers-list::-webkit-scrollbar{display:none}
+.tier-pill{flex:1 1 0;min-width:25px;background:rgba(16,28,21,0.85);border:1px solid rgba(217,178,101,0.3);color:#cbd5e1;border-radius:8px;padding:4px 2px;font-size:10px;font-weight:800;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;cursor:pointer;text-align:center;transition:all .15s ease;user-select:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;box-sizing:border-box}
+.tier-pill:hover:not(.tier-locked){background:rgba(217,178,101,0.2);border-color:#ffd88a;color:#fff;transform:translateY(-1px)}
+.tier-pill.tier-active{background:linear-gradient(180deg,#f59e0b,#b45309);border:1.5px solid #fde047;color:#fff;box-shadow:0 4px 12px rgba(245,158,11,0.45);transform:scale(1.04)}
+.tier-pill.tier-locked{filter:grayscale(1) opacity(0.35);border:1px dashed #64748b;color:#94a3b8;cursor:not-allowed;background:rgba(15,23,42,0.6)}
+.tier-pill.tier-locked:hover{transform:none}
+.tier-lock-icon{font-size:7.5px;display:none;line-height:1}
+.tier-pill.tier-locked .tier-lock-icon{display:inline-block}
+.bet-locked-warn{font-size:11.5px;font-weight:700;color:#fca5a5;background:rgba(185,28,28,0.25);border:1px solid rgba(239,68,68,0.4);border-radius:10px;padding:5px 10px;text-align:center;animation:shake-warn .35s ease}
+@keyframes shake-warn{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+
 @media (max-width: 680px), (orientation: portrait) {
  .game-modes{flex-direction:column;align-items:center;gap:16px}
  .mode-card{max-width:320px;padding:18px 16px}
@@ -141,13 +223,43 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
  .mode-title{font-size:17px}
  .mode-desc{font-size:12px;margin-bottom:12px}
  .mode-icon{font-size:36px;margin:2px 0 6px}
+ .home-wallet-bar{gap:8px;margin:6px 0 2px}
+ .home-wallet-pill{padding:5px 12px 5px 8px}
+ .home-wallet-num{font-size:14.5px}
+ .btn-home-free-coins{padding:6px 14px;font-size:12px}
+ .home-bet-section{padding:10px 12px;max-width:340px;gap:8px}
+ .tier-pill{font-size:9px;padding:3px 1px;min-width:22px}
+ .bet-active-badge{padding:2px 8px}
+ .bet-badge-num{font-size:14px}
+ .bet-section-label{font-size:11px}
 }
 
 /* Landscape on short viewports (mobile phones with Chrome/browser bars, height <= 500px) */
 @media (max-height: 500px) {
- #bg{top:calc(6px + env(safe-area-inset-top,0px)) !important;padding:5px 16px !important;font-size:11.5px !important;border-radius:18px !important}
+ .home-wallet-bar{gap:8px;margin:4px 0 0}
+ .home-wallet-pill{padding:3px 10px 3px 6px}
+ .home-wallet-num{font-size:13.5px}
+ .btn-home-free-coins{padding:4px 12px;font-size:11px}
+ #bg{padding:5px 14px !important;font-size:11px !important;border-radius:18px !important}
  #btn-home{top:calc(6px + env(safe-area-inset-top,0px)) !important;left:calc(8px + env(safe-area-inset-left,0px)) !important;padding:5px 12px !important;font-size:12px !important;border-radius:18px !important}
- #timer-box{top:calc(6px + env(safe-area-inset-top,0px)) !important;right:calc(8px + env(safe-area-inset-right,0px)) !important;padding:2px 10px 2px 4px !important;gap:6px !important}
+ #timer-box{top:calc(6px + env(safe-area-inset-top,0px)) !important;left:50% !important;transform:translateX(-50%) !important;right:auto !important;padding:2px 10px 2px 4px !important;gap:6px !important}
+ #coins-box{top:calc(6px + env(safe-area-inset-top,0px)) !important;right:calc(8px + env(safe-area-inset-right,0px)) !important;padding:2px 10px 2px 6px !important;gap:6px !important}
+ #coins-val{font-size:12.5px !important}
+ .coins-stake-divider{height:12px !important}
+ .coins-stake-badge{font-size:9.5px !important;padding:1px 4px !important}
+ .stake-tag{font-size:8px !important}
+ #game-stake-val{font-size:10px !important}
+ .stake-unit{font-size:8px !important}
+ .coin-float-pill{top:calc(38px + env(safe-area-inset-top,0px)) !important;right:calc(8px + env(safe-area-inset-right,0px)) !important;padding:3px 8px !important;font-size:11px !important}
+ .home-bet-section{padding:5px 10px;gap:4px;max-width:440px;margin-top:0}
+ .tier-pill{font-size:8.5px;padding:2px 1px;min-width:20px}
+ .bet-active-badge{padding:1px 6px}
+ .bet-badge-num{font-size:12.5px}
+ .bet-section-label{font-size:10px}
+ .sb-payout-box{padding:6px 10px !important;gap:8px !important}
+ .sb-payout-icon{font-size:18px !important}
+ .sb-payout-title{font-size:12.5px !important}
+ .sb-payout-desc{font-size:9.5px !important}
  .timer-dial{width:32px !important;height:32px !important}
  .timer-dial svg{width:32px !important;height:32px !important}
  #timer-val{font-size:13.5px !important}
@@ -171,36 +283,55 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
  .sb-table th,.sb-table td{padding:5px 6px !important;font-size:11.5px !important}
  .sb-actions{gap:8px !important}
  .sb-btn-next,.sb-btn-reset,.sb-btn-home{padding:8px 12px !important;font-size:11.5px !important;border-radius:18px !important}
+ #declare-banner{top:calc(46px + env(safe-area-inset-top,0px)) !important;padding:4px 14px !important;border-radius:14px !important;gap:2px !important}
+ .dec-title{font-size:12px !important}
+ .dec-sub{font-size:10.5px !important}
 }
 
 /* Very short landscape screens (height <= 380px) */
 @media (max-height: 380px) {
- #bg{padding:3px 12px !important;font-size:10px !important}
+ #bg{padding:3px 10px !important;font-size:9.5px !important}
  #btn-home{padding:4px 10px !important;font-size:11px !important}
+ #coins-box{padding:2px 8px 2px 4px !important}
+ #coins-val{font-size:11px !important}
  .chip{padding:2px 8px 2px 6px !important;font-size:9px !important}
  .bot-badge{top:calc(4px + env(safe-area-inset-top,0px)) !important;transform:translate(-50%,0) scale(0.68) !important;transform-origin:center top !important}
  .bot-badge.on{transform:translate(-50%,0) scale(0.74) !important}
+ #declare-banner{top:calc(40px + env(safe-area-inset-top,0px)) !important;padding:3px 10px !important;border-radius:12px !important}
+ .dec-title{font-size:11px !important}
+ .dec-sub{font-size:9.5px !important}
 }
 
 @media(max-width:600px) and (min-height:501px){
- #timer-box{top:calc(8px + env(safe-area-inset-top,0px));right:calc(8px + env(safe-area-inset-right,0px));padding:3px 10px 3px 5px;gap:6px}
+ #timer-box{top:calc(8px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);right:auto;padding:3px 10px 3px 5px;gap:6px}
+ #coins-box{top:calc(8px + env(safe-area-inset-top,0px));right:calc(8px + env(safe-area-inset-right,0px));padding:3px 10px 3px 6px;gap:6px}
  .timer-dial{width:36px;height:36px}.timer-dial svg{width:36px;height:36px}#timer-val{font-size:15px}.timer-title{font-size:10px}
  #btn-home{top:calc(8px + env(safe-area-inset-top,0px));left:calc(8px + env(safe-area-inset-left,0px));padding:6px 12px;font-size:12.5px}
- #bg{top:calc(8px + env(safe-area-inset-top,0px));padding:6px 15px;font-size:12.5px}
+ #bg{top:calc(108px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);padding:7px 18px;font-size:12.5px}
  #btn button{padding:7px 14px;font-size:12.5px}
  .chip{font-size:11px;padding:3px 13px 3px 8px}
  .chip.life1{font-size:12px;padding:4px 15px 4px 9px}
 }
-@media (max-width: 400px){.timer-info{display:none}#timer-box{padding:3px 5px;border-radius:50%}}
+@media (max-width: 400px){.timer-info{display:none}#timer-box{padding:3px 5px;border-radius:50%}#coins-box{padding:3px 8px 3px 6px}#coins-val{font-size:13px}}
 @media (orientation: portrait), (max-aspect-ratio: 1/1){
  .bot-badge{top:calc(50px + env(safe-area-inset-top,0px)) !important;transform:translate(-50%,0) scale(0.82) !important;transform-origin:center top !important}
  .bot-badge.on{transform:translate(-50%,0) scale(0.88) !important}
+ #timer-box{top:calc(8px + env(safe-area-inset-top,0px)) !important;left:50% !important;transform:translateX(-50%) !important;right:auto !important}
+ #coins-box{top:calc(8px + env(safe-area-inset-top,0px)) !important;right:calc(8px + env(safe-area-inset-right,0px)) !important;left:auto !important}
+ .coin-float-pill{top:calc(46px + env(safe-area-inset-top,0px)) !important;right:calc(8px + env(safe-area-inset-right,0px)) !important}
+ #btn-home{top:calc(8px + env(safe-area-inset-top,0px)) !important;left:calc(8px + env(safe-area-inset-left,0px)) !important}
+ #bg{top:calc(108px + env(safe-area-inset-top,0px)) !important;left:50% !important;transform:translateX(-50%) !important;padding:7px 18px !important;font-size:12.5px !important}
  #btn{right:auto !important;left:50% !important;top:auto !important;bottom:calc(10px + env(safe-area-inset-bottom,0px)) !important;transform:translateX(-50%) !important;flex-direction:row !important;justify-content:center;align-items:center;gap:8px;width:auto;max-width:calc(100vw - 16px);box-sizing:border-box}
  #btn button{padding:8px 14px;font-size:13px;white-space:nowrap;flex:0 0 auto}
+ #declare-banner{top:calc(150px + env(safe-area-inset-top,0px)) !important;padding:8px 18px !important;border-radius:16px !important}
+ .dec-title{font-size:13.5px !important}
+ .dec-sub{font-size:11px !important}
 }
 @media (orientation: portrait) and (max-width: 380px){
  .bot-badge{top:calc(46px + env(safe-area-inset-top,0px)) !important;transform:translate(-50%,0) scale(0.74) !important;transform-origin:center top !important}
  .bot-badge.on{transform:translate(-50%,0) scale(0.80) !important}
+ #bg{top:calc(98px + env(safe-area-inset-top,0px)) !important;padding:6px 14px !important;font-size:11.5px !important}
+ #declare-banner{top:calc(138px + env(safe-area-inset-top,0px)) !important;padding:6px 14px !important}
  #btn{gap:6px;bottom:calc(6px + env(safe-area-inset-bottom,0px)) !important}
  #btn button{padding:7px 10px;font-size:12px}
 }
@@ -208,8 +339,27 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
 <div id="msg" class="box" style="display:none"></div>
 <button id="btn-home"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-6a1 1 0 0 0-1-1h-2a1 1 0 0 0-1 1v6H4a1 1 0 0 1-1-1V9.5z"/></svg><span>Home</span></button>
 <div id="declare-banner" class="declare-banner"></div>
-<button id="bg">Auto-group</button>
+<button id="bg" title="Auto-Group Cards (Costs 100 Coins)"><span>Auto Group 100</span><svg class="coin-svg-sm" viewBox="0 0 24 24" width="16" height="16"><circle cx="12" cy="12" r="10" fill="#f59e0b" stroke="#fde047" stroke-width="1.8"/><circle cx="12" cy="12" r="7.5" fill="#d97706" stroke="#fbbf24" stroke-width="1"/><text x="12" y="16.5" font-size="11" font-weight="900" fill="#fef3c7" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif">★</text></svg></button>
 <div id="timer-box"><div class="timer-dial"><svg width="42" height="42" viewBox="0 0 44 44"><circle cx="22" cy="22" r="18" fill="none" stroke="#183323" stroke-width="3.8"/><circle id="timer-ring" cx="22" cy="22" r="18" fill="none" stroke="#22c55e" stroke-width="3.8" stroke-dasharray="113" stroke-dashoffset="0" stroke-linecap="round" transform="rotate(-90 22 22)"/></svg><span id="timer-val">25</span></div><div class="timer-info"><span class="timer-title">Time</span></div></div>
+<div id="coins-box" title="Your Coins & Active Bet">
+  <div class="coin-icon-wrap">
+    <svg class="coin-svg" viewBox="0 0 24 24" width="19" height="19">
+      <circle cx="12" cy="12" r="10" fill="#f59e0b" stroke="#fde047" stroke-width="1.8"/>
+      <circle cx="12" cy="12" r="7.5" fill="#d97706" stroke="#fbbf24" stroke-width="1"/>
+      <text x="12" y="16.5" font-size="11" font-weight="900" fill="#fef3c7" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif">★</text>
+    </svg>
+  </div>
+  <div class="coins-info">
+    <span id="coins-val">1,000</span>
+  </div>
+  <div class="coins-stake-divider"></div>
+  <div class="coins-stake-badge" title="Points Rummy Bet Stake per Point">
+    <span class="stake-tag">BET</span>
+    <span id="game-stake-val">100</span>
+    <span class="stake-unit">/pt</span>
+  </div>
+</div>
+<div id="coin-float-pill" class="coin-float-pill" style="display:none"></div>
 <div id="t1" class="bot-badge bot-left">
   <div class="bot-avatar-wrap">
     <div class="bot-ring"></div>
@@ -318,6 +468,39 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
       <div class="home-crown">👑</div>
       <h1 class="home-title">RUMMY 13</h1>
       <p class="home-subtitle">SELECT GAME MODE</p>
+      <div class="home-wallet-bar">
+        <div class="home-wallet-pill" title="Current Wallet Coins">
+          <div class="coin-icon-wrap">
+            <svg class="coin-svg" viewBox="0 0 24 24" width="20" height="20">
+              <circle cx="12" cy="12" r="10" fill="#f59e0b" stroke="#fde047" stroke-width="1.8"/>
+              <circle cx="12" cy="7.5" fill="#d97706" stroke="#fbbf24" stroke-width="1"/>
+              <text x="12" y="16.5" font-size="11" font-weight="900" fill="#fef3c7" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif">★</text>
+            </svg>
+          </div>
+          <span class="home-wallet-lbl">WALLET</span>
+          <span id="home-coins-val" class="home-wallet-num">1,000</span>
+          <span class="home-wallet-coin">🪙</span>
+        </div>
+        <button id="btn-home-free-coins" class="btn-home-free-coins" title="Claim 2,000 Free Coins">
+          <span>🎁</span>
+          <span>Claim Free Coins (+2,000 🪙)</span>
+        </button>
+      </div>
+      <div class="home-bet-section">
+        <div class="bet-section-top">
+          <span class="bet-section-label">Points Rummy Bet Stake</span>
+          <div class="bet-active-badge">
+            <span class="bet-badge-coin">🪙</span>
+            <span id="bet-active-val" class="bet-badge-num">100</span>
+            <span class="bet-badge-unit">coins / pt</span>
+          </div>
+        </div>
+        <div class="bet-slider-container">
+          <input type="range" id="bet-range-slider" min="0" max="10" step="1" value="2" class="bet-slider" title="Select Bet Amount per Point">
+        </div>
+        <div class="bet-tiers-list" id="bet-tiers-list"></div>
+        <div id="bet-locked-warn" class="bet-locked-warn" style="display:none"></div>
+      </div>
     </div>
     <div class="game-modes">
       <div class="mode-card active" id="mode-open-joker">
@@ -357,6 +540,39 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
   <div class="leave-actions">
     <button id="btn-confirm-leave" class="btn-leave-red">Leave Game</button>
     <button id="btn-cancel-leave" class="btn-leave-green">Continue Playing</button>
+  </div>
+</div>
+
+<div id="modal-coins" class="coins-modal-backdrop" style="display:none">
+  <div class="coins-modal-box">
+    <div class="coins-modal-icon">
+      <svg viewBox="0 0 24 24" width="46" height="46">
+        <circle cx="12" cy="12" r="10" fill="#f59e0b" stroke="#fde047" stroke-width="1.8"/>
+        <circle cx="12" cy="12" r="7.5" fill="#d97706" stroke="#fbbf24" stroke-width="1"/>
+        <text x="12" y="16.5" font-size="11" font-weight="900" fill="#fef3c7" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif">★</text>
+      </svg>
+    </div>
+    <h2 id="coins-modal-title">Out of Coins!</h2>
+    <p id="coins-modal-desc">You need 100 coins to use Auto-Group. Claim 2,000 free coins to continue playing!</p>
+    <div class="coins-modal-balance">
+      <span>Current Balance:</span>
+      <span id="coins-modal-bal-val">0</span>
+      <span>🪙</span>
+    </div>
+    <div id="coins-timer-section" style="display:none">
+      <div class="coins-reward-timer-dial">
+        <svg width="60" height="60" viewBox="0 0 60 60">
+          <circle cx="30" cy="30" r="26" fill="none" stroke="#1f2937" stroke-width="4.5"/>
+          <circle id="coins-timer-ring" cx="30" cy="30" r="26" fill="none" stroke="#f59e0b" stroke-width="4.5" stroke-dasharray="163" stroke-dashoffset="0" stroke-linecap="round" transform="rotate(-90 30 30)"/>
+        </svg>
+        <span id="coins-timer-sec">5</span>
+      </div>
+      <div class="coins-timer-status">Claiming 2,000 Free Coins...</div>
+    </div>
+    <div id="coins-modal-actions" class="coins-modal-actions">
+      <button id="btn-add-free-coins" class="btn-claim-coins">🎁 Add Free Coins (+2,000 🪙)</button>
+      <button id="btn-close-coins" class="btn-cancel-coins">Close</button>
+    </div>
   </div>
 </div>
 
@@ -717,6 +933,220 @@ function resetMatch(){
  declaredWinner=-1;
 }
 
+let coins=1000;
+try{
+ const sc=localStorage.getItem('rummy_coins');
+ if(sc!==null){const pc=parseInt(sc,10);if(!isNaN(pc)&&pc>=0)coins=pc}
+}catch(_){}
+
+const BET_TIERS=[1,50,100,500,1000,5000,10000,50000,100000,500000,1000000];
+const BET_LABELS=['1','50','100','500','1K','5K','10K','50K','100K','500K','1M'];
+let selectedBet=100;
+try{
+ const sb=localStorage.getItem('rummy_bet');
+ if(sb!==null){const pb=parseInt(sb,10);if(!isNaN(pb)&&BET_TIERS.includes(pb))selectedBet=pb}
+}catch(_){}
+
+function getMaxAffordableBetIndex(){
+ let maxIdx=-1;
+ for(let i=0;i<BET_TIERS.length;i++){
+  if(coins>=BET_TIERS[i])maxIdx=i;
+ }
+ return maxIdx;
+}
+
+let betWarnTimeout=null;
+function showBetWarning(text){
+ const el=$('bet-locked-warn');if(!el)return;
+ el.textContent=text;
+ el.style.display='block';
+ if(betWarnTimeout)clearTimeout(betWarnTimeout);
+ betWarnTimeout=setTimeout(()=>{if(el)el.style.display='none'},3000);
+}
+
+function updateBetTiersUI(warnMsg=''){
+ const maxIdx=getMaxAffordableBetIndex();
+ let curIdx=BET_TIERS.indexOf(selectedBet);
+ if(curIdx===-1)curIdx=2;
+ if(maxIdx>=0&&curIdx>maxIdx){
+  curIdx=maxIdx;
+  selectedBet=BET_TIERS[curIdx];
+  try{localStorage.setItem('rummy_bet',selectedBet)}catch(_){}
+ }else if(maxIdx===-1){
+  curIdx=0;
+  selectedBet=BET_TIERS[0];
+ }
+
+ const slider=$('bet-range-slider');
+ if(slider){
+  slider.value=curIdx;
+  const pct=maxIdx>=0?((maxIdx/10)*100):0;
+  slider.style.background=`linear-gradient(to right, #f59e0b 0%, #f59e0b ${pct}%, #334155 ${pct}%, #1e293b 100%)`;
+ }
+
+ const bv=$('bet-active-val');if(bv)bv.textContent=selectedBet.toLocaleString();
+ const gsv=$('game-stake-val');if(gsv)gsv.textContent=(selectedBet>=10000?BET_LABELS[BET_TIERS.indexOf(selectedBet)]:selectedBet.toLocaleString());
+
+ const list=$('bet-tiers-list');
+ if(list){
+  list.innerHTML=BET_TIERS.map((tier,i)=>{
+   const isLocked=(tier>coins);
+   const isActive=(i===curIdx&&!isLocked);
+   return `<button type="button" class="tier-pill ${isActive?'tier-active':''} ${isLocked?'tier-locked':''}" data-idx="${i}" title="${isLocked?`Locked: Need ${tier.toLocaleString()} coins`:`Bet ${tier.toLocaleString()} coins/pt`}"><span>${BET_LABELS[i]}</span>${isLocked?'<span class="tier-lock-icon">🔒</span>':''}</button>`;
+  }).join('');
+
+  list.querySelectorAll('.tier-pill').forEach(btn=>{
+   btn.onclick=()=>{
+    const idx=parseInt(btn.dataset.idx,10);
+    const tier=BET_TIERS[idx];
+    if(tier>coins){
+     snd(200,.08);
+     showBetWarning(`⚠️ You need at least ${tier.toLocaleString()} coins for ${BET_LABELS[idx]} bet! (Claim free coins to unlock)`);
+     btn.classList.remove('shake');void btn.offsetWidth;btn.classList.add('shake');
+     return;
+    }
+    snd(520,.03);
+    selectedBet=tier;
+    try{localStorage.setItem('rummy_bet',selectedBet)}catch(_){}
+    updateBetTiersUI();
+   };
+  });
+ }
+ if(warnMsg)showBetWarning(warnMsg);
+}
+
+function initBetSlider(){
+ const slider=$('bet-range-slider');
+ if(!slider)return;
+ slider.oninput=()=>{
+  const targetIdx=parseInt(slider.value,10);
+  const maxIdx=getMaxAffordableBetIndex();
+  if(maxIdx===-1||targetIdx>maxIdx){
+   snd(200,.08);
+   const safeIdx=Math.max(0,maxIdx);
+   slider.value=safeIdx;
+   const targetTier=BET_TIERS[targetIdx];
+   showBetWarning(`⚠️ You need at least ${targetTier.toLocaleString()} coins for ${BET_LABELS[targetIdx]} bet! (Claim free coins to unlock)`);
+   if(maxIdx>=0){
+    selectedBet=BET_TIERS[maxIdx];
+    try{localStorage.setItem('rummy_bet',selectedBet)}catch(_){}
+   }
+  }else{
+   snd(460,.02);
+   selectedBet=BET_TIERS[targetIdx];
+   try{localStorage.setItem('rummy_bet',selectedBet)}catch(_){}
+  }
+  updateBetTiersUI();
+ };
+}
+
+function animateCoinsChange(oldCoins,newCoins,delta){
+ const pill=$('coin-float-pill');
+ if(pill){
+  pill.classList.remove('float-win','float-loss');
+  void pill.offsetWidth;
+  if(delta>0){
+   pill.innerHTML=`+${delta.toLocaleString()} 🪙`;
+   pill.className='coin-float-pill float-win';
+   pill.style.display='inline-flex';
+   snd(650,.08);setTimeout(()=>snd(880,.12),120);
+  }else if(delta<0){
+   pill.innerHTML=`${delta.toLocaleString()} 🪙`;
+   pill.className='coin-float-pill float-loss';
+   pill.style.display='inline-flex';
+   snd(220,.12);
+  }
+  setTimeout(()=>{if(pill)pill.style.display='none'},2400);
+ }
+
+ const startVal=oldCoins,endVal=newCoins,duration=900,startTime=performance.now();
+ function step(now){
+  const elapsed=now-startTime;
+  const progress=Math.min(1,elapsed/duration);
+  const ease=1-Math.pow(1-progress,4);
+  const cur=Math.round(startVal+(endVal-startVal)*ease);
+  const el=$('coins-val');if(el)el.textContent=cur.toLocaleString();
+  const hel=$('home-coins-val');if(hel)hel.textContent=cur.toLocaleString();
+  if(progress<1){
+   requestAnimationFrame(step);
+  }else{
+   updateCoinsUI(true);
+  }
+ }
+ requestAnimationFrame(step);
+}
+
+function updateCoinsUI(pulse=false){
+ const el=$('coins-val');if(el)el.textContent=coins.toLocaleString();
+ const hel=$('home-coins-val');if(hel)hel.textContent=coins.toLocaleString();
+ const mb=$('coins-modal-bal-val');if(mb)mb.textContent=coins.toLocaleString();
+ const gsv=$('game-stake-val');if(gsv)gsv.textContent=(selectedBet>=10000?BET_LABELS[BET_TIERS.indexOf(selectedBet)]:selectedBet.toLocaleString());
+ try{localStorage.setItem('rummy_coins',coins)}catch(_){}
+ if(pulse){
+  const cb=$('coins-box');
+  if(cb){cb.classList.remove('coin-pulse');void cb.offsetWidth;cb.classList.add('coin-pulse')}
+  const hp=document.querySelector('.home-wallet-pill');
+  if(hp){hp.classList.remove('coin-pulse');void hp.offsetWidth;hp.classList.add('coin-pulse')}
+ }
+ const bg=$('bg');
+ if(bg){
+  if(coins<100){
+   bg.classList.add('no-coins');
+   bg.title='Need 100 Coins (Claim free coins in Home menu)';
+  }else{
+   bg.classList.remove('no-coins');
+   bg.title='Auto-Group Cards (Costs 100 Coins)';
+  }
+ }
+ updateBetTiersUI();
+}
+
+let freeCoinsTimer=null;
+function showNoCoinsModal(msgText){
+ const m=$('modal-coins');if(!m)return;
+ const title=$('coins-modal-title'),desc=$('coins-modal-desc');
+ if(title)title.textContent='Out of Coins!';
+ if(desc)desc.textContent=msgText||'You need 100 coins to use Auto-Group. Claim 2,000 free coins to continue!';
+ const ts=$('coins-timer-section'),acts=$('coins-modal-actions');
+ if(ts)ts.style.display='none';
+ if(acts)acts.style.display='flex';
+ updateCoinsUI();
+ m.style.display='flex';
+}
+
+function startFreeCoinsCountdown(){
+ const acts=$('coins-modal-actions'),tsec=$('coins-timer-section');
+ if(acts)acts.style.display='none';
+ if(tsec)tsec.style.display='flex';
+ let left=5;
+ const secEl=$('coins-timer-sec'),ring=$('coins-timer-ring'),circ=163;
+ if(secEl)secEl.textContent=left;
+ if(ring)ring.style.strokeDashoffset='0';
+ snd(520,.05);
+ if(freeCoinsTimer)clearInterval(freeCoinsTimer);
+ freeCoinsTimer=setInterval(()=>{
+  left--;
+  if(secEl)secEl.textContent=Math.max(0,left);
+  if(ring)ring.style.strokeDashoffset=(circ*(1-left/5)).toString();
+  if(left>0){
+   snd(650+(5-left)*80,.04);
+  }else{
+   clearInterval(freeCoinsTimer);
+   freeCoinsTimer=null;
+   coins+=2000;
+   updateCoinsUI(true);
+   snd(523,.08);setTimeout(()=>snd(659,.08),110);setTimeout(()=>snd(784,.12),220);setTimeout(()=>snd(1046,.18),350);
+   const st=document.querySelector('.coins-timer-status');
+   if(st)st.innerHTML='<span style="color:#4ade80;font-weight:900">🎉 +2,000 Free Coins Added!</span>';
+   setTimeout(()=>{
+    const m=$('modal-coins');if(m)m.style.display='none';
+    if(st)st.textContent='Claiming 2,000 Free Coins...';
+    msg('🎉 2,000 Free Coins Added! Balance: '+coins.toLocaleString()+' coins');
+   },900);
+  }
+ },1000);
+}
+
 function stopTurnTimer(){
  if(timerInterval){clearInterval(timerInterval);timerInterval=null}
  const tb=$('timer-box');if(tb){tb.style.display='none';tb.classList.remove('urgent')}
@@ -737,6 +1167,7 @@ function renderTimerUI(){
   r.setAttribute('stroke','#22c55e');
   b.classList.remove('urgent');
  }
+ const dtn=$('dec-timer-num');if(dtn)dtn.textContent=timerSec+'s';
 }
 function onTurnTimeout(){
  stopTurnTimer();
@@ -819,7 +1250,7 @@ function onBotDeclare(b){
  const botName=(b===1?'TITAN-01 (BOT 1)':'NEXUS-02 (BOT 2)');
  const banner=$('declare-banner');
  if(banner){
-  banner.innerHTML=`<div class="dec-title">⚠️ ${botName} DECLARED!</div><div class="dec-sub">You have 25s to arrange cards to reduce penalty points!</div>`;
+  banner.innerHTML=`<div class="dec-title">⚠️ ${botName} DECLARED!</div><div class="dec-sub">Arrange cards in <span id="dec-timer-num" style="color:#fde047;font-weight:900">25s</span> to reduce penalty points!</div>`;
   banner.classList.add('show');
  }
  startRearrangeTimer();
@@ -971,19 +1402,45 @@ function posLabs(){
    }
   }
  }
- const btnEl=$('btn');
- if(btnEl){
-  if(!isPortrait){
-   const pAct=P(4.5,.75,.6),px=(pAct.x+1)/2*innerWidth,py=(1-pAct.y)/2*innerHeight,clX=Math.min(innerWidth-55,Math.max(55,px));
-   btnEl.style.left=clX+'px';
-   btnEl.style.top=Math.max(50,Math.min(innerHeight-50,py))+'px';
+ const btnEl=$('btn'),bgEl=$('bg');
+ if(!isPortrait){
+  const pAct=P(4.5,.75,.6),px=(pAct.x+1)/2*innerWidth,py=(1-pAct.y)/2*innerHeight;
+  const clampedY=Math.max(50,Math.min(innerHeight-50,py));
+  const gap=isShort?38:50;
+  const wDiscard=isShort?86:106;
+  const wAuto=isShort?142:162;
+  const dx=(wDiscard+wAuto)/2+gap;
+  let discardX=Math.max(wDiscard/2+10,px);
+  let bgX=discardX+dx;
+  const maxBgX=innerWidth-(wAuto/2+(isShort?12:20));
+  if(bgX>maxBgX){
+   const diff=bgX-maxBgX;
+   bgX=maxBgX;
+   discardX=Math.max(wDiscard/2+10,discardX-diff);
+  }
+  if(btnEl){
+   btnEl.style.left=discardX+'px';
+   btnEl.style.top=clampedY+'px';
    btnEl.style.bottom='auto';btnEl.style.right='auto';
    btnEl.style.transform='translate(-50%,-50%)';btnEl.style.flexDirection='column';
-  }else{
-   btnEl.style.left='50%';btnEl.style.top='auto';btnEl.style.bottom='calc(10px + env(safe-area-inset-bottom,0px))';
+  }
+  if(bgEl){
+   bgEl.style.left=bgX+'px';
+   bgEl.style.top=clampedY+'px';
+   bgEl.style.bottom='auto';bgEl.style.right='auto';
+   bgEl.style.transform='translate(-50%,-50%)';
+  }
+ }else{
+  if(btnEl){
+   btnEl.style.left='50%';btnEl.style.top='auto';
+   btnEl.style.bottom='calc(10px + env(safe-area-inset-bottom,0px))';
    btnEl.style.right='auto';btnEl.style.transform='translateX(-50%)';btnEl.style.flexDirection='row';
   }
- }}
+  if(bgEl){
+   bgEl.style.left='';bgEl.style.top='';bgEl.style.bottom='';bgEl.style.right='';bgEl.style.transform='';
+  }
+ }
+}
 function updateButtons(){
  const isPlaying=(phase!='deal'&&phase!='over'&&phase!='home'),isPlayer=(turn===0);
  const isGameActive=(phase!=='home');
@@ -991,7 +1448,8 @@ function updateButtons(){
  if(t1)t1.style.display=isGameActive?'flex':'none';
  if(t2)t2.style.display=isGameActive?'flex':'none';
  const bh=$('btn-home');if(bh)bh.style.display=(phase!='home')?'flex':'none';
- const bg=$('bg');if(bg)bg.style.display=isPlaying?'block':'none';
+ const cb=$('coins-box');if(cb)cb.style.display=isGameActive?'flex':'none';
+ const bg=$('bg');if(bg)bg.style.display=isPlaying?'flex':'none';
  const showGroup=isPlaying&&(selS.size>=2);
  const bgp=$('bgp');
  if(bgp){bgp.style.display=showGroup?'block':'none';if(showGroup)bgp.textContent=selS.size>1?'Group ('+selS.size+')':'Group'}
@@ -1001,6 +1459,7 @@ function updateButtons(){
  if(isDiscardPhase){const cSel=[...selS][0],rem=H[0].filter(c=>c!==cSel);canDeclare=checkValidWin(rem)}
  const bs=$('bs');if(bs)bs.style.display=canDeclare?'block':'none';
  const bsubmit=$('bsubmit');if(bsubmit)bsubmit.style.display=(phase==='rearrange')?'block':'none';
+ updateCoinsUI();
 }
 function goHome(){
  const banner=$('declare-banner');if(banner)banner.classList.remove('show');
@@ -1014,6 +1473,8 @@ function goHome(){
  plates.forEach(P=>{P.on=false;P.o=0;P.m.visible=false;P.el.style.opacity=0});
  $('modal').style.display='none';
  $('modal-leave').style.display='none';
+ const mc=$('modal-coins');if(mc)mc.style.display='none';
+ if(freeCoinsTimer){clearInterval(freeCoinsTimer);freeCoinsTimer=null}
  $('home-screen').style.display='flex';
  updateButtons();
 }
@@ -1088,13 +1549,48 @@ function finish(w,bad){
   matchScores[p].total=matchScores[p].scores.reduce((a,b)=>a+b,0);
  }
  render();
-
  const roundWinner=(bad?-1:w);
+ const stake=selectedBet||100;
+ const roundCoins=[0,0,0];
+
+ if(bad){
+  const declarerLoss=80*stake;
+  const botGain=Math.floor(declarerLoss/2);
+  for(let p=0;p<3;p++){
+   if(p===w){roundCoins[p]=-declarerLoss}
+   else{roundCoins[p]=botGain}
+  }
+ }else{
+  for(let p=0;p<3;p++){
+   if(p===roundWinner){
+    const losers=[0,1,2].filter(x=>x!==p);
+    roundCoins[p]=losers.reduce((sum,l)=>sum+(sc[l]*stake),0);
+   }else{
+    roundCoins[p]=-(sc[p]*stake);
+   }
+  }
+ }
+
+ const oldCoins=coins;
+ let userDelta=roundCoins[0];
+ if(userDelta<0){
+  const actualLoss=Math.min(coins,Math.abs(userDelta));
+  userDelta=-actualLoss;
+  roundCoins[0]=userDelta;
+  coins=Math.max(0,coins-actualLoss);
+ }else if(userDelta>0){
+  coins+=userDelta;
+ }
+ try{localStorage.setItem('rummy_coins',coins)}catch(_){}
+
+ animateCoinsChange(oldCoins,coins,userDelta);
+
  const ranked=[0,1,2].map(p=>({
   p,
   name:matchScores[p].name,
   avatar:matchScores[p].avatar,
   thisGame:sc[p],
+  coinDelta:roundCoins[p],
   scores:matchScores[p].scores,
   total:matchScores[p].total
  }));
@@ -1103,10 +1599,10 @@ function finish(w,bad){
  if(roundWinner===0||ranked[0].p===0){
   confetti();
  }
- showScoreboard(roundWinner,bad,ranked);
+ showScoreboard(roundWinner,bad,ranked,roundCoins,stake);
 }
 
-function showScoreboard(roundWinner,bad,ranked){
+function showScoreboard(roundWinner,bad,ranked,roundCoins,stake){
  const modal=$('modal');
  if(!modal)return;
  
@@ -1121,6 +1617,45 @@ function showScoreboard(roundWinner,bad,ranked){
  }
  
  const rankBadges=['🥇 1st','🥈 2nd','🥉 3rd'];
+ const userItem=ranked.find(r=>r.p===0);
+ const userPts=userItem?userItem.thisGame:0;
+ const userDelta=roundCoins?roundCoins[0]:0;
+ const curStake=stake||selectedBet||100;
+ const opItems=ranked.filter(r=>r.p!==0);
+ const opPtsSum=opItems.reduce((acc,it)=>acc+it.thisGame,0);
+
+ let payoutHtml='';
+ if(userDelta>0){
+  payoutHtml=`
+   <div class="sb-payout-box win">
+     <span class="sb-payout-icon">🎉</span>
+     <div class="sb-payout-text">
+       <span class="sb-payout-title">+${userDelta.toLocaleString()} COINS WON!</span>
+       <span class="sb-payout-desc">Opponents' penalty: (${opItems[0].thisGame} + ${opItems[1].thisGame} = ${opPtsSum} pts) × ${curStake.toLocaleString()} 🪙 bet</span>
+     </div>
+   </div>
+  `;
+ }else if(userDelta<0){
+  payoutHtml=`
+   <div class="sb-payout-box loss">
+     <span class="sb-payout-icon">💸</span>
+     <div class="sb-payout-text">
+       <span class="sb-payout-title">${Math.abs(userDelta).toLocaleString()} COINS DEDUCTED</span>
+       <span class="sb-payout-desc">Penalty: ${userPts} pts × ${curStake.toLocaleString()} 🪙 bet</span>
+     </div>
+   </div>
+  `;
+ }else{
+  payoutHtml=`
+   <div class="sb-payout-box win" style="border-color:rgba(217,178,101,0.4)">
+     <span class="sb-payout-icon">🪙</span>
+     <div class="sb-payout-text">
+       <span class="sb-payout-title">0 COINS (BREAK-EVEN)</span>
+       <span class="sb-payout-desc">Stake: ${curStake.toLocaleString()} coins/pt</span>
+     </div>
+   </div>
+  `;
+ }
  
  let tableHtml=`
  <div class="sb-wrap">
@@ -1128,6 +1663,7 @@ function showScoreboard(roundWinner,bad,ranked){
      <div class="sb-title">${headerTitle}</div>
      <div class="sb-subtitle">${headerSub}</div>
    </div>
+   ${payoutHtml}
    <div class="sb-table-wrap">
      <table class="sb-table">
        <thead>
@@ -1135,6 +1671,7 @@ function showScoreboard(roundWinner,bad,ranked){
            <th>RANK</th>
            <th style="text-align:left">PLAYER</th>
            <th>THIS GAME</th>
+           <th>COINS</th>
            <th>TOTAL PTS</th>
          </tr>
        </thead>
@@ -1146,6 +1683,7 @@ function showScoreboard(roundWinner,bad,ranked){
   const isWinner=(item.p===roundWinner);
   const isTopRank=(idx===0);
   const rowClass=(isUser?'sb-row-user ':'')+(isTopRank?'sb-row-winner':'');
+  const coinStr=(item.coinDelta>0?'+':'')+item.coinDelta.toLocaleString()+' 🪙';
   
   tableHtml+=`
     <tr class="${rowClass}">
@@ -1156,6 +1694,7 @@ function showScoreboard(roundWinner,bad,ranked){
         ${isWinner?'<span class="sb-win-tag">WIN</span>':''}
       </td>
       <td class="sb-score ${item.thisGame===0?'zero':''}">${item.thisGame}</td>
+      <td class="sb-coins ${item.coinDelta>=0?'sb-coin-win':'sb-coin-loss'}">${coinStr}</td>
       <td class="sb-total ${isTopRank?'glow':''}">${item.total}</td>
     </tr>
   `;
@@ -1202,16 +1741,56 @@ $('bgp').onclick=()=>{if(phase=='deal'||phase=='over'||phase=='home')return;cons
  if(g0&&cs.every(c=>c.g==g0)&&h.filter(c=>c.g==g0).length==cs.length){cs.forEach(c=>delete c.g);selS.clear();snd(420,.04);tidy();hand();return msg('Group removed.')}
  const id=++gseq;const rest=h.filter(c=>!selS.has(c));const firstIdx=Math.max(0,h.indexOf(cs[0]));
  rest.splice(firstIdx,0,...cs);cs.forEach(c=>c.g=id);H[0]=rest;selS.clear();snd(560,.04);tidy();hand();msg('Cards grouped.')};
-$('bg').onclick=()=>{if(phase=='deal'||phase=='over'||phase=='home')return;const A=solve(H[0]);selS.clear();H[0].forEach(c=>delete c.g);
+$('bg').onclick=()=>{
+ if(phase=='deal'||phase=='over'||phase=='home')return;
+ if(coins<100){
+  snd(300,.08);
+  return msg('Not enough coins (100 required). Claim free coins in Home menu!');
+ }
+ coins-=100;
+ updateCoinsUI(true);
+ snd(800,.04);setTimeout(()=>snd(1050,.05),50);
+ const A=solve(H[0]);selS.clear();H[0].forEach(c=>delete c.g);
  const newH=[];
  A.groups.forEach(g=>{const gid=++gseq;g.cards.forEach(c=>{c.g=gid;newH.push(c)})});
  A.loose.forEach(c=>{delete c.g;newH.push(c)});
- H[0]=newH;snd(560,.04);hand();msg('Cards auto-grouped.')};
+ H[0]=newH;snd(560,.04);hand();msg('Cards auto-grouped (-100 coins). Balance: '+coins.toLocaleString());
+};
+$('coins-box').onclick=()=>{
+ snd(400,.03);
+ msg('Wallet: '+coins.toLocaleString()+' coins. (Claim free coins in Home menu)');
+};
+const btnHomeFree=$('btn-home-free-coins');
+if(btnHomeFree){
+ btnHomeFree.onclick=()=>{
+  const m=$('modal-coins');if(!m)return;
+  const title=$('coins-modal-title'),desc=$('coins-modal-desc');
+  if(title)title.textContent='Free Coins Reward';
+  if(desc)desc.textContent='Claim 2,000 free coins to use for Auto-Group in your games!';
+  const ts=$('coins-timer-section'),acts=$('coins-modal-actions');
+  if(ts)ts.style.display='none';
+  if(acts)acts.style.display='flex';
+  updateCoinsUI();
+  m.style.display='flex';
+ };
+}
+$('btn-add-free-coins').onclick=()=>startFreeCoinsCountdown();
+$('btn-close-coins').onclick=()=>{
+ if(freeCoinsTimer){clearInterval(freeCoinsTimer);freeCoinsTimer=null}
+ $('modal-coins').style.display='none';
+};
 $('btn-home').onclick=()=>{if(phase=='home')return;timerPaused=true;$('modal-leave').style.display='block'};
 $('btn-cancel-leave').onclick=()=>{timerPaused=false;$('modal-leave').style.display='none'};
 $('btn-confirm-leave').onclick=()=>{goHome()};
-$('mode-open-joker').onclick=()=>{newGame()};
-$('btn-play-open').onclick=(e)=>{e.stopPropagation();newGame()};
+$('mode-open-joker').onclick=()=>{
+ if(coins<1){showNoCoinsModal('You need coins to place a bet! Claim 2,000 free coins to continue.');return}
+ newGame();
+};
+$('btn-play-open').onclick=(e)=>{
+ e.stopPropagation();
+ if(coins<1){showNoCoinsModal('You need coins to place a bet! Claim 2,000 free coins to continue.');return}
+ newGame();
+};
 
 const rc=new THREE.Raycaster(),mv=new THREE.Vector2(),pl=new THREE.Plane(new THREE.Vector3(0,1,0),-.7),pt=new THREE.Vector3();
 const ray=e=>{mv.set(e.clientX/innerWidth*2-1,-(e.clientY/innerHeight)*2+1);rc.setFromCamera(mv,camera)};
@@ -1356,7 +1935,7 @@ function fit(){const w=innerWidth,h=innerHeight,a=w/h;ren.setSize(w,h);camera.as
  if(isPortrait){maxW=(innerWidth-16)*.98/u;cx=0}
  else{maxW=(innerWidth-(h<=450?16:24))*.98/u;cx=0}
  if(H[0]&&H[0].length)hand();else posLabs()}
-addEventListener('resize',fit);fit();updateButtons();
+addEventListener('resize',fit);fit();updateButtons();updateCoinsUI();initBetSlider();
 let T=0;
 (function loop(){requestAnimationFrame(loop);T+=.016;const q=.14;
  const jk=phase=='deal'?[]:H[0].filter(isJ);
