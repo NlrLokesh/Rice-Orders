@@ -26,6 +26,11 @@ canvas{display:block;touch-action:none}
 .stake-tag{color:#c9b98e;font-size:9.5px;letter-spacing:.6px}
 #game-stake-val{color:#ffd88a;font-weight:900}
 .stake-unit{color:#94a3b8;font-size:9.5px}
+#coins-box .player-hat-badge{order:1}
+#coins-box .coins-stake-badge{order:2}
+#coins-box .coins-stake-divider{order:3}
+#coins-box .coin-icon-wrap{order:4}
+#coins-box .coins-info{order:5}
 .coin-float-pill{position:fixed;top:calc(52px + env(safe-area-inset-top,0px));right:calc(12px + env(safe-area-inset-right,0px));z-index:96;display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;font-size:14px;font-weight:900;letter-spacing:.5px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,0.85);opacity:0;transform:translateY(0);transition:none}
 .coin-float-pill.float-win{background:linear-gradient(180deg,#16a34a,#0d5e2a);color:#fef08a;border:1.5px solid #86efac;box-shadow:0 8px 28px rgba(0,0,0,0.85),0 0 20px rgba(74,222,128,0.6);animation:float-win-anim 2.4s cubic-bezier(0.16,1,0.3,1) forwards}
 .coin-float-pill.float-loss{background:linear-gradient(180deg,#dc2626,#991b1b);color:#fee2e2;border:1.5px solid #fca5a5;box-shadow:0 8px 28px rgba(0,0,0,0.85),0 0 20px rgba(239,68,68,0.6);animation:float-loss-anim 2.4s cubic-bezier(0.16,1,0.3,1) forwards}
@@ -432,32 +437,95 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
  .bet-slider{height:10px !important}
  .bet-slider::-webkit-slider-thumb{width:24px !important;height:24px !important}
 
- #bg{padding:5px 14px !important;font-size:11px !important;border-radius:18px !important}
- #btn-home{top:calc(6px + env(safe-area-inset-top,0px)) !important;left:calc(8px + env(safe-area-inset-left,0px)) !important;padding:5px 12px !important;font-size:12px !important;border-radius:18px !important}
+ #bg{padding:6px 14px !important;font-size:11.5px !important;border-radius:18px !important}
+ #btn-home{top:calc(6px + env(safe-area-inset-top,0px)) !important;left:calc(8px + env(safe-area-inset-left,0px)) !important;padding:5px 12px !important;font-size:12.5px !important;border-radius:18px !important}
  #timer-box{top:calc(6px + env(safe-area-inset-top,0px)) !important;left:50% !important;transform:translateX(-50%) !important;right:auto !important;padding:2px 10px 2px 4px !important;gap:6px !important}
- #coins-box{top:calc(6px + env(safe-area-inset-top,0px)) !important;right:calc(8px + env(safe-area-inset-right,0px)) !important;padding:2px 10px 2px 6px !important;gap:6px !important}
- #coins-val{font-size:12.5px !important}
- .coins-stake-divider{height:12px !important}
- .coins-stake-badge{font-size:9.5px !important;padding:1px 4px !important}
- .stake-tag{font-size:8px !important}
- #game-stake-val{font-size:10px !important}
- .stake-unit{font-size:8px !important}
+ .timer-dial{width:34px !important;height:34px !important}
+ .timer-dial svg{width:34px !important;height:34px !important}
+ #timer-val{font-size:14.5px !important;font-weight:900 !important}
+ .timer-title{font-size:10px !important;font-weight:800 !important}
+
+ #coins-box{
+  top:calc(6px + env(safe-area-inset-top,0px)) !important;
+  right:calc(8px + env(safe-area-inset-right,0px)) !important;
+  display:flex !important;
+  flex-direction:row !important;
+  align-items:center !important;
+  padding:3px 10px 3px 8px !important;
+  gap:6px !important;
+  border-radius:20px !important;
+ }
+ #coins-box .player-hat-badge{
+  position:static !important;
+  order:1 !important;
+  margin:0 2px 0 0 !important;
+  padding:2px 6px !important;
+  font-size:9.5px !important;
+  border-radius:12px !important;
+  vertical-align:middle !important;
+ }
+ #coins-box .coins-stake-badge{
+  order:2 !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  gap:2px !important;
+  font-size:11px !important;
+  padding:2px 6px !important;
+  border-radius:10px !important;
+ }
+ #coins-box .stake-tag{font-size:9px !important;font-weight:800 !important}
+ #coins-box #game-stake-val{font-size:11.5px !important;font-weight:900 !important}
+ #coins-box .stake-unit{font-size:9px !important}
+ #coins-box .coins-stake-divider{
+  order:3 !important;
+  width:1px !important;
+  height:14px !important;
+  margin:0 2px !important;
+ }
+ #coins-box .coin-icon-wrap{
+  order:4 !important;
+  display:flex !important;
+  align-items:center !important;
+ }
+ #coins-box .coins-info{
+  order:5 !important;
+  display:flex !important;
+  align-items:center !important;
+ }
+ #coins-box #coins-val{font-size:13.5px !important;font-weight:900 !important}
  .coin-float-pill{top:calc(38px + env(safe-area-inset-top,0px)) !important;right:calc(8px + env(safe-area-inset-right,0px)) !important;padding:3px 8px !important;font-size:11px !important}
  
- .sb-payout-box{padding:6px 10px !important;gap:8px !important}
- .sb-payout-icon{font-size:18px !important}
- .sb-payout-title{font-size:12.5px !important}
- .sb-payout-desc{font-size:9.5px !important}
- .timer-dial{width:32px !important;height:32px !important}
- .timer-dial svg{width:32px !important;height:32px !important}
- #timer-val{font-size:13.5px !important}
- .timer-title{font-size:9.5px !important}
- 
- .bot-badge{top:calc(6px + env(safe-area-inset-top,0px)) !important;transform:translate(-50%,0) scale(0.78) !important;transform-origin:center top !important;padding:3px 10px 3px 4px !important}
- .bot-badge.on{transform:translate(-50%,0) scale(0.85) !important}
+ .bot-badge{
+  top:calc(6px + env(safe-area-inset-top,0px)) !important;
+  transform:translate(-50%,0) scale(0.88) !important;
+  transform-origin:center top !important;
+  padding:3px 12px 3px 5px !important;
+ }
+ .bot-badge.on{
+  transform:translate(-50%,0) scale(0.94) !important;
+ }
  .bot-avatar-wrap,.bot-img{width:36px !important;height:36px !important}
- .bot-name{font-size:11.5px !important}
- .bot-card-pill{font-size:10px !important;padding:1px 6px !important}
+ .bot-name{
+  font-size:13.5px !important;
+  font-weight:800 !important;
+  color:#f8fafc !important;
+  letter-spacing:.3px !important;
+ }
+ .bot-ai-tag{
+  font-size:9.5px !important;
+  font-weight:900 !important;
+  padding:1.5px 5px !important;
+ }
+ .bot-card-pill{
+  font-size:11px !important;
+  font-weight:700 !important;
+  padding:1.5px 7px !important;
+ }
+ .bot-badge .joker-hat-badge{
+  font-size:10px !important;
+  padding:2px 6px !important;
+  margin-left:4px !important;
+ }
 
  .chip{padding:3px 10px 3px 8px !important;font-size:10px !important;border-radius:12px !important;gap:5px !important}
  .chip.life1{font-size:11px !important;padding:3px 12px 3px 8px !important}
@@ -465,12 +533,30 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
  
  #btn button{padding:6px 14px !important;font-size:12px !important;border-radius:18px !important}
 
- .scoreboard-modal{padding:14px 16px !important;border-radius:18px !important;max-height:94dvh !important;width:min(96vw,460px) !important}
- .sb-title{font-size:17px !important}
- .sb-subtitle{font-size:11.5px !important}
- .sb-table th,.sb-table td{padding:5px 6px !important;font-size:11.5px !important}
- .sb-actions{gap:8px !important}
- .sb-btn-view,.sb-btn-next,.sb-btn-reset,.sb-btn-home{padding:8px 12px !important;font-size:11.5px !important;border-radius:18px !important}
+ .scoreboard-modal{
+  padding:10px 16px 12px !important;
+  border-radius:18px !important;
+  max-height:96vh !important;
+  width:min(94vw,490px) !important;
+  overflow-y:visible !important;
+ }
+ .sb-wrap{gap:5px !important;display:flex !important;flex-direction:column !important}
+ .sb-header{margin-bottom:2px !important}
+ .sb-title{font-size:15px !important;letter-spacing:.8px !important;margin:0 0 2px !important}
+ .sb-subtitle{display:none !important}
+ .sb-payout-box{display:none !important}
+ .sb-rule-note{display:none !important}
+ .sb-table-wrap{border-radius:10px !important;margin-bottom:2px !important}
+ .sb-table th{padding:4px 6px !important;font-size:10.5px !important}
+ .sb-table td{padding:4px 6px !important;font-size:11px !important}
+ .sb-actions{gap:6px !important;margin-top:4px !important;display:flex !important;flex-wrap:nowrap !important;justify-content:center !important}
+ .sb-btn-view,.sb-btn-next,.sb-btn-reset,.sb-btn-home{
+  padding:6px 10px !important;
+  font-size:11px !important;
+  border-radius:14px !important;
+  white-space:nowrap !important;
+  flex:1 1 auto !important;
+ }
  #declare-banner{top:calc(46px + env(safe-area-inset-top,0px)) !important;padding:4px 14px !important;border-radius:14px !important;gap:2px !important}
  .dec-title{font-size:12px !important}
  .dec-sub{font-size:10.5px !important}
@@ -533,11 +619,21 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
 
  #bg{padding:3px 10px !important;font-size:9.5px !important}
  #btn-home{padding:4px 10px !important;font-size:11px !important}
- #coins-box{padding:2px 8px 2px 4px !important}
- #coins-val{font-size:11px !important}
+ #coins-box{padding:2px 8px 2px 6px !important}
+ #coins-val{font-size:12px !important;font-weight:900 !important}
  .chip{padding:2px 8px 2px 6px !important;font-size:9px !important}
- .bot-badge{top:calc(4px + env(safe-area-inset-top,0px)) !important;transform:translate(-50%,0) scale(0.68) !important;transform-origin:center top !important}
- .bot-badge.on{transform:translate(-50%,0) scale(0.74) !important}
+ .bot-badge{top:calc(4px + env(safe-area-inset-top,0px)) !important;transform:translate(-50%,0) scale(0.82) !important;transform-origin:center top !important}
+ .bot-badge.on{transform:translate(-50%,0) scale(0.88) !important}
+ .bot-name{font-size:12.5px !important}
+ .scoreboard-modal{padding:8px 12px 10px !important;border-radius:16px !important;max-height:98vh !important;width:min(96vw,470px) !important}
+ .sb-title{font-size:14px !important;margin:0 0 1px !important}
+ .sb-subtitle{display:none !important}
+ .sb-payout-box{display:none !important}
+ .sb-rule-note{display:none !important}
+ .sb-table th{padding:3px 5px !important;font-size:10px !important}
+ .sb-table td{padding:3px 5px !important;font-size:10.5px !important}
+ .sb-actions{gap:5px !important;margin-top:3px !important}
+ .sb-btn-view,.sb-btn-next,.sb-btn-reset,.sb-btn-home{padding:5px 8px !important;font-size:10.5px !important}
  #declare-banner{top:calc(40px + env(safe-area-inset-top,0px)) !important;padding:3px 10px !important;border-radius:12px !important}
  .dec-title{font-size:11px !important}
  .dec-sub{font-size:9.5px !important}
@@ -2425,6 +2521,14 @@ function posLabs(){
  });
  const p1=P(-5.6,.75,-5.8),p2=P(5.6,.75,-5.8);
  const t1El=$('t1'),t2El=$('t2');
+ const timerBox=$('timer-box');
+ const timerW=timerBox?.offsetWidth||(isShort?82:94);
+ const timerCenter=innerWidth*0.5;
+ const timerHalf=timerW/2;
+ const tGap=isShort?16:22;
+ const t1MaxRight=timerCenter-timerHalf-tGap;
+ const t2MinLeft=timerCenter+timerHalf+tGap;
+
  if(t1El){
   if(isPortrait){
    t1El.style.top='calc(50px + env(safe-area-inset-top,0px))';
@@ -2433,13 +2537,18 @@ function posLabs(){
    t1El.style.transform='none';
   }else{
    t1El.style.top='';t1El.style.right='';t1El.style.transform='';
-   const raw1=(p1.x+1)/2*innerWidth;
-   const minB1=isShort?130:165;
-   const maxB1=innerWidth*0.5-(isShort?110:140);
-   if(maxB1>=minB1){
-    t1El.style.left=Math.max(minB1,Math.min(maxB1,raw1))+'px';
+   const w1=t1El.offsetWidth||(isShort?130:150);
+   const homeBtn=$('btn-home');
+   const homeRight=homeBtn?(homeBtn.offsetLeft+homeBtn.offsetWidth+(isShort?10:16)):(isShort?85:105);
+   const minCenter1=homeRight+w1/2;
+   const maxCenter1=t1MaxRight-w1/2;
+   if(maxCenter1>=minCenter1){
+    const idealCenter1=(homeRight+t1MaxRight)/2;
+    const raw1=(p1.x+1)/2*innerWidth;
+    const target1=(raw1+idealCenter1*2)/3;
+    t1El.style.left=Math.max(minCenter1,Math.min(maxCenter1,target1))+'px';
    }else{
-    t1El.style.left=((isShort?73:94)+(innerWidth*0.5-(isShort?55:68)))/2+'px';
+    t1El.style.left=(homeRight+t1MaxRight)/2+'px';
    }
   }
  }
@@ -2451,13 +2560,20 @@ function posLabs(){
    t2El.style.transform='none';
   }else{
    t2El.style.top='';t2El.style.left='';t2El.style.transform='';
-   const raw2=(p2.x+1)/2*innerWidth;
-   const minB2=innerWidth*0.5+(isShort?110:140);
-   const maxB2=innerWidth-(isShort?135:175);
-   if(maxB2>=minB2){
-    t2El.style.left=Math.max(minB2,Math.min(maxB2,raw2))+'px';
+   const w2=t2El.offsetWidth||(isShort?150:175);
+   const coinsBox=$('coins-box');
+   const coinsBoxW=coinsBox?.offsetWidth||(isShort?135:150);
+   const coinsLeft=innerWidth-coinsBoxW-(isShort?10:16);
+   const t2MaxRight=coinsLeft-(isShort?10:16);
+   const minCenter2=t2MinLeft+w2/2;
+   const maxCenter2=t2MaxRight-w2/2;
+   if(maxCenter2>=minCenter2){
+    const idealCenter2=(t2MinLeft+t2MaxRight)/2;
+    const raw2=(p2.x+1)/2*innerWidth;
+    const target2=(raw2+idealCenter2*2)/3;
+    t2El.style.left=Math.max(minCenter2,Math.min(maxCenter2,target2))+'px';
    }else{
-    t2El.style.left=((innerWidth*0.5+(isShort?55:68))+(innerWidth-(isShort?83:109)))/2+'px';
+    t2El.style.left=Math.max(minCenter2,(t2MinLeft+t2MaxRight)/2)+'px';
    }
   }
  }
