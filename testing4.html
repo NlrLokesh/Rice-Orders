@@ -516,15 +516,11 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
   font-weight:900 !important;
   padding:1.5px 5px !important;
  }
- .bot-card-pill{
-  font-size:11px !important;
-  font-weight:700 !important;
-  padding:1.5px 7px !important;
- }
+ .bot-card-pill{display:none !important}
  .bot-badge .joker-hat-badge{
   font-size:10px !important;
   padding:2px 6px !important;
-  margin-left:4px !important;
+  margin-left:2px !important;
  }
 
  .chip{padding:3px 10px 3px 8px !important;font-size:10px !important;border-radius:12px !important;gap:5px !important}
@@ -557,9 +553,37 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
   white-space:nowrap !important;
   flex:1 1 auto !important;
  }
- #declare-banner{top:calc(46px + env(safe-area-inset-top,0px)) !important;padding:4px 14px !important;border-radius:14px !important;gap:2px !important}
- .dec-title{font-size:12px !important}
- .dec-sub{font-size:10.5px !important}
+ #declare-banner{
+  top:calc(48px + env(safe-area-inset-top,0px)) !important;
+  left:calc(12px + env(safe-area-inset-left,0px)) !important;
+  right:auto !important;
+  transform:none !important;
+  max-width:210px !important;
+  padding:5px 12px !important;
+  border-radius:14px !important;
+  align-items:flex-start !important;
+  text-align:left !important;
+  box-shadow:0 8px 24px rgba(0,0,0,0.85),0 0 16px rgba(220,38,38,0.4) !important;
+  gap:2px !important;
+  z-index:85 !important;
+ }
+ #declare-banner.show{transform:none !important}
+ .dec-title{font-size:11.5px !important;font-weight:900 !important}
+ .dec-sub{font-size:10px !important;line-height:1.2 !important}
+
+ .joker-announcement-banner{
+  position:fixed !important;
+  top:calc(48px + env(safe-area-inset-top,0px)) !important;
+  left:calc(12px + env(safe-area-inset-left,0px)) !important;
+  right:auto !important;
+  transform:translateY(-10px) !important;
+  max-width:220px !important;
+  z-index:88 !important;
+ }
+ .joker-announcement-banner.show{transform:translateY(0) !important}
+ .jab-content{padding:5px 12px !important;gap:6px !important;border-radius:14px !important}
+ .jab-icon{font-size:15px !important}
+ .jab-text{font-size:11px !important;font-weight:800 !important;white-space:nowrap !important}
 
  /* Compact Out of Coins Modal in Landscape Mobile */
  .coins-modal-backdrop{padding:8px 12px !important}
@@ -634,9 +658,20 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
  .sb-table td{padding:3px 5px !important;font-size:10.5px !important}
  .sb-actions{gap:5px !important;margin-top:3px !important}
  .sb-btn-view,.sb-btn-next,.sb-btn-reset,.sb-btn-home{padding:5px 8px !important;font-size:10.5px !important}
- #declare-banner{top:calc(40px + env(safe-area-inset-top,0px)) !important;padding:3px 10px !important;border-radius:12px !important}
- .dec-title{font-size:11px !important}
+ #declare-banner{
+  top:calc(42px + env(safe-area-inset-top,0px)) !important;
+  left:calc(10px + env(safe-area-inset-left,0px)) !important;
+  max-width:190px !important;
+  padding:4px 10px !important;
+  border-radius:12px !important;
+ }
+ .dec-title{font-size:10.5px !important}
  .dec-sub{font-size:9.5px !important}
+ .joker-announcement-banner{
+  top:calc(42px + env(safe-area-inset-top,0px)) !important;
+  left:calc(10px + env(safe-area-inset-left,0px)) !important;
+  max-width:200px !important;
+ }
 
  .coins-modal-backdrop{padding:4px 8px !important}
  .coins-modal-box{max-width:290px !important;padding:8px 10px !important;border-radius:14px !important}
@@ -1494,7 +1529,7 @@ function checkAllViewedJoker(){
    vjBtn.innerHTML='<span class="vj-icon">✨</span><span class="vj-text">Revealed Face Up</span>';
    vjBtn.title='All players have viewed the Joker. It is now permanently face-up!';
   }
-  showJokerNotification(`✨ All players have viewed the Joker! Wild Joker is now permanently revealed (${cut&&cut.r?L[cut.r]+S[cut.s]:(W?L[W]:'A')})!`);
+  showJokerNotification(`✨ Wild Joker: ${cut&&cut.r?L[cut.r]+S[cut.s]:(W?L[W]:'A')}`, '✨');
   snd(900,.1);setTimeout(()=>snd(1100,.12),120);
   tidy();hand();render();updateAutoGroupButtonState();
  }
@@ -1514,7 +1549,7 @@ async function botPeekJoker(b){
   botBadge.classList.add('joker-seen-pulse');
   setTimeout(()=>{if(botBadge)botBadge.classList.remove('joker-seen-pulse')},4000);
  }
- showJokerNotification(`🎩 ${botName} formed a Pure Sequence & privately viewed the Closed Joker!`);
+ showJokerNotification(`🎩 ${botName} viewed Joker`, '🎩');
  snd(520,.06);setTimeout(()=>snd(780,.08),100);setTimeout(()=>snd(1040,.1),200);
  
  if(cut&&!isJokerPermanentlyRevealed){
@@ -1551,7 +1586,7 @@ function updateViewJokerButtonState(){
  if(hasPure){
   if(!lastPureSeqNotified&&!hasPlayerViewedJoker[0]){
    lastPureSeqNotified=true;
-   showJokerNotification('🎉 1st Life (Pure Sequence) Formed! Tap "View Joker" to see Wild Joker!');
+   showJokerNotification('🎉 1st Life! Tap View Joker', '🎉');
    snd(650,.06);setTimeout(()=>snd(880,.08),120);
   }
   if(currentVJState!=='unlocked'){
@@ -1585,7 +1620,7 @@ function onViewJokerClick(){
    void btn.offsetWidth;
    btn.classList.add('shake');
   }
-  showJokerNotification('⚠️ Form a Pure Sequence (1st Life) to view Closed Joker!');
+  showJokerNotification('⚠️ Need 1st Life to View Joker', '⚠️');
   return;
  }
  openPrivateJokerPeek();
@@ -1601,7 +1636,7 @@ function openPrivateJokerPeek(){
    hat0.innerHTML='<span class="hat-emoji">🎩</span><span class="hat-label">JOKER SEEN</span>';
    hat0.style.display='inline-flex';
   }
-  showJokerNotification('🎩 You formed a Pure Sequence (1st Life) & viewed the Closed Joker!');
+  showJokerNotification('🎩 Joker Viewed!', '🎩');
   snd(520,.05);setTimeout(()=>snd(780,.07),80);setTimeout(()=>snd(1040,.1),160);
   checkAllViewedJoker();
   tidy();hand();render();updateAutoGroupButtonState();
@@ -2353,10 +2388,10 @@ function onBotDeclare(b){
  stopTurnTimer();
  snd(440,.08);
  setTimeout(()=>snd(580,.08),120);
- const botName=(b===1?'TITAN-01 (BOT 1)':'NEXUS-02 (BOT 2)');
+ const botName=(b===1?'TITAN-01':'NEXUS-02');
  const banner=$('declare-banner');
  if(banner){
-  banner.innerHTML=`<div class="dec-title">⚠️ ${botName} DECLARED!</div><div class="dec-sub">Arrange cards in <span id="dec-timer-num" style="color:#fde047;font-weight:900">25s</span> to reduce penalty points!</div>`;
+  banner.innerHTML=`<div class="dec-title">⚠️ ${botName} Declared!</div><div class="dec-sub">Arrange cards: <span id="dec-timer-num" style="color:#fde047;font-weight:900">25s</span></div>`;
   banner.classList.add('show');
  }
  startRearrangeTimer();
@@ -2519,15 +2554,13 @@ function posLabs(){
   tv.copy(q.m.position);pv.copy(tv).project(camera);
   set(e,pv);e.style.opacity=q.o.toFixed(2);
  });
- const p1=P(-5.6,.75,-5.8),p2=P(5.6,.75,-5.8);
  const t1El=$('t1'),t2El=$('t2');
  const timerBox=$('timer-box');
- const timerW=timerBox?.offsetWidth||(isShort?82:94);
+ const timerW=timerBox?.offsetWidth||(isShort?84:96);
  const timerCenter=innerWidth*0.5;
- const timerHalf=timerW/2;
- const tGap=isShort?16:22;
- const t1MaxRight=timerCenter-timerHalf-tGap;
- const t2MinLeft=timerCenter+timerHalf+tGap;
+ const timerLeft=timerCenter-timerW/2;
+ const timerRight=timerCenter+timerW/2;
+ const tGap=isShort?30:38;
 
  if(t1El){
   if(isPortrait){
@@ -2537,18 +2570,17 @@ function posLabs(){
    t1El.style.transform='none';
   }else{
    t1El.style.top='';t1El.style.right='';t1El.style.transform='';
-   const w1=t1El.offsetWidth||(isShort?130:150);
+   const w1=t1El.offsetWidth||(isShort?115:130);
    const homeBtn=$('btn-home');
-   const homeRight=homeBtn?(homeBtn.offsetLeft+homeBtn.offsetWidth+(isShort?10:16)):(isShort?85:105);
+   const homeRight=homeBtn?(homeBtn.offsetLeft+homeBtn.offsetWidth+(isShort?8:12)):(isShort?85:105);
+   const maxRight1=timerLeft-tGap;
    const minCenter1=homeRight+w1/2;
-   const maxCenter1=t1MaxRight-w1/2;
+   const maxCenter1=maxRight1-w1/2;
+   const idealCenter1=(homeRight+maxRight1)/2;
    if(maxCenter1>=minCenter1){
-    const idealCenter1=(homeRight+t1MaxRight)/2;
-    const raw1=(p1.x+1)/2*innerWidth;
-    const target1=(raw1+idealCenter1*2)/3;
-    t1El.style.left=Math.max(minCenter1,Math.min(maxCenter1,target1))+'px';
+    t1El.style.left=Math.max(minCenter1,Math.min(maxCenter1,idealCenter1))+'px';
    }else{
-    t1El.style.left=(homeRight+t1MaxRight)/2+'px';
+    t1El.style.left=(homeRight+maxRight1)/2+'px';
    }
   }
  }
@@ -2560,20 +2592,18 @@ function posLabs(){
    t2El.style.transform='none';
   }else{
    t2El.style.top='';t2El.style.left='';t2El.style.transform='';
-   const w2=t2El.offsetWidth||(isShort?150:175);
+   const w2=t2El.offsetWidth||(isShort?120:135);
    const coinsBox=$('coins-box');
-   const coinsBoxW=coinsBox?.offsetWidth||(isShort?135:150);
-   const coinsLeft=innerWidth-coinsBoxW-(isShort?10:16);
-   const t2MaxRight=coinsLeft-(isShort?10:16);
-   const minCenter2=t2MinLeft+w2/2;
-   const maxCenter2=t2MaxRight-w2/2;
+   const coinsBoxW=coinsBox?.offsetWidth||(isShort?130:145);
+   const coinsLeft=innerWidth-coinsBoxW-(isShort?10:14);
+   const minLeft2=timerRight+tGap;
+   const idealCenter2=(minLeft2+coinsLeft)/2+(isShort?12:16);
+   const minCenter2=minLeft2+w2/2;
+   const maxCenter2=coinsLeft-w2/2-(isShort?6:10);
    if(maxCenter2>=minCenter2){
-    const idealCenter2=(t2MinLeft+t2MaxRight)/2;
-    const raw2=(p2.x+1)/2*innerWidth;
-    const target2=(raw2+idealCenter2*2)/3;
-    t2El.style.left=Math.max(minCenter2,Math.min(maxCenter2,target2))+'px';
+    t2El.style.left=Math.max(minCenter2,Math.min(maxCenter2,idealCenter2))+'px';
    }else{
-    t2El.style.left=Math.max(minCenter2,(t2MinLeft+t2MaxRight)/2)+'px';
+    t2El.style.left=Math.max(minCenter2,(minLeft2+coinsLeft)/2)+'px';
    }
   }
  }
@@ -3415,9 +3445,9 @@ addEventListener('pointerup',e=>{if(!pd||!e.isPrimary)return;
   snd(600,.03);
   if(turn!==0&&selS.size===1){
    const bName=matchScores[turn]?.name||('AI '+(turn===1?'TITAN-01':'NEXUS-02'));
-   showJokerNotification(`⏳ ${bName} is playing… Please wait for your turn!`, '⏳');
+   showJokerNotification(`⏳ ${bName} is playing…`, '⏳');
   }else if(turn===0&&phase==='draw'&&selS.size===1){
-   showJokerNotification('👆 Pick a card from Glowing Deck or Discard pile first to discard!', '👆');
+   showJokerNotification('👆 Draw a card first!', '👆');
   }
  }
  else{snd(360,.04);const c=drag.c,dropX=drag.x,origG=drag.origG;
