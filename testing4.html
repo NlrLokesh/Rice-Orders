@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>Rummy 13 · 3D</title>
 <style>
@@ -326,6 +329,8 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
 .vc-badge.win{background:linear-gradient(90deg,#16a34a,#15803d);color:#fff;border:1px solid #4ade80}
 .vc-badge.loss{background:linear-gradient(90deg,#dc2626,#991b1b);color:#fff;border:1px solid #f87171}
 .vc-badge.pts{background:rgba(100,116,139,0.35);color:#cbd5e1;border:1px solid #64748b}
+.vc-badge.joker-seen{background:rgba(245,158,11,0.22);color:#fde047;border:1px solid #ca8a04}
+.vc-badge.joker-unseen{background:rgba(100,116,139,0.22);color:#94a3b8;border:1px solid #475569}
 .vc-player-coins{font-size:12.5px;font-weight:900}
 .vc-player-coins.win{color:#4ade80}
 .vc-player-coins.loss{color:#f87171}
@@ -609,6 +614,148 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
  #btn{gap:8px !important;bottom:calc(max(24px, 7vh) + env(safe-area-inset-bottom,0px)) !important}
  #btn button{padding:10px 22px !important;font-size:13.5px !important;border-radius:24px !important}
 }
+
+/* Closed Joker View Joker Button */
+#btn-view-joker, .btn-view-joker{
+ position:fixed;z-index:75;display:none;align-items:center;gap:7px;
+ padding:9px 18px;border-radius:24px;font-size:12.5px;font-weight:900;letter-spacing:.6px;
+ text-transform:uppercase;cursor:pointer;
+ box-sizing:border-box;white-space:nowrap;user-select:none;
+ left:24%;top:42%;bottom:auto;right:auto;
+ transform:translate(-50%,-50%);
+ transition:transform .15s,filter .15s,box-shadow .15s,background .2s,border-color .2s;
+}
+#btn-view-joker.locked, .btn-view-joker.locked{
+ background:linear-gradient(180deg,#1e293b,#0f172a);color:#cbd5e1;border:1.5px solid #64748b;
+ box-shadow:0 4px 16px rgba(0,0,0,0.7),inset 0 1px 0 rgba(255,255,255,0.15);opacity:.9;cursor:pointer;
+}
+#btn-view-joker.locked:hover, .btn-view-joker.locked:hover{
+ background:linear-gradient(180deg,#334155,#1e293b);border-color:#fbbf24;color:#fde047;
+}
+#btn-view-joker.unlocked, .btn-view-joker.unlocked{
+ background:linear-gradient(135deg,#fef08a 0%,#f59e0b 50%,#d97706 100%);
+ color:#1a0b00;border:2px solid #ffffff;
+ box-shadow:0 0 22px rgba(245,158,11,0.95),0 6px 18px rgba(0,0,0,0.85),inset 0 1px 0 rgba(255,255,255,0.5);
+ animation:pulse-vj-btn 1.6s infinite ease-in-out;
+}
+#btn-view-joker.unlocked:hover, .btn-view-joker.unlocked:hover{
+ filter:brightness(1.12);
+ box-shadow:0 0 32px rgba(253,224,71,1),0 8px 24px rgba(0,0,0,0.9);
+}
+#btn-view-joker.revealed, .btn-view-joker.revealed{
+ background:linear-gradient(135deg,#a7f3d0 0%,#10b981 50%,#047857 100%);
+ color:#022c22;border:1.8px solid #a7f3d0;
+ box-shadow:0 0 16px rgba(16,185,129,0.7),0 4px 12px rgba(0,0,0,0.7);
+ pointer-events:none;cursor:default;
+}
+@keyframes pulse-vj-btn{
+ 0%,100%{box-shadow:0 0 16px rgba(245,158,11,0.8),0 4px 12px rgba(0,0,0,0.8);filter:brightness(1)}
+ 50%{box-shadow:0 0 30px rgba(253,224,71,1),0 6px 20px rgba(0,0,0,0.9);filter:brightness(1.08)}
+}
+@media (max-height: 480px){
+ #btn-view-joker, .btn-view-joker{padding:7px 15px !important;font-size:11.5px !important}
+}
+
+/* Joker Hat Hint Badges */
+.joker-hat-badge{
+ display:none;align-items:center;gap:4px;font-size:10px;font-weight:900;line-height:1;
+ padding:2.5px 7px;margin-left:6px;border-radius:12px;
+ background:linear-gradient(135deg,#f59e0b,#d97706);
+ color:#1a0b00;border:1.2px solid #ffffff;
+ box-shadow:0 0 12px rgba(245,158,11,0.85);
+ animation:hat-pop .4s cubic-bezier(0.34,1.56,0.64,1);
+ vertical-align:middle;white-space:nowrap;letter-spacing:.3px;
+}
+.player-hat-badge{
+ position:absolute;top:-10px;right:-8px;display:inline-flex;align-items:center;gap:3px;
+ background:linear-gradient(135deg,rgba(245,158,11,0.95),rgba(217,119,6,0.95));
+ border:1.5px solid #fff;border-radius:12px;padding:2px 7px;
+ box-shadow:0 0 12px rgba(245,158,11,0.8);font-size:9px;font-weight:900;color:#1a0b00;
+ letter-spacing:.3px;animation:hat-pop .35s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes hat-pop{
+ 0%{transform:scale(0);opacity:0}
+ 70%{transform:scale(1.3);opacity:1}
+ 100%{transform:scale(1);opacity:1}
+}
+
+/* Pulsing effect when bot views joker */
+.bot-badge.joker-seen-pulse{
+ border-color:#fbbf24 !important;
+ box-shadow:0 0 28px rgba(245,158,11,1),0 8px 30px rgba(0,0,0,0.95),inset 0 0 18px rgba(251,191,36,0.5) !important;
+ animation:bot-joker-glow 1.2s infinite alternate !important;
+}
+@keyframes bot-joker-glow{
+ 0%{transform:translate(-50%,0) scale(1)}
+ 100%{transform:translate(-50%,0) scale(1.1);border-color:#fff !important}
+}
+
+/* Joker Announcement Toast Banner */
+.joker-announcement-banner{
+ position:fixed;top:calc(12px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%) translateY(-35px);
+ z-index:250;opacity:0;pointer-events:none;transition:all .35s cubic-bezier(0.34,1.56,0.64,1);
+ max-width:92vw;
+}
+.joker-announcement-banner.show{
+ transform:translateX(-50%) translateY(0);opacity:1;
+}
+.jab-content{
+ display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,rgba(16,36,26,0.98),rgba(8,20,14,0.98));
+ border:2px solid #fbbf24;border-radius:30px;padding:8px 20px;
+ box-shadow:0 10px 30px rgba(0,0,0,0.9),0 0 24px rgba(245,158,11,0.75),inset 0 0 14px rgba(251,191,36,0.25);
+ backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+}
+.jab-icon{font-size:20px;animation:hat-pop .4s cubic-bezier(0.34,1.56,0.64,1)}
+.jab-text{font-size:13px;font-weight:900;color:#fef08a;text-shadow:0 0 10px rgba(245,158,11,0.6);letter-spacing:.4px;white-space:nowrap}
+@media (max-width: 600px){
+ .joker-announcement-banner{top:calc(6px + env(safe-area-inset-top,0px))}
+ .jab-content{padding:5px 12px;gap:6px}
+ .jab-icon{font-size:16px}
+ .jab-text{font-size:11px;white-space:normal;text-align:center;line-height:1.2}
+}
+
+/* Private Joker Peek Modal */
+.private-joker-modal-backdrop{
+ position:fixed;inset:0;z-index:125;display:flex;align-items:center;justify-content:center;
+ background:rgba(6,17,10,0.84);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+ padding:14px;box-sizing:border-box;
+}
+.pjk-box{
+ width:100%;max-width:310px;background:radial-gradient(circle at 50% 25%,#183323 0%,#0c1b12 70%,#060d08 100%);
+ border:2px solid #ffd700;border-radius:20px;padding:16px 18px;
+ box-shadow:0 16px 40px rgba(0,0,0,0.95),0 0 30px rgba(255,215,0,0.4),inset 0 0 20px rgba(255,215,0,0.15);
+ display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;
+ animation:pjk-pop .28s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes pjk-pop{
+ 0%{transform:scale(0.85);opacity:0}
+ 100%{transform:scale(1);opacity:1}
+}
+.pjk-header{display:flex;align-items:center;gap:8px;width:100%;justify-content:center}
+.pjk-icon{font-size:18px}
+.pjk-title{font-size:14px;font-weight:950;color:#ffd700;letter-spacing:1px;text-shadow:0 0 10px rgba(255,215,0,0.5)}
+.pjk-private-tag{font-size:9px;font-weight:900;padding:2px 7px;border-radius:8px;background:rgba(239,68,68,0.25);color:#fca5a5;border:1px solid rgba(239,68,68,0.5);letter-spacing:.5px}
+.pjk-card-card{
+ width:62px;height:88px;background:#ffffff;border-radius:8px;border:2.5px solid #ffd700;
+ box-shadow:0 8px 20px rgba(0,0,0,0.7),0 0 16px rgba(255,215,0,0.6);
+ display:flex;flex-direction:column;justify-content:space-between;padding:5px 7px;box-sizing:border-box;
+ position:relative;user-select:none;
+}
+.pjk-card-rank{font-size:15px;font-weight:950;line-height:1;text-align:left}
+.pjk-card-suit-mid{font-size:28px;line-height:1;margin:auto}
+.pjk-card-rank-bot{font-size:15px;font-weight:950;line-height:1;text-align:right;transform:rotate(180deg)}
+.pjk-desc{font-size:12px;color:#e2e8f0;line-height:1.35;margin:0}
+.pjk-desc b{color:#ffd700;font-weight:900}
+.pjk-footer{display:flex;flex-direction:column;align-items:center;gap:6px;width:100%;margin-top:2px}
+.pjk-timer-note{font-size:10.5px;color:#cbd5e1}
+.pjk-timer-note b{color:#ffd700}
+.pjk-btn-close{
+ width:100%;padding:8px 14px;border-radius:12px;font-size:12.5px;font-weight:900;
+ background:linear-gradient(180deg,#fff176 0%,#ffd700 45%,#b45309 100%);color:#120a01;
+ border:1.5px solid #ffffff;cursor:pointer;box-shadow:0 4px 14px rgba(255,215,0,0.4);
+ transition:transform .15s;
+}
+.pjk-btn-close:hover{transform:scale(1.02)}
 </style></head><body>
 <div id="msg" class="box" style="display:none"></div>
 <button id="btn-home"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-6a1 1 0 0 0-1-1h-2a1 1 0 0 0-1 1v6H4a1 1 0 0 1-1-1V9.5z"/></svg><span>Home</span></button>
@@ -632,7 +779,13 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
     <span id="game-stake-val">100</span>
     <span class="stake-unit">/pt</span>
   </div>
+  <div id="hat-p0" class="player-hat-badge" style="display:none" title="You have viewed the Closed Joker">
+    <span class="hat-emoji">🎩</span>
+    <span class="hat-label">JOKER SEEN</span>
+  </div>
 </div>
+<button id="btn-view-joker" class="btn-view-joker locked" style="display:none;position:fixed;left:24%;top:42%;bottom:auto;right:auto;transform:translate(-50%,-50%);" title="Locked: Form a Pure Sequence (1st Life) to view Closed Joker"><span class="vj-icon">🔒</span><span class="vj-text">View Joker</span></button>
+<div id="joker-announcement-banner" class="joker-announcement-banner" style="display:none"><div class="jab-content"><span class="jab-icon">🎩</span><span class="jab-text" id="jab-text"></span></div></div>
 <div id="coin-float-pill" class="coin-float-pill" style="display:none"></div>
 <div id="t1" class="bot-badge bot-left">
   <div class="bot-avatar-wrap">
@@ -677,6 +830,7 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
     <div class="bot-name-row">
       <span class="bot-ai-tag">AI</span>
       <span class="bot-name">TITAN-01</span>
+      <span class="joker-hat-badge" id="hat-p1" style="display:none" title="TITAN-01 has viewed the Closed Joker">🎩</span>
     </div>
     <div class="bot-pill-row">
       <span class="bot-card-pill" id="b1-cards">13 Cards</span>
@@ -728,6 +882,7 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
     <div class="bot-name-row">
       <span class="bot-ai-tag">AI</span>
       <span class="bot-name">NEXUS-02</span>
+      <span class="joker-hat-badge" id="hat-p2" style="display:none" title="NEXUS-02 has viewed the Closed Joker">🎩</span>
     </div>
     <div class="bot-pill-row">
       <span class="bot-card-pill" id="b2-cards">13 Cards</span>
@@ -796,8 +951,8 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
     </div>
 
     <!-- RIGHT: CUTE COMPACT CLOSED JOKER CARD -->
-    <div class="mode-card disabled" id="mode-closed-joker">
-      <div class="mode-badge soon">🔒 SOON</div>
+    <div class="mode-card active" id="mode-closed-joker">
+      <div class="mode-badge live" style="background:rgba(234,179,8,0.22);color:#fde047;border:1px solid #ca8a04"><span class="badge-dot" style="background:#fde047;box-shadow:0 0 6px #fde047"></span> LIVE</div>
       <div class="mode-icon">🎴</div>
       <div class="mode-title-block">
         <h2 class="mode-title">Closed Joker</h2>
@@ -807,7 +962,7 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
         <span class="mode-tag">3P</span>
         <span class="mode-tag">Mystery</span>
       </div>
-      <button class="mode-play-btn locked" disabled>Coming Soon</button>
+      <button class="mode-play-btn" id="btn-play-closed">Play Now ▶</button>
     </div>
   </div>
 </div>
@@ -888,17 +1043,56 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
 </div>
 
 <div id="modal" class="box mid"></div>
+<div id="private-joker-modal" class="private-joker-modal-backdrop" style="display:none">
+  <div class="pjk-box">
+    <div class="pjk-header">
+      <span class="pjk-icon">🎴</span>
+      <span class="pjk-title">WILD JOKER</span>
+      <span class="pjk-private-tag">PRIVATE PEEK</span>
+    </div>
+    <div class="pjk-card-card">
+      <span id="pjk-card-rank-top" class="pjk-card-rank">8</span>
+      <span id="pjk-card-suit-mid" class="pjk-card-suit-mid">♦</span>
+      <span id="pjk-card-rank-bot" class="pjk-card-rank-bot">8</span>
+    </div>
+    <div class="pjk-desc">
+      Rank <b id="pjk-rank-name">8 ♦</b> is the <b>Wild Joker</b>!<br>
+      Any <b id="pjk-rank-only">8</b> can substitute for any card in sets & impure sequences.
+    </div>
+    <div class="pjk-footer">
+      <span class="pjk-timer-note">Returning face down in <b id="pjk-timer">5</b>s</span>
+      <button id="btn-close-peek" class="pjk-btn-close">Hide & Return Face Down ▶</button>
+    </div>
+  </div>
+</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 const L=['','A','2','3','4','5','6','7','8','9','10','J','Q','K'],S=['♠','♥','♦','♣'];
 let W=1;
+let currentGameMode='open';
+let hasPlayerViewedJoker=[false,false,false];
+let isJokerFaceUp=true;
+let isJokerPermanentlyRevealed=false;
+let privatePeekTimer=null;
+let privatePeekCountdown=5;
+
+function isJokerForPlayer(c,p=0){
+ if(!c)return false;
+ if(!c.r)return true;
+ if(currentGameMode==='open')return c.r===W;
+ if(isJokerPermanentlyRevealed)return c.r===W;
+ if(p!==null&&p>=0&&hasPlayerViewedJoker[p])return c.r===W;
+ return false;
+}
 const pts=c=>!c.r?0:(c.r==1||c.r>10)?10:c.r;
-const isJ=c=>!c.r||c.r==W;
-function kinds(cs){
+const isJ=c=>isJokerForPlayer(c,0);
+
+function kinds(cs,p=0){
  if(cs.length<3)return [];
+ const isJp=c=>isJokerForPlayer(c,p);
  const o=[],n=cs.length;
  if(n<=4){
-  const nj=cs.filter(c=>!isJ(c));
+  const nj=cs.filter(c=>!isJp(c));
   if(!nj.length)o.push('set');
   else if(nj.every(c=>c.r===nj[0].r)&&new Set(nj.map(c=>c.s)).size===nj.length)o.push('set');
  }
@@ -914,7 +1108,7 @@ function kinds(cs){
    }
    const missing=n-nat.length;
    let wilds=0;
-   cs.forEach((c,idx)=>{if(!used.has(idx)&&isJ(c))wilds++});
+   cs.forEach((c,idx)=>{if(!used.has(idx)&&isJp(c))wilds++});
    if(wilds>=missing&&(nat.length+wilds===n)){
     if(missing===0)canPure=true;
     else if(nat.length>=2)canImp=true;
@@ -925,11 +1119,13 @@ function kinds(cs){
  if(canImp&&!canPure)o.push('imp');
  return o;
 }
-function arrange(cs,k){
+
+function arrange(cs,k,p=0){
+ const isJp=c=>isJokerForPlayer(c,p);
  const n=cs.length;
  if(k==='set'){
-  const nj=cs.filter(c=>!isJ(c)).sort((a,b)=>a.s-b.s);
-  const j=cs.filter(isJ);
+  const nj=cs.filter(c=>!isJp(c)).sort((a,b)=>a.s-b.s);
+  const j=cs.filter(isJp);
   return nj.concat(j);
  }
  for(let s=0;s<4;s++){
@@ -941,7 +1137,7 @@ function arrange(cs,k){
     const mIdx=cs.findIndex((c,idx)=>!used.has(idx)&&c.r===actR&&c.s===s);
     if(mIdx>=0){used.add(mIdx);slots[slotIdx]=cs[mIdx]}
    });
-   const wilds=cs.filter((c,idx)=>!used.has(idx)&&isJ(c));
+   const wilds=cs.filter((c,idx)=>!used.has(idx)&&isJp(c));
    const miss=slots.filter(x=>x===null).length;
    if(wilds.length>=miss&&(n-miss+miss===n)&&(n-miss>=2||k==='pure')){
     slots.forEach((item,slotIdx)=>{if(!item&&wilds.length)slots[slotIdx]=wilds.shift()});
@@ -951,15 +1147,17 @@ function arrange(cs,k){
  }
  return cs.slice().sort((a,b)=>a.s-b.s||a.r-b.r);
 }
-function solve(h){
+
+function solve(h,p=0){
+ const isJp=c=>isJokerForPlayer(c,p);
  const n=h.length,by=[...Array(n)].map(()=>[]);
  const jokers=[],bySuit=[[],[],[],[]],byRank=Array(14).fill(0).map(()=>[]);
- for(let i=0;i<n;i++){const c=h[i];if(isJ(c))jokers.push(i);else{if(c.s<4)bySuit[c.s].push(i);if(c.r>=1&&c.r<=13)byRank[c.r].push(i)}}
+ for(let i=0;i<n;i++){const c=h[i];if(isJp(c))jokers.push(i);else{if(c.s<4)bySuit[c.s].push(i);if(c.r>=1&&c.r<=13)byRank[c.r].push(i)}}
  const seen=new Set();
  function addMeld(indices){
   if(indices.length<3)return;
   let mask=0;const cs=[];for(let idx of indices){mask|=(1<<idx);cs.push(h[idx])}
-  for(let k of kinds(cs)){
+  for(let k of kinds(cs,p)){
    const key=mask+':'+k;
    if(!seen.has(key)){seen.add(key);by[31-Math.clz32(mask&-mask)].push([mask,k])}
   }
@@ -976,23 +1174,261 @@ function solve(h){
   const pool=bySuit[s].concat(jokers);
   if(pool.length>=3)for(let sz=3;sz<=Math.min(6,pool.length);sz++)combos(pool,sz,0,[])
  }
- const memo=new Map(),f=(mk,p,s)=>{
-  if(!mk)return{c:(p?0:200)+(s>1?0:100)};
-  const key=mk*8+p*4+s;if(memo.has(key))return memo.get(key);
+ const memo=new Map(),f=(mk,pPure,sSet)=>{
+  if(!mk)return{c:(pPure?0:200)+(sSet>1?0:100)};
+  const key=mk*8+pPure*4+sSet;if(memo.has(key))return memo.get(key);
   const lb=31-Math.clz32(mk&-mk);let b={c:1e9};
-  for(const[m,k]of by[lb])if((m&mk)==m){const r=f(mk^m,(p||k=='pure')?1:0,Math.min(2,s+(k=='set'?0:1)));if(r.c<b.c)b={c:r.c,m,k,nx:r}}
-  const r=f(mk^(1<<lb),p,s),d=pts(h[lb])+r.c;if(d<b.c)b={c:d,d:lb,nx:r};
+  for(const[m,k]of by[lb])if((m&mk)==m){const r=f(mk^m,(pPure||k=='pure')?1:0,Math.min(2,sSet+(k=='set'?0:1)));if(r.c<b.c)b={c:r.c,m,k,nx:r}}
+  const r=f(mk^(1<<lb),pPure,sSet),d=pts(h[lb])+r.c;if(d<b.c)b={c:d,d:lb,nx:r};
   memo.set(key,b);return b};
  let r=f((1<<n)-1,0,0);const o={c:r.c,groups:[],loose:[]};
  while(r.nx){if(r.m)o.groups.push({k:r.k,cards:h.filter((_,i)=>r.m>>i&1)});else o.loose.push(h[r.d]);r=r.nx}
  const ord={pure:0,imp:1,set:2};
- o.groups.sort((a,b)=>ord[a.k]-ord[b.k]).forEach(g=>g.cards=arrange(g.cards,g.k));
+ o.groups.sort((a,b)=>ord[a.k]-ord[b.k]).forEach(g=>g.cards=arrange(g.cards,g.k,p));
  o.loose.sort((a,b)=>a.s-b.s||a.r-b.r);
  o.pure=o.groups.some(g=>g.k=='pure');o.seq=o.groups.filter(g=>g.k!='set').length;
  o.dead=o.loose.reduce((a,c)=>a+pts(c),0);o.ok=o.pure&&o.seq>1&&!o.loose.length;return o}
+
+function checkHandHasPureSeq(cards){
+ if(!cards||cards.length<3)return false;
+ const bySuit=[[],[],[],[]];
+ cards.forEach(c=>{
+  if(c&&c.r>=1&&c.r<=13&&c.s>=0&&c.s<=3){
+   bySuit[c.s].push(c.r);
+  }
+ });
+ for(let s=0;s<4;s++){
+  const rList=Array.from(new Set(bySuit[s])).sort((a,b)=>a-b);
+  if(rList.length<3)continue;
+  let streak=1;
+  for(let i=1;i<rList.length;i++){
+   if(rList[i]===rList[i-1]+1){
+    streak++;
+    if(streak>=3)return true;
+   }else{
+    streak=1;
+   }
+  }
+  if(rList.includes(1)&&rList.includes(13)&&rList.includes(12)){
+   return true;
+  }
+ }
+ return false;
+}
+
+function playerHasPureSeq(p=0){
+ const h=H[p];
+ if(!h||h.length<3)return false;
+ if(p===0){
+  const segs=segment(h,0);
+  if(segs.some(g=>g.k==='pure'))return true;
+ }
+ return checkHandHasPureSeq(h);
+}
+
+let jokerNotifyTimeout=null;
+function showJokerNotification(text){
+ const banner=$('joker-announcement-banner');
+ const textEl=$('jab-text');
+ if(!banner||!textEl)return;
+ textEl.textContent=text;
+ banner.classList.remove('show');
+ void banner.offsetWidth;
+ banner.classList.add('show');
+ banner.style.display='block';
+ if(jokerNotifyTimeout)clearTimeout(jokerNotifyTimeout);
+ jokerNotifyTimeout=setTimeout(()=>{
+  if(banner){
+   banner.classList.remove('show');
+   setTimeout(()=>{if(banner&&!banner.classList.contains('show'))banner.style.display='none'},400);
+  }
+ },3500);
+}
+
+function checkAllViewedJoker(){
+ if(currentGameMode!=='closed')return;
+ if(isJokerPermanentlyRevealed)return;
+ if(hasPlayerViewedJoker[0]&&hasPlayerViewedJoker[1]&&hasPlayerViewedJoker[2]){
+  isJokerPermanentlyRevealed=true;
+  isJokerFaceUp=true;
+  if(cut){
+   tgt(cut,-3.3,.74,.6,-Math.PI/2+.5,Math.PI/2,1.4);
+  }
+  const vjBtn=$('btn-view-joker');
+  if(vjBtn){
+   vjBtn.className='btn-view-joker revealed';
+   vjBtn.innerHTML='<span class="vj-icon">✨</span><span class="vj-text">Revealed Face Up</span>';
+   vjBtn.title='All players have viewed the Joker. It is now permanently face-up!';
+  }
+  showJokerNotification(`✨ All players have viewed the Joker! Wild Joker is now permanently revealed (${cut&&cut.r?L[cut.r]+S[cut.s]:(W?L[W]:'A')})!`);
+  snd(900,.1);setTimeout(()=>snd(1100,.12),120);
+  tidy();hand();render();updateAutoGroupButtonState();
+ }
+}
+
+async function botPeekJoker(b){
+ if(hasPlayerViewedJoker[b])return;
+ hasPlayerViewedJoker[b]=true;
+ const botName=matchScores[b]?.name||('AI '+(b===1?'TITAN-01':'NEXUS-02'));
+ const hatEl=$('hat-p'+b);
+ if(hatEl){
+  hatEl.innerHTML='<span class="hat-emoji">🎩</span><span class="hat-text">JOKER SEEN</span>';
+  hatEl.style.display='inline-flex';
+ }
+ const botBadge=$('t'+b);
+ if(botBadge){
+  botBadge.classList.add('joker-seen-pulse');
+  setTimeout(()=>{if(botBadge)botBadge.classList.remove('joker-seen-pulse')},4000);
+ }
+ showJokerNotification(`🎩 ${botName} formed a Pure Sequence & privately viewed the Closed Joker!`);
+ snd(520,.06);setTimeout(()=>snd(780,.08),100);setTimeout(()=>snd(1040,.1),200);
+ 
+ if(cut&&!isJokerPermanentlyRevealed){
+  const tiltRz=(b===1?-0.18:0.18);
+  tgt(cut,-3.3,.98,.6,Math.PI/2+.5,Math.PI/2+tiltRz,1.4);
+  await sleep(1100);
+  if(!isJokerPermanentlyRevealed&&cut){
+   tgt(cut,-3.3,.74,.6,Math.PI/2+.5,Math.PI/2,1.4);
+  }
+ }
+ checkAllViewedJoker();
+}
+
+let lastPureSeqNotified=false,currentVJState='';
+function updateViewJokerButtonState(){
+ const btn=$('btn-view-joker');
+ if(!btn)return;
+ if(currentGameMode!=='closed'||phase==='home'||phase==='deal'||phase==='over'){
+  btn.style.display='none';
+  currentVJState='hidden';
+  return;
+ }
+ btn.style.display='inline-flex';
+ if(isJokerPermanentlyRevealed){
+  if(currentVJState!=='revealed'){
+   currentVJState='revealed';
+   btn.className='btn-view-joker revealed';
+   btn.innerHTML='<span class="vj-icon">✨</span><span class="vj-text">Joker Revealed</span>';
+   btn.title='Wild Joker is permanently revealed face up!';
+  }
+  return;
+ }
+ const hasPure=playerHasPureSeq(0);
+ if(hasPure){
+  if(!lastPureSeqNotified&&!hasPlayerViewedJoker[0]){
+   lastPureSeqNotified=true;
+   showJokerNotification('🎉 1st Life (Pure Sequence) Formed! Tap "View Joker" to see Wild Joker!');
+   snd(650,.06);setTimeout(()=>snd(880,.08),120);
+  }
+  if(currentVJState!=='unlocked'){
+   currentVJState='unlocked';
+   btn.className='btn-view-joker unlocked';
+   btn.innerHTML='<span class="vj-icon">👁️</span><span class="vj-text">View Joker</span>';
+   btn.title='Click to peek at Wild Joker privately (1st Life formed!)';
+  }
+ }else{
+  if(currentVJState!=='locked'){
+   currentVJState='locked';
+   btn.className='btn-view-joker locked';
+   btn.innerHTML='<span class="vj-icon">🔒</span><span class="vj-text">View Joker</span>';
+   btn.title='Locked: Form a Pure Sequence (1st Life) to view Wild Joker';
+  }
+ }
+}
+
+function onViewJokerClick(){
+ if(currentGameMode!=='closed'||phase==='home'||phase==='deal'||phase==='over')return;
+ if(isJokerPermanentlyRevealed){
+  msg('Wild Joker is already face-up and visible on the table.');
+  return;
+ }
+ const hasPure=playerHasPureSeq(0);
+ if(!hasPure){
+  snd(200,.08);
+  const btn=$('btn-view-joker');
+  if(btn){
+   btn.classList.remove('shake');
+   void btn.offsetWidth;
+   btn.classList.add('shake');
+  }
+  showJokerNotification('⚠️ Form a Pure Sequence (1st Life) to view Closed Joker!');
+  return;
+ }
+ openPrivateJokerPeek();
+}
+
+function openPrivateJokerPeek(){
+ if(!cut)return;
+ const isFirstTime=!hasPlayerViewedJoker[0];
+ if(isFirstTime){
+  hasPlayerViewedJoker[0]=true;
+  const hat0=$('hat-p0');
+  if(hat0){
+   hat0.innerHTML='<span class="hat-emoji">🎩</span><span class="hat-label">JOKER SEEN</span>';
+   hat0.style.display='inline-flex';
+  }
+  showJokerNotification('🎩 You formed a Pure Sequence (1st Life) & viewed the Closed Joker!');
+  snd(520,.05);setTimeout(()=>snd(780,.07),80);setTimeout(()=>snd(1040,.1),160);
+  checkAllViewedJoker();
+  tidy();hand();render();updateAutoGroupButtonState();
+ }else{
+  snd(520,.04);
+ }
+
+ if(isJokerPermanentlyRevealed)return;
+
+ isJokerFaceUp=true;
+ tgt(cut,-3.3,.74,.6,-Math.PI/2+.5,Math.PI/2,1.4);
+
+ const modal=$('private-joker-modal');
+ if(!modal)return;
+ const rankStr=cut.r?L[cut.r]:'A';
+ const suitSym=S[cut.s]||'♠';
+ const isRed=(cut.s===1||cut.s===2);
+ const colorStyle=isRed?'#ef4444':'#0f172a';
+
+ $('pjk-card-rank-top').textContent=rankStr;
+ $('pjk-card-rank-top').style.color=colorStyle;
+ $('pjk-card-suit-mid').textContent=suitSym;
+ $('pjk-card-suit-mid').style.color=colorStyle;
+ $('pjk-card-rank-bot').textContent=rankStr;
+ $('pjk-card-rank-bot').style.color=colorStyle;
+ $('pjk-rank-name').textContent=rankStr+' '+suitSym;
+ $('pjk-rank-only').textContent=rankStr;
+
+ privatePeekCountdown=5;
+ $('pjk-timer').textContent=privatePeekCountdown;
+ modal.style.display='flex';
+
+ if(privatePeekTimer)clearInterval(privatePeekTimer);
+ privatePeekTimer=setInterval(()=>{
+  privatePeekCountdown--;
+  const el=$('pjk-timer');
+  if(el)el.textContent=privatePeekCountdown;
+  if(privatePeekCountdown<=0){
+   closePrivateJokerPeek();
+  }
+ },1000);
+}
+
+function closePrivateJokerPeek(){
+ if(privatePeekTimer){
+  clearInterval(privatePeekTimer);
+  privatePeekTimer=null;
+ }
+ const modal=$('private-joker-modal');
+ if(modal)modal.style.display='none';
+
+ if(!isJokerPermanentlyRevealed&&cut){
+  isJokerFaceUp=false;
+  tgt(cut,-3.3,.74,.6,Math.PI/2+.5,Math.PI/2,1.4);
+  snd(320,.04);
+ }
+}
+
 function isHandAlreadyAutoGrouped(h){
  if(!h||h.length<3)return true;
- const sol=solve(h);
+ const sol=solve(h,0);
  const targetCards=[];
  const targetGroupMap=new Map();
  let gid=1;
@@ -1041,25 +1477,25 @@ function updateAutoGroupButtonState(){
   bg.title=(coins<100)?'Need 100 Coins (Claim free coins in Home menu)':'Auto-Group Cards (Costs 100 Coins)';
  }
 }
-function best(h){
- const sol=solve(h);
+function best(h,p=0){
+ const sol=solve(h,p);
  let cand=sol.loose.map(c=>h.indexOf(c)).filter(i=>i>=0);
  if(!cand.length)cand=h.map((_,i)=>i);
  let b=null;
  for(const i of cand){
-  const r=solve(h.filter((_,j)=>j!=i)),k=r.c-pts(h[i])/100;
+  const r=solve(h.filter((_,j)=>j!=i),p),k=r.c-pts(h[i])/100;
   if(!b||k<b.k)b={i,r,k};
  }
  return b;
 }
-function segment(h){
+function segment(h,p=0){
  const segs=[],visited=new Set(),n=h.length;
  h.forEach((c,idx)=>{
   if(c.g){
    if(!visited.has(c.g)){
     visited.add(c.g);
     const cards=h.filter(x=>x.g===c.g);
-    const ks=kinds(cards);
+    const ks=kinds(cards,p);
     const k=ks.length?(ks.includes('pure')?'pure':ks.includes('imp')?'imp':'set'):'bad';
     segs.push({cards,k,gId:c.g});
    }
@@ -1074,28 +1510,28 @@ function segment(h){
   }
  });
  return segs}
-function checkValidWin(cards){
+function checkValidWin(cards,p=0){
  if(!cards||cards.length!==13)return false;
  const ung=cards.filter(c=>!c.g);
  if(ung.length===0){
-  const segs=segment(cards);
+  const segs=segment(cards,p);
   if(!segs.some(g=>g.k==='loose'||g.k==='bad')){
    const pureSeq=segs.find(g=>g.k==='pure');
    const secondSeq=segs.find(g=>g!==pureSeq&&(g.k==='pure'||g.k==='imp'));
    if(pureSeq&&secondSeq&&segs.every(g=>g.k==='pure'||g.k==='imp'||g.k==='set'))return true;
   }
- }else if(ung.length>=3&&kinds(ung).length>0){
+ }else if(ung.length>=3&&kinds(ung,p).length>0){
   const testCards=cards.map(c=>({...c}));
   const tempG=999999;
   testCards.filter(c=>!c.g).forEach(c=>c.g=tempG);
-  const segs=segment(testCards);
+  const segs=segment(testCards,p);
   if(!segs.some(g=>g.k==='loose'||g.k==='bad')){
    const pureSeq=segs.find(g=>g.k==='pure');
    const secondSeq=segs.find(g=>g!==pureSeq&&(g.k==='pure'||g.k==='imp'));
    if(pureSeq&&secondSeq&&segs.every(g=>g.k==='pure'||g.k==='imp'||g.k==='set'))return true;
   }
  }
- const sol=solve(cards);
+ const sol=solve(cards,p);
  return !!sol.ok;
 }
 
@@ -1200,45 +1636,6 @@ const gt=new THREE.CanvasTexture(gk),glow=[-2.1,1.8].map(x=>{const m=new THREE.M
 const cache={};
 const PA=ys=>[...ys.map(y=>[.35,y]),...ys.map(y=>[.65,y])],P4=PA([.24,.76]),P6=PA([.24,.5,.76]),
 PIP={2:[[.5,.25],[.5,.75]],3:[[.5,.25],[.5,.5],[.5,.75]],4:P4,5:[...P4,[.5,.5]],6:P6,7:[...P6,[.5,.37]],8:[...P6,[.5,.37],[.5,.63]],9:[...PA([.22,.41,.59,.78]),[.5,.5]],10:[...PA([.22,.41,.59,.78]),[.5,.31],[.5,.69]]};
-function drawCameo(x,cx,cy,r,rank,col,sy){
- x.save();
- const bg=x.createRadialGradient(cx,cy,4,cx,cy,r);bg.addColorStop(0,'#fffbeb');bg.addColorStop(.85,'#fef3c7');bg.addColorStop(1,'#fde68a');
- x.beginPath();x.arc(cx,cy,r,0,Math.PI*2);x.fillStyle=bg;x.fill();
- x.lineWidth=2.5;x.strokeStyle='#d97706';x.stroke();x.lineWidth=1;x.strokeStyle='#fbbf24';x.beginPath();x.arc(cx,cy,r-3,0,Math.PI*2);x.stroke();
- x.save();x.beginPath();x.arc(cx,cy,r-1,0,Math.PI*2);x.clip();
- if(rank===11){
-  x.fillStyle='#1e40af';x.beginPath();x.arc(cx,cy-8,16,Math.PI,0);x.fill();
-  x.strokeStyle='#f59e0b';x.lineWidth=3;x.beginPath();x.moveTo(cx-10,cy-10);x.quadraticCurveTo(cx-20,cy-24,cx-12,cy-28);x.stroke();
-  x.fillStyle='#fed7aa';x.beginPath();x.arc(cx,cy+2,12,0,Math.PI*2);x.fill();
-  x.fillStyle='#b45309';x.beginPath();x.arc(cx-10,cy+4,5,0,Math.PI*2);x.arc(cx+10,cy+4,5,0,Math.PI*2);x.fill();
-  x.fillStyle='#1e293b';x.fillRect(cx-5,cy,2.5,3);x.fillRect(cx+2.5,cy,2.5,3);
-  x.strokeStyle='#9a3412';x.lineWidth=1.5;x.beginPath();x.arc(cx,cy+6,4,.2,Math.PI-.2);x.stroke();
-  x.fillStyle='#1e3a8a';x.beginPath();x.arc(cx,cy+26,16,Math.PI,0);x.fill();
-  x.fillStyle='#f59e0b';x.fillRect(cx-4,cy+14,8,14);
- }else if(rank===12){
-  x.fillStyle='#78350f';x.beginPath();x.ellipse(cx,cy+6,17,18,0,0,Math.PI*2);x.fill();
-  x.fillStyle='#ffedd5';x.beginPath();x.arc(cx,cy+4,11,0,Math.PI*2);x.fill();
-  x.fillStyle='#f59e0b';x.beginPath();x.moveTo(cx-12,cy-6);x.lineTo(cx-14,cy-18);x.lineTo(cx-7,cy-12);x.lineTo(cx,cy-22);x.lineTo(cx+7,cy-12);x.lineTo(cx+14,cy-18);x.lineTo(cx+12,cy-6);x.closePath();x.fill();
-  x.strokeStyle='#b45309';x.lineWidth=1;x.stroke();
-  x.fillStyle='#ef4444';x.beginPath();x.arc(cx,cy-14,2,0,Math.PI*2);x.fill();
-  x.fillStyle='#1e293b';x.fillRect(cx-5,cy+3,2.5,2.5);x.fillRect(cx+2.5,cy+3,2.5,2.5);
-  x.fillStyle='#dc2626';x.beginPath();x.arc(cx,cy+9,3,0,Math.PI);x.fill();
-  x.fillStyle='#be123c';x.beginPath();x.arc(cx,cy+28,16,Math.PI,0);x.fill();
-  x.strokeStyle='#fbbf24';x.lineWidth=2;x.beginPath();x.arc(cx,cy+15,8,.2,Math.PI-.2);x.stroke();
- }else if(rank===13){
-  x.fillStyle='#f59e0b';x.beginPath();x.moveTo(cx-14,cy-5);x.lineTo(cx-16,cy-20);x.lineTo(cx-8,cy-13);x.lineTo(cx,cy-24);x.lineTo(cx+8,cy-13);x.lineTo(cx+16,cy-20);x.lineTo(cx+14,cy-5);x.closePath();x.fill();
-  x.strokeStyle='#92400e';x.lineWidth=1.2;x.stroke();
-  x.fillStyle='#ef4444';x.beginPath();x.arc(cx,cy-23,2.5,0,Math.PI*2);x.fill();
-  x.fillStyle='#fed7aa';x.beginPath();x.arc(cx,cy+3,11,0,Math.PI*2);x.fill();
-  x.fillStyle='#e2e8f0';x.beginPath();x.arc(cx-10,cy+3,4,0,Math.PI*2);x.arc(cx+10,cy+3,4,0,Math.PI*2);x.fill();
-  x.fillStyle='#0f172a';x.fillRect(cx-5,cy+1,2.5,2.5);x.fillRect(cx+2.5,cy+1,2.5,2.5);
-  x.fillStyle='#f1f5f9';x.beginPath();x.moveTo(cx-8,cy+7);x.quadraticCurveTo(cx,cy+5,cx+8,cy+7);x.lineTo(cx+6,cy+16);x.quadraticCurveTo(cx,cy+20,cx-6,cy+16);x.closePath();x.fill();
-  x.strokeStyle='#cbd5e1';x.lineWidth=1;x.stroke();
-  x.fillStyle='#991b1b';x.beginPath();x.arc(cx,cy+28,16,Math.PI,0);x.fill();
-  x.fillStyle='#f8fafc';x.fillRect(cx-5,cy+16,10,14);x.fillStyle='#0f172a';x.fillRect(cx-2,cy+18,1.5,3);x.fillRect(cx+1,cy+22,1.5,3);
- }
- x.restore();x.restore();
-}
 function face(c){const key=c.r+'-'+c.s;if(cache[key])return cache[key];
  const k=mkc(540,756),x=k.getContext('2d');x.scale(3,3);x.textAlign='center';
  x.beginPath();x.roundRect(2,2,176,248,14);x.fillStyle='#ffffff';x.fill();
@@ -1265,9 +1662,12 @@ function face(c){const key=c.r+'-'+c.s;if(cache[key])return cache[key];
    x.lineWidth=1;x.strokeStyle='#f59e0b';x.beginPath();x.arc(90,126,58,0,Math.PI*2);x.stroke();
    x.fillStyle='#d97706';x.font='16px serif';x.fillText('★',90,66);x.fillText('★',90,194);
   }else if(c.r>10){
-   drawCameo(x,110,140,38,c.r,col,sy);
-   x.save();x.fillStyle=isRed?'rgba(214,26,41,0.08)':'rgba(21,24,29,0.06)';
-   x.font='72px serif';x.fillText(sy,65,148);x.restore();
+   x.font='92px serif';x.fillText(sy,90,152);
+   x.save();
+   x.fillStyle=isRed?'rgba(214,26,41,0.2)':'rgba(21,24,29,0.18)';
+   x.font='bold 52px -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif';
+   x.fillText(lr,90,104);
+   x.restore();
   }else{
    PIP[c.r].forEach(([px,py])=>{x.save();x.translate(px*180,py*252);if(py>.5)x.rotate(Math.PI);x.font='46px serif';x.fillText(sy,0,16);x.restore()});
   }
@@ -1730,7 +2130,9 @@ function onBotDeclare(b){
  render();
 }
 
-async function newGame(keepMatch=false){
+async function newGame(keepMatch=false,mode=null){
+ if(typeof keepMatch==='string'){mode=keepMatch;keepMatch=false}
+ if(mode)currentGameMode=mode;
  const banner=$('declare-banner');if(banner)banner.classList.remove('show');
  if(!keepMatch){
   resetMatch();
@@ -1740,6 +2142,16 @@ async function newGame(keepMatch=false){
  if(cf){scene.remove(cf.m);try{cf.m.geometry?.dispose?.();cf.m.material?.dispose?.()}catch(_){}cf=null}
  initCardsIfNeeded();
  resetCardMeshes();
+ hasPlayerViewedJoker=[false,false,false];
+ lastPureSeqNotified=false;
+ currentVJState='';
+ isJokerPermanentlyRevealed=(currentGameMode==='open');
+ isJokerFaceUp=(currentGameMode==='open');
+ [0,1,2].forEach(p=>{
+  const hat=$('hat-p'+p);if(hat)hat.style.display='none';
+  const badge=$('t'+p);if(badge)badge.classList.remove('joker-seen-pulse');
+ });
+ closePrivateJokerPeek();
  stock=shuf(all.slice());H=[[],[],[]];cut=null;disc=[];W=-1;turn=0;phase='deal';selS.clear();hov=null;lastDrawnCard=null;drag=null;pd=null;
  $('modal').style.display='none';$('modal-leave').style.display='none';$('home-screen').style.display='none';
  plates.forEach(P=>{P.on=false;P.o=0;P.m.visible=false;P.el.style.opacity=0});
@@ -1762,12 +2174,21 @@ async function newGame(keepMatch=false){
  await sleep(500);if(thisSession!==gameSession)return;
  cut=stock.pop();W=cut.r||1;disc=[stock.pop()];render();snd(900,.06);
  await sleep(600);if(thisSession!==gameSession)return;
- phase='draw';tidy();render();updateButtons();startTurnTimer();msg('Wild joker: '+(cut.r?L[cut.r]+S[cut.s]:'A')+'. Your turn: tap the glowing deck or discard to draw.')}
+ phase='draw';tidy();render();updateButtons();startTurnTimer();
+ if(currentGameMode==='closed'&&!isJokerFaceUp){
+  msg('Closed Joker mode: Wild joker is face down. Form a Pure Sequence (1st Life) to view it!');
+ }else{
+  msg('Wild joker: '+(cut.r?L[cut.r]+S[cut.s]:'A')+'. Your turn: tap the glowing deck or discard to draw.');
+ }
+}
 
 function place(){
  stock.forEach((c,i)=>tgt(c,-1.8,.75+i*.007,.6+i*.004,Math.PI/2+.5,(c.id%7-3)*.01,1.4));
  {const n=disc.length,b0=Math.max(0,n-6);disc.forEach((c,i)=>tgt(c,1.8+(c.id%5-2)*.05,.75+Math.min(i,b0)*.004+Math.max(0,i-b0)*.05,.6,-Math.PI/2+.5,(c.id%9-4)*.03,1.4))}
- if(cut)tgt(cut,-2.8,.74,.6,-Math.PI/2+.5,Math.PI/2,1.4);
+ if(cut){
+  const rx=(currentGameMode==='closed'&&!isJokerFaceUp)?(Math.PI/2+.5):(-Math.PI/2+.5);
+  tgt(cut,-3.3,.74,.6,rx,Math.PI/2,1.4);
+ }
  const isPortrait=innerHeight>innerWidth;
  const isShort=(innerWidth>innerHeight&&innerHeight<=480);
  let bX,bZ,bY,bSc,bSp;
@@ -1918,6 +2339,38 @@ function posLabs(){
    bgEl.style.left='';bgEl.style.top='';bgEl.style.bottom='';bgEl.style.right='';bgEl.style.transform='';
   }
  }
+ const vjBtn=$('btn-view-joker');
+ if(vjBtn){
+  if(currentGameMode!=='closed'||phase==='home'||phase==='deal'||phase==='over'){
+   vjBtn.style.setProperty('display','none','important');
+   currentVJState='hidden';
+  }else{
+   vjBtn.style.setProperty('display','inline-flex','important');
+   updateViewJokerButtonState();
+   const pCut=P(-3.3,.74,.6);
+   const pLeft=P(-4.525,.74,.6);
+   const cx=(pCut.x+1)/2*innerWidth,cy=(1-pCut.y)/2*innerHeight;
+   const cardLeftX=(pLeft.x+1)/2*innerWidth;
+   const btnW=vjBtn.offsetWidth||(isShort?105:120);
+   const clampedY=Math.max(50,Math.min(innerHeight-50,cy));
+   if(isPortrait){
+    const clampedX=Math.max(btnW/2+10,Math.min(innerWidth-btnW/2-10,cx));
+    const potY=Math.max(65,cy-54);
+    vjBtn.style.setProperty('left',clampedX+'px','important');
+    vjBtn.style.setProperty('top',potY+'px','important');
+   }else{
+    const gap=isShort?10:14;
+    const targetX=cardLeftX-(btnW/2)-gap;
+    const minX=btnW/2+10;
+    const clampedX=Math.max(minX,Math.min(cardLeftX-(btnW/2)-4,targetX));
+    vjBtn.style.setProperty('left',clampedX+'px','important');
+    vjBtn.style.setProperty('top',clampedY+'px','important');
+   }
+   vjBtn.style.setProperty('bottom','auto','important');
+   vjBtn.style.setProperty('right','auto','important');
+   vjBtn.style.setProperty('transform','translate(-50%,-50%)','important');
+  }
+ }
 }
 function updateButtons(){
  const isPlaying=(phase!='deal'&&phase!='over'&&phase!='home'),isPlayer=(turn===0);
@@ -1939,10 +2392,15 @@ function updateButtons(){
  const bsubmit=$('bsubmit');if(bsubmit)bsubmit.style.display=(phase==='rearrange')?'block':'none';
  updateCoinsUI();
  updateAutoGroupButtonState();
+ updateViewJokerButtonState();
 }
 function goHome(){
  const banner=$('declare-banner');if(banner)banner.classList.remove('show');
  stopTurnTimer();
+ closePrivateJokerPeek();
+ const vjBtn=$('btn-view-joker');if(vjBtn)vjBtn.style.display='none';
+ currentVJState='hidden';
+ [0,1,2].forEach(p=>{const hat=$('hat-p'+p);if(hat)hat.style.display='none'});
  if(viewCardsTimer){clearInterval(viewCardsTimer);viewCardsTimer=null}
  const vc=$('modal-view-cards');if(vc)vc.style.display='none';
  gameSession++;
@@ -1989,24 +2447,53 @@ function tidy(){
 const render=()=>{place();hand()};
 function refill(){if(!stock.length&&disc.length>1){const t=disc.pop();stock=shuf(disc);disc=[t]}}
 function drawStock(){refill();return stock.pop()}
-function next(){turn=(turn+1)%3;updateButtons();updateBotHUD();if(turn){stopTurnTimer();bot(turn)}else{phase='wait';refill();place();if(!drag)hand();setTimeout(()=>{if(phase=='wait'){phase='draw';updateButtons();startTurnTimer();msg('Wild joker: '+(cut.r?L[cut.r]+S[cut.s]:'A')+'. Your turn: tap the glowing deck or discard to draw.')}},600)}}
-function bot(b){msg('Bot '+b+' is playing…');updateButtons();updateBotHUD();place();
+function next(){turn=(turn+1)%3;updateButtons();updateBotHUD();if(turn){stopTurnTimer();bot(turn)}else{phase='wait';refill();place();if(!drag)hand();setTimeout(()=>{if(phase=='wait'){phase='draw';updateButtons();startTurnTimer();
+ if(currentGameMode==='closed'&&!isJokerFaceUp&&!hasPlayerViewedJoker[0]&&!isJokerPermanentlyRevealed){
+  msg('Closed Joker mode: Form a Pure Sequence (1st Life) to view Wild Joker. Your turn: tap deck or discard to draw.');
+ }else{
+  msg('Wild joker: '+(cut.r?L[cut.r]+S[cut.s]:'A')+'. Your turn: tap the glowing deck or discard to draw.');
+ }
+}},600)}}
+async function bot(b){
+ msg('Bot '+b+' is playing…');updateButtons();updateBotHUD();place();
  const thisSession=gameSession;
- setTimeout(()=>{if(thisSession!==gameSession||phase=='over'||phase=='home')return;
-  const h=H[b],top=disc[disc.length-1],take=best(h.concat(top)).r.c<solve(h).c;
-  h.push(take?disc.pop():drawStock());place();updateBotHUD();snd(520,.04);
-  setTimeout(()=>{if(thisSession!==gameSession||phase=='over'||phase=='home')return;
-   const o=best(h);const c=h.splice(o.i,1)[0];disc.push(c);place();updateBotHUD();snd(380,.05);
-   if(o.r.ok){onBotDeclare(b)}else{next()}},1000)},1000)}
+ 
+ if(currentGameMode==='closed'&&!hasPlayerViewedJoker[b]&&playerHasPureSeq(b)){
+  await botPeekJoker(b);
+  if(thisSession!==gameSession||phase=='over'||phase=='home')return;
+ }
+ 
+ await sleep(800);
+ if(thisSession!==gameSession||phase=='over'||phase=='home')return;
+ 
+ const h=H[b],top=disc[disc.length-1],take=best(h.concat(top),b).r.c<solve(h,b).c;
+ h.push(take?disc.pop():drawStock());place();updateBotHUD();snd(520,.04);
+ 
+ if(currentGameMode==='closed'&&!hasPlayerViewedJoker[b]&&playerHasPureSeq(b)){
+  await botPeekJoker(b);
+  if(thisSession!==gameSession||phase=='over'||phase=='home')return;
+ }
+ 
+ await sleep(800);
+ if(thisSession!==gameSession||phase=='over'||phase=='home')return;
+ 
+ const o=best(h,b);const c=h.splice(o.i,1)[0];disc.push(c);place();updateBotHUD();snd(380,.05);
+ if(o.r.ok){onBotDeclare(b)}else{next()}
+}
 function finish(w,bad){
+ closePrivateJokerPeek();
  const banner=$('declare-banner');if(banner)banner.classList.remove('show');
  stopTurnTimer();phase='over';updateButtons();
+ if(currentGameMode==='closed'){
+  isJokerFaceUp=true;
+  if(cut)tgt(cut,-3.3,.74,.6,-Math.PI/2+.5,Math.PI/2,1.4);
+ }
  if(w===0&&!bad){autoGroupWinningRemainder(H[0]);tidy()}
  const sc=[0,1,2].map(p=>{
   if(p==w&&!bad)return 0;
   if(p===0){
    if(bad)return 80;
-   const segs=segment(H[0]);
+   const segs=segment(H[0],0);
    const pure=segs.find(g=>g.k=='pure');
    if(!pure)return 80;
    const secondSeq=segs.find(g=>g!==pure&&(g.k=='pure'||g.k=='imp'));
@@ -2017,7 +2504,7 @@ function finish(w,bad){
    const dead=segs.filter(g=>g.k=='loose'||g.k=='bad').reduce((sum,g)=>sum+g.cards.reduce((a,c)=>a+pts(c),0),0);
    return Math.min(80,dead);
   }else{
-   const A=solve(H[p]);
+   const A=solve(H[p],p);
    if(!A.pure)return 80;
    if(A.seq<2){
     const pureGrp=A.groups.find(g=>g.k=='pure');
@@ -2092,15 +2579,16 @@ function finish(w,bad){
   wildRank: W,
   players: [0, 1, 2].map(p => {
    let groups = [];
+   const playerViewed = (currentGameMode === 'open' || isJokerPermanentlyRevealed || hasPlayerViewedJoker[p]);
    if (p === 0) {
-    const segs = segment(H[0]);
+    const segs = segment(H[0], 0);
     groups = segs.map(s => ({
      k: s.k,
      label: s.k === 'pure' ? 'Pure Seq' : s.k === 'imp' ? 'Impure Seq' : s.k === 'set' ? 'Set' : 'Ungrouped',
      cards: s.cards.slice()
     }));
    } else {
-    const sol = solve(H[p]);
+    const sol = solve(H[p], p);
     groups = sol.groups.map(g => ({
      k: g.k,
      label: g.k === 'pure' ? 'Pure Seq' : g.k === 'imp' ? 'Impure Seq' : 'Set',
@@ -2122,6 +2610,7 @@ function finish(w,bad){
     coins: roundCoins[p],
     isWinner: (p === roundWinner && !bad),
     isBad: (p === w && bad),
+    hasViewed: playerViewed,
     groups
    };
   })
@@ -2309,14 +2798,24 @@ function renderViewCardsContent(){
    badgeHtml=`<span class="vc-badge pts">${pl.pts} PTS</span>`;
   }
   
+  let jokerBadgeHtml='';
+  if(currentGameMode==='closed'){
+   if(pl.hasViewed){
+    jokerBadgeHtml='<span class="vc-badge joker-seen">🎩 JOKER VIEWED</span>';
+   }else{
+    jokerBadgeHtml='<span class="vc-badge joker-unseen">🔒 JOKER UNSEEN</span>';
+   }
+  }
+
   const coinStr=(pl.coins>=0?'+':'')+pl.coins.toLocaleString()+' 🪙';
   const coinClass=pl.coins>=0?'win':'loss';
+  const playerKnowsWild=(currentGameMode==='open'||!!pl.hasViewed);
   
   let meldsHtml='';
   pl.groups.forEach(g=>{
    let cardsHtml='';
    g.cards.forEach(c=>{
-    const isWild=(c.r===wildR);
+    const isWild=(c.r===wildR&&playerKnowsWild);
     const isPrintedJoker=(c.r===0);
     const isJk=(isWild||isPrintedJoker);
     const isRed=(c.s===1||c.s===2);
@@ -2345,6 +2844,7 @@ function renderViewCardsContent(){
          <span class="vc-player-avatar">${pl.avatar}</span>
          <span class="vc-player-name">${pl.name}</span>
          ${badgeHtml}
+         ${jokerBadgeHtml}
        </div>
        <div class="vc-player-coins ${coinClass}">${coinStr}</div>
      </div>
@@ -2396,7 +2896,7 @@ $('bgp').onclick=()=>{if(phase=='deal'||phase=='over'||phase=='home')return;cons
  const g0=cs[0].g;
  if(g0&&cs.every(c=>c.g==g0)&&h.filter(c=>c.g==g0).length==cs.length){cs.forEach(c=>delete c.g);selS.clear();snd(420,.04);tidy();hand();return msg('Group removed.')}
  const id=++gseq;const rest=h.filter(c=>!selS.has(c));const firstIdx=Math.max(0,h.indexOf(cs[0]));
- rest.splice(firstIdx,0,...cs);cs.forEach(c=>c.g=id);H[0]=rest;selS.clear();snd(560,.04);tidy();hand();msg('Cards grouped.')};
+ rest.splice(firstIdx,0,...cs);cs.forEach(c=>c.g=id);H[0]=rest;selS.clear();snd(560,.04);tidy();hand();updateButtons();msg('Cards grouped.')};
 $('bg').onclick=()=>{
  if(phase=='deal'||phase=='over'||phase=='home')return;
  if(isHandAlreadyAutoGrouped(H[0])){
@@ -2415,7 +2915,7 @@ $('bg').onclick=()=>{
  const newH=[];
  A.groups.forEach(g=>{const gid=++gseq;g.cards.forEach(c=>{c.g=gid;newH.push(c)})});
  A.loose.forEach(c=>{delete c.g;newH.push(c)});
- H[0]=newH;snd(560,.04);hand();updateAutoGroupButtonState();msg('Cards auto-grouped (-100 coins). Balance: '+coins.toLocaleString());
+ H[0]=newH;snd(560,.04);hand();updateAutoGroupButtonState();updateButtons();msg('Cards auto-grouped (-100 coins). Balance: '+coins.toLocaleString());
 };
 $('coins-box').onclick=()=>{
  snd(400,.03);
@@ -2535,25 +3035,82 @@ $('btn-confirm-leave').onclick=()=>{
  goHome();
 };
 $('mode-open-joker').onclick=()=>{
- if(coins<1){showNoCoinsModal('You need coins to place a bet! Claim 2,000 free coins to continue.');return}
- newGame();
+ const curStake=selectedBet||1;
+ if(coins<curStake){showNoCoinsModal('You need coins to place a bet! Claim free coins to continue.');return}
+ newGame('open');
 };
 $('btn-play-open').onclick=(e)=>{
  e.stopPropagation();
- if(coins<1){showNoCoinsModal('You need coins to place a bet! Claim 2,000 free coins to continue.');return}
- newGame();
+ const curStake=selectedBet||1;
+ if(coins<curStake){showNoCoinsModal('You need coins to place a bet! Claim free coins to continue.');return}
+ newGame('open');
 };
+$('mode-closed-joker').onclick=()=>{
+ const curStake=selectedBet||1;
+ if(coins<curStake){showNoCoinsModal('You need coins to place a bet! Claim free coins to continue.');return}
+ newGame('closed');
+};
+$('btn-play-closed').onclick=(e)=>{
+ e.stopPropagation();
+ const curStake=selectedBet||1;
+ if(coins<curStake){showNoCoinsModal('You need coins to place a bet! Claim free coins to continue.');return}
+ newGame('closed');
+};
+try{
+ const qAuto=new URLSearchParams(location.search).get('autostart');
+ if(qAuto==='closed')setTimeout(()=>newGame('closed'),150);
+ if(qAuto==='open')setTimeout(()=>newGame('open'),150);
+}catch(_){}
+
+const vjBtnEl=$('btn-view-joker');
+if(vjBtnEl)vjBtnEl.onclick=(e)=>{e.stopPropagation();onViewJokerClick()};
+const cpBtnEl=$('btn-close-peek');
+if(cpBtnEl)cpBtnEl.onclick=(e)=>{e.stopPropagation();closePrivateJokerPeek()};
+const pjkModalEl=$('private-joker-modal');
+if(pjkModalEl)pjkModalEl.onclick=(e)=>{if(e.target===pjkModalEl)closePrivateJokerPeek()};
 
 const rc=new THREE.Raycaster(),mv=new THREE.Vector2(),pl=new THREE.Plane(new THREE.Vector3(0,1,0),-.7),pt=new THREE.Vector3();
 const ray=e=>{mv.set(e.clientX/innerWidth*2-1,-(e.clientY/innerHeight)*2+1);rc.setFromCamera(mv,camera)};
 const hitHand=()=>{const hs=rc.intersectObjects(H[0].map(c=>c.m));return hs.length?hs[0].object.userData.c:null};
 cvEl.addEventListener('contextmenu',e=>e.preventDefault());
 cvEl.addEventListener('pointerdown',e=>{if(!e.isPrimary||pd||phase=='deal'||phase=='over'||phase=='home')return;ray(e);
- const hs=rc.intersectObjects(H[0].map(c=>c.m)),ps=phase=='draw'?rc.intersectObjects(disc.concat(stock,cut?[cut]:[]).map(c=>c.m)):[];
- if(hs.length&&(!ps.length||hs[0].distance<ps[0].distance)){pd={c:hs[0].object.userData.c,sx:e.clientX,sy:e.clientY};try{cvEl.setPointerCapture(e.pointerId)}catch(_){}return}
- if(phase=='draw'){const pc=ps.length?ps[0].object.userData.c:null;
-  if(!pc)return;const drawn=disc.includes(pc)?disc.pop():drawStock();lastDrawnCard=drawn;H[0].push(drawn);
-  selS.clear();snd(520,.05);phase='disc';msg('Tap cards to select: 1 to Discard or Declare, 2+ to Group. Drag to rearrange.');place();hand()}});
+ if(cut&&rc.intersectObjects([cut.m]).length){
+  if(currentGameMode==='closed'&&phase!=='deal'&&phase!=='over'&&phase!=='home'){
+   onViewJokerClick();
+   return;
+  }
+ }
+ if(phase==='draw'){
+  const discMeshes=disc.map(c=>c.m).concat([glow[1]]);
+  const stockCards=stock.map(c=>c.m);
+  const hitDisc=rc.intersectObjects(discMeshes);
+  let hitStock=rc.intersectObjects(stockCards);
+  if(!hitStock.length){
+   const hitGlow=rc.intersectObjects([glow[0]]);
+   if(hitGlow.length&&hitGlow[0].point&&hitGlow[0].point.x>-2.55){
+    hitStock=hitGlow;
+   }
+  }
+  if(hitDisc.length||hitStock.length){
+   let isFromDisc=false;
+   if(hitDisc.length&&hitStock.length){
+    isFromDisc=(hitDisc[0].distance<hitStock[0].distance);
+   }else if(hitDisc.length){
+    isFromDisc=true;
+   }
+   const drawn=isFromDisc?disc.pop():drawStock();
+   if(drawn){
+    lastDrawnCard=drawn;H[0].push(drawn);
+    selS.clear();snd(520,.05);phase='disc';
+    msg('Tap cards to select: 1 to Discard or Declare, 2+ to Group. Drag to rearrange.');
+    place();hand();updateButtons();
+    return;
+   }
+  }
+ }
+ const hs=rc.intersectObjects(H[0].map(c=>c.m));
+ if(hs.length){pd={c:hs[0].object.userData.c,sx:e.clientX,sy:e.clientY};try{cvEl.setPointerCapture(e.pointerId)}catch(_){}return}
+});
 addEventListener('pointermove',e=>{if(!e.isPrimary)return;if(pd&&!e.buttons){cancelPtr();return}
  if(!pd){if(phase=='deal'||phase=='over'||phase=='home')return;ray(e);const h=hitHand();if(h!==hov){hov=h;cvEl.style.cursor=h?'grab':'default'}return}
  if(!drag&&Math.hypot(e.clientX-pd.sx,e.clientY-pd.sy)<24)return;ray(e);if(!rc.ray.intersectPlane(pl,pt))return;
@@ -2610,9 +3167,9 @@ addEventListener('pointerup',e=>{if(!pd||!e.isPrimary)return;
  }
  if(drag&&drag.c&&drag.c.m)drag.c.m.renderOrder=0;
  if(drag&&drag.c&&drag.c.fx)drag.c.fx.renderOrder=6;
- pd=null;drag=null;hov=null;hand()});
+ pd=null;drag=null;hov=null;hand();updateButtons()});
 addEventListener('pointercancel',()=>cancelPtr());
-function cancelPtr(){if(drag&&drag.c&&drag.c.m)drag.c.m.renderOrder=0;if(drag&&drag.c&&drag.c.fx)drag.c.fx.renderOrder=6;if(drag){tidy()}pd=null;drag=null;hov=null;hand()}
+function cancelPtr(){if(drag&&drag.c&&drag.c.m)drag.c.m.renderOrder=0;if(drag&&drag.c&&drag.c.fx)drag.c.fx.renderOrder=6;if(drag){tidy()}pd=null;drag=null;hov=null;hand();updateButtons()}
 
 /* ===== Joker & wild-card Jester hat badge ===== */
 const spk=(()=>{const k=mkc(128,128),x=k.getContext('2d');
@@ -2694,11 +3251,16 @@ initCardsIfNeeded();
 addEventListener('resize',fit);fit();updateButtons();updateCoinsUI();initBetSlider();
 let T=0;
 (function loop(){requestAnimationFrame(loop);T+=.016;const q=.14;
- const jk=phase=='deal'?[]:H[0].filter(isJ);
+ const isLiveRound=(phase==='draw'||phase==='disc'||phase==='wait'||phase==='rearrange'||phase==='over');
+ const userWildCards=isLiveRound?H[0].filter(c=>c.r!==0&&isJokerForPlayer(c,0)):[];
  all.forEach(c=>{
   if(!c.m.visible)return;
   const p=c.m.position,r=c.m.rotation,dXZ=Math.hypot(c.tp[0]-p.x,c.tp[2]-p.z),isDragging=(drag&&c===drag.c),fly=!isDragging&&(dXZ>0.8),ty=c.tp[1]+(fly?Math.min(dXZ*0.65,3.4):0),tz=c.tp[2]+(fly?Math.min(dXZ*0.25,1.2):0),rate=isDragging?0.38:q;
-  p.x+=(c.tp[0]-p.x)*rate;p.y+=(ty-p.y)*rate;p.z+=(tz-p.z)*rate;r.x+=(c.tr[0]-r.x)*q;r.z+=(c.tr[1]-r.z)*q;c.m.scale.setScalar(c.m.scale.x+(c.sc-c.m.scale.x)*q);const j=jk.includes(c)||(cut&&c===cut);if(j||c.fx)glint(c,j)});
+  p.x+=(c.tp[0]-p.x)*rate;p.y+=(ty-p.y)*rate;p.z+=(tz-p.z)*rate;r.x+=(c.tr[0]-r.x)*q;r.z+=(c.tr[1]-r.z)*q;c.m.scale.setScalar(c.m.scale.x+(c.sc-c.m.scale.x)*q);
+  const cutGlint=(isLiveRound&&cut&&c===cut&&c.r!==0&&(currentGameMode==='open'||isJokerFaceUp));
+  const j=userWildCards.includes(c)||cutGlint;
+  if(c.fx)c.fx.visible=j;
+  if(j)glint(c,true)});
  const gl=phase=='draw'?.4+.35*Math.sin(T*5):0;glow.forEach(m=>m.material.opacity=gl);
  for(let i=1;i<360;i+=3){dp[i]+=.004;if(dp[i]>10)dp[i]=1}dg.attributes.position.needsUpdate=true;
  plates.forEach(P=>{const tg=P.tg,m=P.m,u=P.u,live=P.on&&phase!='deal';
