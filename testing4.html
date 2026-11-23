@@ -437,13 +437,13 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
  .bet-slider{height:10px !important}
  .bet-slider::-webkit-slider-thumb{width:24px !important;height:24px !important}
 
- #bg{padding:6px 14px !important;font-size:11.5px !important;border-radius:18px !important}
- #btn-home{top:calc(6px + env(safe-area-inset-top,0px)) !important;left:calc(8px + env(safe-area-inset-left,0px)) !important;padding:5px 12px !important;font-size:12.5px !important;border-radius:18px !important}
+ #bg{padding:6px 16px !important;font-size:13.5px !important;font-weight:800 !important;border-radius:20px !important;letter-spacing:.3px !important}
+ #btn-home{top:calc(6px + env(safe-area-inset-top,0px)) !important;left:calc(8px + env(safe-area-inset-left,0px)) !important;padding:5px 12px !important;font-size:13px !important;font-weight:800 !important;border-radius:18px !important}
  #timer-box{top:calc(6px + env(safe-area-inset-top,0px)) !important;left:50% !important;transform:translateX(-50%) !important;right:auto !important;padding:2px 10px 2px 4px !important;gap:6px !important}
  .timer-dial{width:34px !important;height:34px !important}
  .timer-dial svg{width:34px !important;height:34px !important}
- #timer-val{font-size:14.5px !important;font-weight:900 !important}
- .timer-title{font-size:10px !important;font-weight:800 !important}
+ #timer-val{font-size:15px !important;font-weight:900 !important}
+ .timer-title{font-size:10.5px !important;font-weight:800 !important}
 
  #coins-box{
   top:calc(6px + env(safe-area-inset-top,0px)) !important;
@@ -455,27 +455,21 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
   gap:6px !important;
   border-radius:20px !important;
  }
- #coins-box .player-hat-badge{
-  position:static !important;
-  order:1 !important;
-  margin:0 2px 0 0 !important;
-  padding:2px 6px !important;
-  font-size:9.5px !important;
-  border-radius:12px !important;
-  vertical-align:middle !important;
+ #coins-box .player-hat-badge, .player-hat-badge, #hat-p0{
+  display:none !important;
  }
  #coins-box .coins-stake-badge{
   order:2 !important;
   display:inline-flex !important;
   align-items:center !important;
   gap:2px !important;
-  font-size:11px !important;
+  font-size:11.5px !important;
   padding:2px 6px !important;
   border-radius:10px !important;
  }
- #coins-box .stake-tag{font-size:9px !important;font-weight:800 !important}
- #coins-box #game-stake-val{font-size:11.5px !important;font-weight:900 !important}
- #coins-box .stake-unit{font-size:9px !important}
+ #coins-box .stake-tag{font-size:9.5px !important;font-weight:800 !important}
+ #coins-box #game-stake-val{font-size:12px !important;font-weight:900 !important}
+ #coins-box .stake-unit{font-size:9.5px !important}
  #coins-box .coins-stake-divider{
   order:3 !important;
   width:1px !important;
@@ -492,27 +486,35 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
   display:flex !important;
   align-items:center !important;
  }
- #coins-box #coins-val{font-size:13.5px !important;font-weight:900 !important}
+ #coins-box #coins-val{font-size:14px !important;font-weight:900 !important}
  .coin-float-pill{top:calc(38px + env(safe-area-inset-top,0px)) !important;right:calc(8px + env(safe-area-inset-right,0px)) !important;padding:3px 8px !important;font-size:11px !important}
  
  .bot-badge{
   top:calc(6px + env(safe-area-inset-top,0px)) !important;
+  right:auto !important;
+  width:max-content !important;
+  max-width:max-content !important;
   transform:translate(-50%,0) scale(0.88) !important;
   transform-origin:center top !important;
   padding:3px 12px 3px 5px !important;
+ }
+ .bot-badge.bot-right{
+  right:auto !important;
+  left:auto;
+  width:max-content !important;
  }
  .bot-badge.on{
   transform:translate(-50%,0) scale(0.94) !important;
  }
  .bot-avatar-wrap,.bot-img{width:36px !important;height:36px !important}
  .bot-name{
-  font-size:13.5px !important;
+  font-size:14px !important;
   font-weight:800 !important;
   color:#f8fafc !important;
   letter-spacing:.3px !important;
  }
  .bot-ai-tag{
-  font-size:9.5px !important;
+  font-size:10px !important;
   font-weight:900 !important;
   padding:1.5px 5px !important;
  }
@@ -523,11 +525,11 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
   margin-left:2px !important;
  }
 
- .chip{padding:3px 10px 3px 8px !important;font-size:10px !important;border-radius:12px !important;gap:5px !important}
- .chip.life1{font-size:11px !important;padding:3px 12px 3px 8px !important}
- .chip.life1 .tx::before{font-size:11px !important}
+ .chip{padding:4px 11px 4px 9px !important;font-size:11.5px !important;font-weight:800 !important;border-radius:14px !important;gap:5px !important}
+ .chip.life1{font-size:12.5px !important;padding:4px 13px 4px 9px !important;font-weight:900 !important}
+ .chip.life1 .tx::before{font-size:12.5px !important}
  
- #btn button{padding:6px 14px !important;font-size:12px !important;border-radius:18px !important}
+ #btn button{padding:7px 16px !important;font-size:13.5px !important;font-weight:800 !important;border-radius:20px !important;letter-spacing:.4px !important}
 
  .scoreboard-modal{
   padding:10px 16px 12px !important;
@@ -641,14 +643,15 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
  .bet-slider{height:8.5px !important}
  .bet-slider::-webkit-slider-thumb{width:20px !important;height:20px !important}
 
- #bg{padding:3px 10px !important;font-size:9.5px !important}
- #btn-home{padding:4px 10px !important;font-size:11px !important}
+ #bg{padding:5px 12px !important;font-size:12px !important;font-weight:800 !important}
+ #btn-home{padding:4px 10px !important;font-size:11.5px !important;font-weight:800 !important}
  #coins-box{padding:2px 8px 2px 6px !important}
- #coins-val{font-size:12px !important;font-weight:900 !important}
- .chip{padding:2px 8px 2px 6px !important;font-size:9px !important}
- .bot-badge{top:calc(4px + env(safe-area-inset-top,0px)) !important;transform:translate(-50%,0) scale(0.82) !important;transform-origin:center top !important}
+ #coins-val{font-size:13px !important;font-weight:900 !important}
+ .chip{padding:3px 9px 3px 7px !important;font-size:10.5px !important;font-weight:800 !important}
+ .bot-badge{top:calc(4px + env(safe-area-inset-top,0px)) !important;right:auto !important;width:max-content !important;transform:translate(-50%,0) scale(0.82) !important;transform-origin:center top !important}
+ .bot-badge.bot-right{right:auto !important;width:max-content !important}
  .bot-badge.on{transform:translate(-50%,0) scale(0.88) !important}
- .bot-name{font-size:12.5px !important}
+ .bot-name{font-size:13px !important}
  .scoreboard-modal{padding:8px 12px 10px !important;border-radius:16px !important;max-height:98vh !important;width:min(96vw,470px) !important}
  .sb-title{font-size:14px !important;margin:0 0 1px !important}
  .sb-subtitle{display:none !important}
@@ -918,7 +921,7 @@ p{margin:6px 0 14px;font-size:14px;opacity:.9}
  50%{box-shadow:0 0 30px rgba(253,224,71,1),0 6px 20px rgba(0,0,0,0.9);filter:brightness(1.08)}
 }
 @media (max-height: 480px){
- #btn-view-joker, .btn-view-joker{padding:7px 15px !important;font-size:11.5px !important}
+ #btn-view-joker, .btn-view-joker{padding:7px 16px !important;font-size:13px !important;font-weight:900 !important}
 }
 
 /* Joker Hat Hint Badges */
@@ -1633,8 +1636,7 @@ function openPrivateJokerPeek(){
   hasPlayerViewedJoker[0]=true;
   const hat0=$('hat-p0');
   if(hat0){
-   hat0.innerHTML='<span class="hat-emoji">🎩</span><span class="hat-label">JOKER SEEN</span>';
-   hat0.style.display='inline-flex';
+   hat0.style.display='none';
   }
   showJokerNotification('🎩 Joker Viewed!', '🎩');
   snd(520,.05);setTimeout(()=>snd(780,.07),80);setTimeout(()=>snd(1040,.1),160);
@@ -2569,7 +2571,7 @@ function posLabs(){
    t1El.style.right='auto';
    t1El.style.transform='none';
   }else{
-   t1El.style.top='';t1El.style.right='';t1El.style.transform='';
+   t1El.style.top='';t1El.style.right='auto';t1El.style.transform='';
    const w1=t1El.offsetWidth||(isShort?115:130);
    const homeBtn=$('btn-home');
    const homeRight=homeBtn?(homeBtn.offsetLeft+homeBtn.offsetWidth+(isShort?8:12)):(isShort?85:105);
@@ -2591,13 +2593,13 @@ function posLabs(){
    t2El.style.left='auto';
    t2El.style.transform='none';
   }else{
-   t2El.style.top='';t2El.style.left='';t2El.style.transform='';
-   const w2=t2El.offsetWidth||(isShort?120:135);
+   t2El.style.top='';t2El.style.right='auto';t2El.style.transform='';
+   const w2=t2El.offsetWidth||(isShort?115:130);
    const coinsBox=$('coins-box');
-   const coinsBoxW=coinsBox?.offsetWidth||(isShort?130:145);
+   const coinsBoxW=coinsBox?.offsetWidth||(isShort?110:125);
    const coinsLeft=innerWidth-coinsBoxW-(isShort?10:14);
    const minLeft2=timerRight+tGap;
-   const idealCenter2=(minLeft2+coinsLeft)/2+(isShort?12:16);
+   const idealCenter2=(minLeft2+coinsLeft)/2;
    const minCenter2=minLeft2+w2/2;
    const maxCenter2=coinsLeft-w2/2-(isShort?6:10);
    if(maxCenter2>=minCenter2){
